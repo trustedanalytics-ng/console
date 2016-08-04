@@ -45,7 +45,7 @@ h3
          div(ng-show='servicePlanGuid || servicePlans')
             form(name='newInstanceType', ng-submit='createInstance(newInstanceName)')
                input.form-control(name='instanceName', type='text', required='', placeholder='Instance name',
-                  ng-model='newInstanceName', ng-trim="true" pattern-validator="^[a-zA-Z][a-zA-Z0-9-_\.]*")
+                  ng-model='newInstanceName', ng-trim="true" pattern-validator="^[a-zA-Z][a-zA-Z0-9-_.]*$")
                button.btn.btn-primary(type='submit', ng-disabled="!newInstanceType.instanceName.$valid")
                   | Create new {{ brokerName }} instance
                div(ng-messages="newInstanceType.instanceName.$error")

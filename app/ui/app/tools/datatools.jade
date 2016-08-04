@@ -45,7 +45,7 @@ h3
             div
                 form(name="newInstance", ng-submit='createInstance(newInstanceName)')
                     input.form-control(name="instanceName" type='text', required='', placeholder='Instance name',
-                    ng-model='newInstanceName', pattern-validator="^[a-zA-Z][a-zA-Z0-9-_\.]*")
+                    ng-model='newInstanceName', pattern-validator="^[a-zA-Z][a-zA-Z0-9-_.]*$")
                     button.btn.btn-primary(type='submit', ng-disabled='!newInstance.instanceName.$valid')
                         | Create new instance
                     div(ng-if="!newInstance.instanceName.$valid && newInstanceName.length")
