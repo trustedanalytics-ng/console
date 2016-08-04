@@ -42,7 +42,6 @@
         $scope.userToAdd = {};
         $scope.availableRoles = userService.getRoles();
         $scope.roleCheckboxes = {};
-        $scope.managersCounter = 0;
 
         $scope.$watch('users', function () {
             $scope.roleCheckboxes = UserRoleMapperService.mapRolesToCheckboxes($scope.users);
@@ -50,7 +49,7 @@
         });
 
         $scope.updateUserRoles = function (user) {
-            $scope.managersCounter = ManageUsersHelper.updateUserRoles(user, $scope.roleCheckboxes, $scope.users, userService);
+            ManageUsersHelper.updateUserRoles(user, $scope.roleCheckboxes, $scope.users, userService);
         };
 
         $scope.countManagers = function () {
@@ -79,7 +78,7 @@
 
         $scope.isCheckboxDisabled = function (avRole, guid, username) {
             return avRole === 'managers' && $scope.roleCheckboxes[guid][avRole] &&
-                ($scope.managersCounter <= 1 || $scope.currentUser.email === username);
+                ($scope.countManagers() <= 1 || $scope.currentUser.email === username);
         };
 
         function resetAddUser() {

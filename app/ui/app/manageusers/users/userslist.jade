@@ -32,7 +32,7 @@ table.table.user-list(ng-show='state.isLoaded() && users.length > 0', ng-table='
                             ng-click="updateUserRoles(user, avRole)")
                     span.fa.fa-check
         td
-            a.delete-user.fa-times.fa(ng-click='deleteUser(user)', ng-hide="roleCheckboxes[user.guid]['managers'] && managersCounter <= 1")
+            a.delete-user.fa-times.fa(ng-click='deleteUser(user)', ng-hide="roleCheckboxes[user.guid]['managers'] && countManagers() <= 1")
 
 div(ng-show='state.isLoaded() && users.length === 0')
     | No users available
