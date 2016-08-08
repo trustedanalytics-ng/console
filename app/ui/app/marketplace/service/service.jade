@@ -67,7 +67,7 @@
                                     .panel-body Space has to be chosen in order to create a new instance
                                 div(ng-messages="marketplaceNewInstance.instanceName.$error")
                                     span.validationMessage(ng-message="regexValidator")
-                                        | Allowed characters: [letters, numbers, _, -, .]
+                                        | Allowed characters: [letters, numbers, _, -, .]. Instance name should begin with letter.
                                 .extra-params
                                     .header(ng-if="ctrl.newInstance.params.length") Extra service parameters:
                                     .param(ng-repeat="param in ctrl.newInstance.params")

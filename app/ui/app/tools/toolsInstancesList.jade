@@ -61,7 +61,7 @@ h3
                   | Create new {{ brokerName }} instance
                div(ng-messages="newInstanceType.instanceName.$error")
                   span(class="validationMessage", ng-message="regexValidator")
-                     | Allowed characters: [letters, numbers, _, -, .]
+                     | Allowed characters: [letters, numbers, _, -, .]. Instance name should begin with letter.
 
     script(type="text/ng-template", id="confirm-delete")
       .ngdialog-message.clearfix
