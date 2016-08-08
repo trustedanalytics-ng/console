@@ -29,6 +29,7 @@
                     $scope.snapshotsTableParams = CommonTableParams.getTableParams($scope, function () {
                         return $scope.response;
                     });
+                    $scope.selected = {};
                     state.setLoaded();
                 }).catch(function onError() {
                     state.setError();
@@ -52,9 +53,9 @@
             VersionTrackingResource.getDiff(before, after)
                 .then(function (response) {
                     $scope.diff = response.plain();
-                    $scope.appsList = filterMetrics($scope.diff.applications);
-                    $scope.cdhServicesList = filterMetrics($scope.diff.cdh_services);
-                    $scope.cfServicesList = filterMetrics($scope.diff.cf_services);
+                    $scope.appsList = filterMetrics($scope.diff.applications, "createdAt");
+                    $scope.cdhServicesList = filterMetrics($scope.diff.cdh_services, "serviceState");
+                    $scope.cfServicesList = filterMetrics($scope.diff.cf_services, "createdAt");
                     state.setLoaded();
                 }).catch(function onError() {
                     state.setError();
@@ -72,9 +73,9 @@
             getSnapshots(currentDate);
         };
 
-        function filterMetrics(object) {
+        function filterMetrics(object, addedMetric) {
             return _.filter(object, function (obj) {
-                return obj.operation === "CHANGED" || (obj.metric === "createdAt" &&
+                return obj.operation === "CHANGED" || (obj.metric === addedMetric &&
                     _.contains(["ADDED", "REMOVED"], obj.operation));
             });
         }
