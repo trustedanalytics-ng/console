@@ -55,18 +55,6 @@
                     $scope.appsList = filterMetrics($scope.diff.applications);
                     $scope.cdhServicesList = filterMetrics($scope.diff.cdh_services);
                     $scope.cfServicesList = filterMetrics($scope.diff.cf_services);
-
-                    $scope.appsTableParams = CommonTableParams.getTableParams($scope, function () {
-                        return $scope.appsList;
-                    });
-
-                    $scope.cdhServicesTableParams = CommonTableParams.getTableParams($scope, function () {
-                        return $scope.cdhServicesList;
-                    });
-
-                    $scope.cfServicesTableParams = CommonTableParams.getTableParams($scope, function () {
-                        return $scope.cfServicesList;
-                    });
                     state.setLoaded();
                 }).catch(function onError() {
                     state.setError();
