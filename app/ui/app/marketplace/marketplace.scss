@@ -37,6 +37,9 @@
 
   .service-list {
     display: flex;
+    display: -webkit-flex;
+    -webkit-flex-wrap: wrap;
+    flex-wrap: wrap;
     flex-flow: row wrap;
     margin: 0 -10px;
 
