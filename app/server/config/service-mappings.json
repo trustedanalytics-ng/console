@@ -1,0 +1,120 @@
+[{
+  "path": "/registrations",
+  "name": "user-management"
+}, {
+  "path": "/invitations",
+  "name": "user-management"
+}, {
+  "path": "/users",
+  "name": "user-management"
+}, {
+  "path": "/datasets",
+  "name": "datacatalog"
+}, {
+  "path": "/tables",
+  "name": "datacatalogexport"
+}, {
+  "path": "/das",
+  "name": "dataaquisitionservice"
+}, {
+  "path": "/tools/service_instances*",
+  "name": "service-exposer"
+}, {
+  "path": "/spaces/[^/]+/services*",
+  "name": "servicecatalog"
+}, {
+  "path": "/spaces/[^/]+/summary*",
+  "name": "servicecatalog"
+}, {
+  "path": "/services",
+  "name": "servicecatalog"
+}, {
+  "path": "/service_keys",
+  "name": "servicecatalog"
+}, {
+  "path": "/service_instances",
+  "name": "servicecatalog"
+}, {
+  "path": "/atk/scoring-engine",
+  "name": "servicecatalog"
+}, {
+  "path": "/spaces/[^/]+/service_instances*",
+  "name": "servicecatalog"
+}, {
+  "path": "/spaces",
+  "name": "user-management"
+}, {
+  "path": "/orgs/[^/]+/spaces",
+  "name": "user-management"
+}, {
+  "path": "/orgs/[^/]+/name",
+  "name": "user-management"
+}, {
+  "path": "/apps",
+  "name": "servicecatalog"
+}, {
+  "path": "/service_plan",
+  "name": "servicecatalog"
+},{
+  "path": "/service_bindings",
+  "name": "servicecatalog"
+},{
+  "path": "/marketplace/application",
+  "name": "servicecatalog"
+}, {
+  "path": "/orgs/[^/]+/metrics",
+  "name": "metrics-provider"
+}, {
+  "path": "/metrics/load-data",
+  "name": "router-metrics-provider"
+}, {
+  "path": "/orgs/[^/]+/users",
+  "name": "user-management"
+}, {
+  "path": "/spaces/[^/]+/users",
+  "name": "user-management"
+}, {
+  "path": "/orgs/[^/]+/atkinstances",
+  "name": "app-launcher-helper"
+}, {
+  "path": "/platform_context",
+  "name": "platformcontext"
+}, {
+  "path": "/external_tools",
+  "name": "platformcontext"
+}, {
+  "path": "/orgs",
+  "name": "user-management"
+}, {
+  "path": "/les",
+  "name": "latest-events-service"
+}, {
+  "path": "/upload",
+  "name": "hdfs-uploader",
+  "timeout": 3600000
+}, {
+  "path": "/platform/summary",
+  "name": "platform-operations"
+}, {
+  "path": "/platform_tests/tests",
+  "name": "platform-tests"
+}, {
+  "path": "/v1/analytics/h2o/models/organizations",
+  "name": "model-catalog"
+}, {
+  "path": "/v1/oozie",
+  "name": "workflow-scheduler"
+}, {
+  "path": "/h2o/engines",
+  "name": "h2o-model-publisher"
+}, {
+  "path": "/gearpump/([^/]+)/(.*)",
+  "name": "gearpump-dashboard",
+  "domainRewrite": true
+}, {
+  "path": "/v1",
+  "name": "platform-snapshot"
+}, {
+  "path": "/kubernetes/(.*)",
+  "name": "kubernetes-broker"
+}]

@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-var _ = require('underscore');
-var defaults = require('./default-config.json');
+var _ = require('underscore'),
+    defaults = require('./defaults.json');
 
 var vcapServices = JSON.parse(process.env.VCAP_SERVICES || '{}');
 var vcapApplication = JSON.parse(process.env.VCAP_APPLICATION || '{}');
@@ -45,11 +45,7 @@ function getVariable(name) {
     if(!name || !_.isString(name)) {
         return null;
     }
-    var value = process.env[name.toUpperCase()];
-    if(!value) {
-        value = defaults[name.toLowerCase()];
-    }
-    return value;
+    return process.env[name.toUpperCase()] || defaults[name.toLowerCase()];
 }
 
 function getSso() {
@@ -64,13 +60,13 @@ function getSso() {
 }
 
 function envNameToUserProvidedName(env) {
-    var envNameWithoutUnderscores = env.split('_').
-        slice(1).
-        forEach(function(splitEnv) {
+    var envCamelCase = env.split('_')
+        .slice(1)
+        .forEach(function(splitEnv) {
             splitEnv = capitalize(splitEnv);
-        }).
-        join('');
-    return envNameWithoutUnderscores.concat(envNameWithoutUnderscores[0].toLowerCase(), envNameWithoutUnderscores.substr(1));
+        })
+        .join('');
+    return envCamelCase[0].toLowerCase().concat(envCamelCase.substr(1));
 }
 
 function capitalize(input) {

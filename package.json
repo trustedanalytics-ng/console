@@ -2,7 +2,7 @@
   "name": "console",
   "author": "Intel Corporation",
   "license": "Apache-2.0",
-  "version": "0.5.57",
+  "version": "0.5.58",
   "private": true,
   "dependencies": {
     "compression": "1.6.1",
@@ -20,7 +20,8 @@
     "request": "2.69.0",
     "require-dir": "0.3.0",
     "serve-favicon": "2.3.0",
-    "underscore": "1.8.3"
+    "underscore": "1.8.3",
+    "url-join": "1.1.0"
   },
   "devDependencies": {
     "chai": "3.5.0",

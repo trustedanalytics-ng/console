@@ -14,94 +14,52 @@
  * limitations under the License.
  */
 var request = require('request'),
-    _ = require('underscore'),
-    url = require('url'),
+    urlJoin = require('url-join'),
     util = require('util'),
-
-    localServices = require('./config/local-services'),
-    serviceMapping = require('./config/service-mapping'),
-    config = require('./config/config'),
+    defaults = require('./config/defaults.json'),
+    servicesConfig = require('./config/services-config'),
     httpException = require('./utils/http-exception'),
     gatewayErrors = require('./gateway-errors');
 
-var HOST_SUFFIX = "_HOST";
-
-function getHost(service, path) {
-    var host = null;
-
-    if(!service) {
-        host = localServices[service.name];
-        console.info('Using default url for service %s: %s', service.name, host);
-        return host;
-    }
-
-    if(service.domainRewrite) {
-        var domain = config.getDomain();
-        var parameters = path.match(service.path);
-        var subdomain = parameters[1];
-        var endpoint = parameters[2];
-
-        host = "http://" + subdomain + "." + domain;
-        if(endpoint) {
-            host += (service.endpoint ? service.endpoint : "") + "/" + endpoint;
-        }
-        return host;
-    }
-
-    if(isServiceHostEnvExist(service.name)) {
-        return process.env[serviceNameInHostEnvNotation(service.name)];
-    }
-
-    var userProvidedService = config.getUserProvidedSerice(service.name);
-    return userProvidedService.host;
-}
-
-function getServiceName(requestUrl) {
-    return _.find(serviceMapping, function(service){
-        return requestUrl.match(service.path);
-    });
-}
-
-function serviceNameInHostEnvNotation(service) {
-    return service.toUpperCase().split("-").join("_") + HOST_SUFFIX;
-}
-
-function isServiceHostEnvExist(service) {
-    return process.env[serviceNameInHostEnvNotation(service)];
-}
 
 function forwardRequest(req, res) {
     var path = req.url;
-    var service = getServiceName(path);
+    var service = servicesConfig.getServiceByPath(path);
     if(!service) {
         throw404(res, util.format("No service found for the path: %s", JSON.stringify(path)));
         return;
     }
-
-    var host = getHost(service, path);
+    var host = servicesConfig.getServiceHost(service, path);
     if(!host) {
         throw404(res, util.format("No route found for service  %s", JSON.stringify(service)));
         return;
     }
-
-    var targetUrl = service.domainRewrite ? host : url.resolve(host, path);
-
-    if(req.user && req.user.accessToken) {
-        req.headers['Authorization'] = 'bearer ' + req.user.accessToken;
+    var targetUrl;
+    if(service.domainRewrite) {
+        targetUrl = host;
+    } else {
+        var cleanPath = path.replace(defaults.reverse_proxy.request_prefix, '');
+        var prefix = servicesConfig.getServicePrefix(service);
+        targetUrl = urlJoin(host, prefix, cleanPath);
     }
-    req.headers['x-forwarded-host'] = req.headers['host'];
 
-    var timeout = service.timeout || config.get('timeout');
-
+    setHeaders(req);
     req.clearTimeout();
 
     req.pipe(request({
             url: targetUrl,
             method: req.method,
-            timeout: timeout
+            timeout: servicesConfig.getServiceTimeout(service)
         },
         handleProxyError(res, service.name, path)
     )).pipe(res);
+}
+
+function setHeaders(req) {
+    if(req.user && req.user.accessToken) {
+        req.headers['Authorization'] = 'bearer ' + req.user.accessToken;
+    }
+    req.headers['x-forwarded-host'] = req.headers['host'];
 }
 
 function handleProxyError(res, serviceName, path) {
