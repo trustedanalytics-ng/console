@@ -62,9 +62,7 @@ function getSso() {
 function envNameToUserProvidedName(env) {
     var envCamelCase = env.split('_')
         .slice(1)
-        .forEach(function(splitEnv) {
-            splitEnv = capitalize(splitEnv);
-        })
+        .map(capitalize)
         .join('');
     return envCamelCase[0].toLowerCase().concat(envCamelCase.substr(1));
 }
