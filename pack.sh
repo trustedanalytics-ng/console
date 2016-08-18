@@ -18,33 +18,25 @@ set -e
 
 VERSION=`node -e "console.log(require('./package.json').version)"`
 PROJECT_NAME=`node -e "console.log(require('./package.json').name)"`
-PACKAGE_CATALOG=${PROJECT_NAME}-${VERSION}
+PACKAGE_CATALOG="docker-package"
 
 # build project
 npm install && node ./node_modules/gulp/bin/gulp.js build
 
-# create tmp catalog
+# re-create tmp catalog
+rm -rf ${PACKAGE_CATALOG}
 mkdir ${PACKAGE_CATALOG}
 
 # files to package
-rsync -av . ${PACKAGE_CATALOG} \
-  --exclude node_modules \
-  --exclude bower_components \
-  --exclude .git \
-  --exclude .sass-cache \
-  --exclude ${PACKAGE_CATALOG}
+cp -r --parents package.json ${PACKAGE_CATALOG}
+cp -r --parents app/server ${PACKAGE_CATALOG}
+cp -r --parents target/app ${PACKAGE_CATALOG}
+cp -r --parents LICENSE.txt ${PACKAGE_CATALOG}
+cp -r --parents ThirdPartyLicenses ${PACKAGE_CATALOG}
 
 npm install --production --prefix ${PACKAGE_CATALOG}
 
 # prepare build manifest
 echo "commit_sha=$(git rev-parse HEAD)" > ${PACKAGE_CATALOG}/build_info.ini
 
-# create zip package
-cd ${PACKAGE_CATALOG}
-zip -r ../${PROJECT_NAME}-${VERSION}.zip *
-cd ..
-
-# remove tmp catalog
-rm -r ${PACKAGE_CATALOG}
-
-echo "Zip package for $PROJECT_NAME project in version $VERSION has been prepared."
+echo "Docker package for $PROJECT_NAME project in version $VERSION has been prepared."

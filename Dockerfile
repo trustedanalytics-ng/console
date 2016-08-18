@@ -3,9 +3,8 @@ FROM tapimages.us.enableiot.com:8080/tap-base-node:latest
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 
-# Copy app and  install app dependencies
-COPY . /usr/src/app
-RUN npm install --production
+# Copy prepared app package
+COPY docker-package /usr/src/app
 
 EXPOSE 8080
 CMD [ "npm", "start" ]

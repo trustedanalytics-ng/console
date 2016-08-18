@@ -22,3 +22,6 @@ src/coverage
 
 # Bower
 bower_components
+
+# Docker package
+docker-package
