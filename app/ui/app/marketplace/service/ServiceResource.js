@@ -17,7 +17,7 @@
     "use strict";
 
     App.factory('ServiceResource', function (Restangular) {
-        var service = Restangular.service("services");
+        var service = Restangular.service("catalog");
         service.getService = function (id) {
             return this.one(id).get();
         };

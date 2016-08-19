@@ -21,6 +21,8 @@ var request = require('request'),
     httpException = require('./utils/http-exception'),
     gatewayErrors = require('./gateway-errors');
 
+var DEFAULT_PROTO = 'http://';
+
 
 function forwardRequest(req, res) {
     var path = req.url;
@@ -41,6 +43,9 @@ function forwardRequest(req, res) {
         var cleanPath = path.replace(defaults.reverse_proxy.request_prefix, '');
         var prefix = servicesConfig.getServicePrefix(service);
         targetUrl = urlJoin(host, prefix, cleanPath);
+    }
+    if(!targetUrl.match(/(http(s)?:)?\/\//)) {
+        targetUrl = DEFAULT_PROTO + targetUrl;
     }
 
     setHeaders(req);

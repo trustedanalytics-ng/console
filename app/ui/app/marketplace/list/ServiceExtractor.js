@@ -27,7 +27,7 @@
             extractService: function (resource) {
                 var entity = resource.entity || {};
                 var metadata = resource.metadata || {};
-                var extra = JSON.parse(entity.extra) || {};
+                var extra = JSON.parse(entity.extra || '{}');
                 var service = {
                     id: metadata.guid,
                     name: extra.displayName || entity.label,

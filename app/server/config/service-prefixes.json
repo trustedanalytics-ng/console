@@ -20,10 +20,6 @@
     "value":"/rest"
   },
   {
-    "name":"servicecatalog",
-    "value":"/rest"
-  },
-  {
     "name":"metrics-provider",
     "value":"/rest"
   },

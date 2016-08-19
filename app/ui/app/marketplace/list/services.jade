@@ -47,10 +47,3 @@ h3
     .panel.panel-danger(ng-show='ctrl.state.isError()')
         .panel-heading Error
         .panel-body Error occurred
-
-    .panel.panel-warning(ng-show='!ctrl.space && (ctrl.state.isLoaded() || ctrl.state.isError())')
-        .panel-heading No space specified
-        .panel-body
-            | In order to view market place, you have to choose target space. Use widget in the top right corner to do that.
-            | <br>
-            | If there are no available spaces for your account, please contact administrator.

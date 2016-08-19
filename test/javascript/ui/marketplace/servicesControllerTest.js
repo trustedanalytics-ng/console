@@ -76,30 +76,16 @@ describe("Unit: ServicesController", function () {
         expect(createController()).not.to.be.null;
     });
 
-    it('init should get services when space is not empty', function () {
-        targetProvider.setSpace({guid: 'testing'});
+    it('init should get services', function () {
         createController();
         serviceListDeferred.resolve([serviceSample]);
         rootScope.$digest();
         expect(controller.services).to.deep.have.members([serviceSample]);
     });
 
-    it('init should not get services when space is empty', function () {
-        createController();
-        serviceListDeferred.resolve([serviceSample]);
-        rootScope.$digest();
-        expect(controller.services).not.to.deep.have.members([serviceSample]);
-    });
-
-    it('init should set status pending when space is not empty', function () {
-        targetProvider.setSpace({guid: 'testing'});
+    it('init should set status pending', function () {
         createController();
         expect(state.value).to.be.equals(state.values.PENDING);
-    });
-
-    it('init should set status loaded when space is empty', function () {
-        createController();
-        expect(state.value).to.be.equals(state.values.LOADED);
     });
 
     it('init, got services, set status loaded', function () {
@@ -109,8 +95,7 @@ describe("Unit: ServicesController", function () {
         expect(state.value).to.be.equals(state.values.LOADED);
     });
 
-    it('init, got error, set status error if space is not empty', function () {
-        targetProvider.setSpace({guid: 'testing'});
+    it('init, got error, set status error', function () {
         controller = createController();
         serviceListDeferred.reject();
         rootScope.$digest();
@@ -118,8 +103,7 @@ describe("Unit: ServicesController", function () {
         expect(state.value).to.be.equals(state.values.ERROR);
     });
 
-    it('on targetChanged, get services again if space is not empty', function () {
-        targetProvider.setSpace({guid: 'testing'});
+    it('on targetChanged, get services again', function () {
         createController();
 
         rootScope.$broadcast('targetChanged');

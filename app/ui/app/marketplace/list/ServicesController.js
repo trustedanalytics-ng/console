@@ -36,30 +36,24 @@
 
             self.state.setPending();
 
-            if (self.isSpaceSet()) {
-                ServiceResource
-                    .withErrorMessage('Failed to retrieve services list')
-                    .getListBySpace(targetProvider.getSpace().guid)
-                    .then(function (data) {
-                        data = data || {};
-                        self.services = _.sortBy(serviceExtractor.extract(data), function (service) {
-                            return service.name.toLowerCase();
-                        });
-                        self.filtered = self.services;
-                        calculatePagination($scope.currentPage, $scope.itemsPerPage);
-                        self.state.setLoaded();
-                        self.space = targetProvider.getSpace();
-
-                    })
-                    .catch(function () {
-                        self.state.setError();
+            ServiceResource
+                .withErrorMessage('Failed to retrieve services list')
+                .getListBySpace(targetProvider.getSpace().guid)
+                .then(function (data) {
+                    data = data || {};
+                    self.services = _.sortBy(serviceExtractor.extract(data), function (service) {
+                        return service.name.toLowerCase();
                     });
-            }
-            else {
-                self.space = null;
-                self.services = [];
-                self.state.setLoaded();
-            }
+                    self.filtered = self.services;
+                    calculatePagination($scope.currentPage, $scope.itemsPerPage);
+                    self.state.setLoaded();
+                    self.space = targetProvider.getSpace();
+
+                })
+                .catch(function () {
+                    self.state.setError();
+                });
+
         };
 
         self.updateServices();

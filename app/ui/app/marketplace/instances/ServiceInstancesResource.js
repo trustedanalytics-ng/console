@@ -17,14 +17,44 @@
     "use strict";
 
     App.factory('ServiceInstancesResource', function (Restangular) {
-        var service = Restangular.service("service_instances");
+        var service = Restangular.service("services");
 
-        service.getSummary = function(spaceId, service_keys) {
+        service.getSummary = function(service_keys) {
             var params = _.pick({
-                space: spaceId,
                 service_keys: service_keys
             }, _.identity);
             return this.one('summary').get(params);
+        };
+
+        service.createInstance = function (name, planGuid, orgGuid, params) {
+            var parameters = _.extend({}, params, {
+                name: name
+            });
+            return this.post({
+                name: name,
+                service_plan_guid: planGuid,
+                organization_guid: orgGuid,
+                parameters: parameters
+            });
+        };
+
+        service.deleteInstance = function (serviceId) {
+            return this.one(serviceId).remove();
+        };
+
+        service.getAllByType = function (spaceId, serviceId) {
+            return this.getList({
+                space: spaceId,
+                broker: serviceId
+            });
+        };
+
+        service.getAll = function () {
+            return this.getList();
+        };
+
+        service.getById = function (instanceId) {
+            return this.one(instanceId).get();
         };
 
         return service;
