@@ -53,6 +53,16 @@ function init(app) {
         req.logout();
         res.redirect(sso.logoutUri);
     });
+
+    app.use(authErrorHandler);
+}
+
+function authErrorHandler(err, req, res, next) {
+    if(!err) {
+        return next();
+    }
+    console.log('Authentication error occured:', err.toString() || err.message, err.stack);
+    res.status(500).send('Internal server error during authentication process');
 }
 
 function login(req, res, next) {
