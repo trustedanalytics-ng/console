@@ -17,7 +17,7 @@
 (function () {
     'use strict';
 
-    App.controller('ServiceInstanceDetailsController', function ($scope, State, ServiceInstanceResource,
+    App.controller('ServiceInstanceDetailsController', function ($scope, State, ServiceInstancesResource,
             NotificationService, $stateParams, $state, ToolsInstanceResource) {
         var instanceId = $stateParams.instanceId;
         var GATEWAY_TIMEOUT_ERROR = 504;
@@ -28,7 +28,7 @@
         $scope.toolsState = toolsState;
         $scope.deleteState = new State().setDefault();
 
-        ServiceInstanceResource.getById(instanceId)
+        ServiceInstancesResource.getById(instanceId)
             .then(function (serviceInstance) {
                 $scope.serviceInstance = serviceInstance;
                 $scope.state.setLoaded();
@@ -60,7 +60,7 @@
 
         $scope.deleteServiceInstance = function () {
             $scope.deleteState.setPending();
-            ServiceInstanceResource
+            ServiceInstancesResource
                 .supressGenericError()
                 .deleteInstance(instanceId)
                 .then(function () {

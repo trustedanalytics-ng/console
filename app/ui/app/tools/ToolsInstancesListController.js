@@ -17,7 +17,7 @@
     "use strict";
 
     App.controller('ToolsInstancesListController', function ($scope, $location, targetProvider, State,
-        NotificationService, ToolsInstanceResource, ServiceResource, ServiceInstanceResource, $state) {
+        NotificationService, ToolsInstanceResource, ServiceResource, ServiceInstancesResource, $state) {
 
         var GATEWAY_TIMEOUT_ERROR = 504;
 
@@ -42,7 +42,7 @@
 
         $scope.createInstance = function (name) {
             $scope.state.setPending();
-            ServiceInstanceResource
+            ServiceInstancesResource
                 .supressGenericError()
                 .createInstance(name, $scope.servicePlanGuid, $scope.organization.guid, $scope.space.guid)
                 .then(function () {
@@ -67,7 +67,7 @@
             NotificationService.confirm('confirm-delete')
                 .then(function () {
                     $scope.state.setPending();
-                    return ServiceInstanceResource
+                    return ServiceInstancesResource
                         .withErrorMessage('Deleting instance of ' + $scope.brokerName + ' failed')
                         .deleteInstance(appId);
                 })

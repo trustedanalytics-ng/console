@@ -71,7 +71,7 @@ describe("Unit: ServiceInstanceDetailsControllerTest", function () {
             controller = $controller('ServiceInstanceDetailsController', {
                 $scope: scope,
                 NotificationService: notificationService,
-                ServiceInstanceResource: serviceInstanceResource,
+                ServiceInstancesResource: serviceInstanceResource,
                 ToolsInstanceResource: toolsInstanceResource,
                 $state: $state
             });

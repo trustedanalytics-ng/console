@@ -19,7 +19,7 @@ describe("Unit: ApplicationController", function () {
     var controller,
         createController,
         applicationResource,
-        serviceInstanceResource,
+        serviceInstancesResource,
         notificationService,
         applicationHelper,
         state,
@@ -42,10 +42,10 @@ describe("Unit: ApplicationController", function () {
     }));
 
     beforeEach(inject(function ($controller, ApplicationResource,
-                                ServiceInstanceResource, $routeParams,
+                                ServiceInstancesResource, $routeParams,
                                 State, _$q_, $rootScope, _$state_, ApplicationHelper) {
         state = new State();
-        serviceInstanceResource = ServiceInstanceResource;
+        serviceInstancesResource = ServiceInstancesResource;
         applicationResource = ApplicationResource;
         applicationHelper = ApplicationHelper;
         $q = _$q_;
@@ -104,7 +104,7 @@ describe("Unit: ApplicationController", function () {
 
         expect($scope.application, 'application').to.be.deep.equal(application);
         expect($scope.state.value, 'state').to.be.equal(state.values.LOADED);
-        expect(serviceInstanceResource.getAll.called).to.be.true;
+        expect(serviceInstancesResource.getAll.called).to.be.true;
     });
 
     it('getApplication success and get instances success, download instances', function () {
@@ -123,7 +123,7 @@ describe("Unit: ApplicationController", function () {
 
         getSampleInstances();
         var deferredInstances = $q.defer();
-        serviceInstanceResource.getAll = sinon.stub().returns(deferredInstances.promise);
+        serviceInstancesResource.getAll = sinon.stub().returns(deferredInstances.promise);
         deferredInstances.reject({ status: 404 });
 
         createController();
@@ -268,7 +268,7 @@ describe("Unit: ApplicationController", function () {
         instances = instances || [];
 
         var deferredInstances = $q.defer();
-        serviceInstanceResource.getAll = sinon.stub().returns(deferredInstances.promise);
+        serviceInstancesResource.getAll = sinon.stub().returns(deferredInstances.promise);
         deferredInstances.resolve(instances);
 
         createController();

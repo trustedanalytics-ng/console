@@ -18,7 +18,7 @@
 
 
     App.controller('ServiceController', function (ServiceResource, serviceExtractor, NotificationService, $stateParams,
-        targetProvider, $scope, ServiceInstanceResource, State, ApplicationRegisterResource, $location) {
+        targetProvider, $scope, ServiceInstancesResource, State, ApplicationRegisterResource, $location) {
 
         var GATEWAY_TIMEOUT_ERROR = 504;
 
@@ -52,7 +52,7 @@
         self.createServiceInstance = function (plan) {
             if (targetProvider.getSpace()) {
                 self.newInstanceState.setPending();
-                ServiceInstanceResource
+                ServiceInstancesResource
                     .supressGenericError()
                     .createInstance(
                         self.newInstance.name,

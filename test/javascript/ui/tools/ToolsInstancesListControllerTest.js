@@ -19,7 +19,7 @@ describe("Unit: ToolsInstanceListController", function () {
         createController,
         _targetProvider,
         toolsInstanceMock,
-        serviceInstanceMock,
+        serviceInstancesMock,
         serviceResourceMock,
         SERVICE_ID = 'qweqwe',
         $rootScope,
@@ -33,9 +33,9 @@ describe("Unit: ToolsInstanceListController", function () {
     beforeEach(module('app'));
 
     beforeEach(inject(function ($controller, $location, TestHelpers, _$rootScope_, _$q_,
-                                ToolsInstanceResource, ServiceInstanceResource, ServiceResource) {
+                                ToolsInstanceResource, ServiceInstancesResource, ServiceResource) {
         toolsInstanceMock = ToolsInstanceResource;
-        serviceInstanceMock = ServiceInstanceResource;
+        serviceInstancesMock = ServiceInstancesResource;
         serviceResourceMock = ServiceResource;
         locationMock = $location;
 
@@ -66,7 +66,7 @@ describe("Unit: ToolsInstanceListController", function () {
                 targetProvider: _targetProvider,
                 NotificationService: notificationService,
                 ToolsInstanceResource: toolsInstanceMock,
-                ServiceInstanceResource: serviceInstanceMock,
+                ServiceInstancesResource: serviceInstancesMock,
                 ServiceResource: serviceResourceMock,
                 $state: state
             });
@@ -80,7 +80,7 @@ describe("Unit: ToolsInstanceListController", function () {
 
     it('createInstance, create instance of service', function () {
 
-        var spyCreateInstance = sinon.spy(serviceInstanceMock, 'createInstance');
+        var spyCreateInstance = sinon.spy(serviceInstancesMock, 'createInstance');
 
         createController();
         scope.createInstance('lala');
@@ -112,7 +112,7 @@ describe("Unit: ToolsInstanceListController", function () {
         ];
 
         var deferredApp = $q.defer();
-        serviceInstanceMock.deleteInstance = sinon.stub().returns(deferredApp.promise);
+        serviceInstancesMock.deleteInstance = sinon.stub().returns(deferredApp.promise);
 
         var deferredAppGetToolsInstances = $q.defer();
         toolsInstanceMock.getToolsInstances = sinon.stub().returns(deferredAppGetToolsInstances.promise);
@@ -134,7 +134,7 @@ describe("Unit: ToolsInstanceListController", function () {
 
         $rootScope.$digest();
 
-        expect( serviceInstanceMock.deleteInstance.calledWith(appId), 'deleteInstance calledWith').to.be.true;
+        expect( serviceInstancesMock.deleteInstance.calledWith(appId), 'deleteInstance calledWith').to.be.true;
 
     });
 

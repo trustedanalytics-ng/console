@@ -17,7 +17,7 @@
 (function() {
     'use strict';
 
-    App.factory('ApplicationHelper', function(ServiceInstanceResource, ApplicationResource, NotificationService, $q, $state) {
+    App.factory('ApplicationHelper', function(ServiceInstancesResource, ApplicationResource, NotificationService, $q, $state) {
 
         return {
             loadInstances: loadInstances,
@@ -29,7 +29,7 @@
         };
 
         function loadInstances(state, spaceGuid) {
-            return ServiceInstanceResource.getAll(spaceGuid)
+            return ServiceInstancesResource.getAll(spaceGuid)
                 .then(function(instances) {
                     state.setLoaded();
                     return instances;

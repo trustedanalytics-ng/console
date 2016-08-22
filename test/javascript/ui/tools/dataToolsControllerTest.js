@@ -21,7 +21,7 @@ describe("Unit: DataToolsController", function () {
         scope,
         atkInstancesResource,
         atkScoringEngineResource,
-        serviceInstanceResource,
+        serviceInstancesResource,
         notificationService,
         createController,
         state,
@@ -62,7 +62,7 @@ describe("Unit: DataToolsController", function () {
 
         };
 
-        serviceInstanceResource = {
+        serviceInstancesResource = {
             save: function() {},
             supressGenericError: sinon.stub().returnsThis(),
             withErrorMessage: sinon.stub().returnsThis(),
@@ -83,7 +83,7 @@ describe("Unit: DataToolsController", function () {
                 targetProvider: targetProvider,
                 AtkInstanceResource: atkInstancesResource,
                 AtkScoringEngineResource: atkScoringEngineResource,
-                ServiceInstanceResource: serviceInstanceResource,
+                ServiceInstancesResource: serviceInstancesResource,
                 NotificationService: notificationService
             });
         };
@@ -158,7 +158,7 @@ describe("Unit: DataToolsController", function () {
         loadAtkInstances();
 
         var postDeferred = $q.defer();
-        serviceInstanceResource.createInstance = sinon.stub().returns(postDeferred.promise);
+        serviceInstancesResource.createInstance = sinon.stub().returns(postDeferred.promise);
         postDeferred.resolve();
         var showNotificationSpied = sinon.spy(notificationService, 'success');
 
@@ -174,8 +174,8 @@ describe("Unit: DataToolsController", function () {
             space_guid: SAMPLE_SPACE.guid,
         };
 
-        expect(serviceInstanceResource.createInstance.called, 'call create service').to.be.ok;
-        expect(serviceInstanceResource.createInstance.calledWith(post.name, post.service_plan_guid,
+        expect(serviceInstancesResource.createInstance.called, 'call create service').to.be.ok;
+        expect(serviceInstancesResource.createInstance.calledWith(post.name, post.service_plan_guid,
             post.organization_guid, post.space_guid), 'call create service with proper arguments').to.be.ok;
     });
 
@@ -184,7 +184,7 @@ describe("Unit: DataToolsController", function () {
         loadAtkInstances();
 
         var postDeferred = $q.defer();
-        serviceInstanceResource.createInstance = sinon.stub().returns(postDeferred.promise);
+        serviceInstancesResource.createInstance = sinon.stub().returns(postDeferred.promise);
         postDeferred.resolve();
 
         atkInstancesResource.getAll = sinon.stub().returns($q.defer().promise);
@@ -216,7 +216,7 @@ describe("Unit: DataToolsController", function () {
         var confirmedDeferred = $q.defer();
         var deleteDeferred = $q.defer();
         var successSpied = sinon.spy(notificationService, 'success');
-        serviceInstanceResource.deleteInstance = sinon.stub().returns(deleteDeferred.promise);
+        serviceInstancesResource.deleteInstance = sinon.stub().returns(deleteDeferred.promise);
         notificationService.confirm = function() {
             return confirmedDeferred.promise;
         };
@@ -236,7 +236,7 @@ describe("Unit: DataToolsController", function () {
         notificationService.confirm = function() {
             return confirmedDeferred.promise;
         };
-        serviceInstanceResource.deleteInstance = sinon.stub().returns(deleteDeferred.promise);
+        serviceInstancesResource.deleteInstance = sinon.stub().returns(deleteDeferred.promise);
         confirmedDeferred.resolve();
         deleteDeferred.reject();
         scope.deleteInstance();

@@ -18,7 +18,7 @@ describe("Unit: ServiceInstancesController", function () {
     var controller,
         createController,
         _targetProvider,
-        serviceInstanceMock,
+        serviceInstancesMock,
         SERVICE_ID = 'qweqwe',
         $rootScope,
         $q,
@@ -30,8 +30,8 @@ describe("Unit: ServiceInstancesController", function () {
     beforeEach(module('app'));
 
     beforeEach(inject(function ($controller, TestHelpers, _$rootScope_, _$q_,
-                                ServiceInstanceResource) {
-        serviceInstanceMock = ServiceInstanceResource;
+                                ServiceInstancesResource) {
+        serviceInstancesMock = ServiceInstancesResource;
 
         _targetProvider = new TestHelpers().stubTargetProvider();
         $q = _$q_;
@@ -52,7 +52,7 @@ describe("Unit: ServiceInstancesController", function () {
                 $scope: scope,
                 targetProvider: _targetProvider,
                 NotificationService: notificationService,
-                ServiceInstanceResource: serviceInstanceMock
+                ServiceInstancesResource: serviceInstancesMock
             });
         };
     }));
@@ -63,7 +63,7 @@ describe("Unit: ServiceInstancesController", function () {
 
     it('init, no space set, do not get instances', function () {
         _targetProvider.space = null;
-        var getAllByTypeSpied = sinon.spy(serviceInstanceMock, 'getAllByType');
+        var getAllByTypeSpied = sinon.spy(serviceInstancesMock, 'getAllByType');
 
         createController();
 
@@ -73,7 +73,7 @@ describe("Unit: ServiceInstancesController", function () {
     it('init, got instances, set instances and state loaded', function () {
         var instances = getServiceInstances();
         var deferred = $q.defer();
-        serviceInstanceMock.getAllByType = sinon.stub().returns(deferred.promise);
+        serviceInstancesMock.getAllByType = sinon.stub().returns(deferred.promise);
         createController();
 
         deferred.resolve(instances);
@@ -85,7 +85,7 @@ describe("Unit: ServiceInstancesController", function () {
 
     it('init, got instances error, set status error', function () {
         var deferred = $q.defer();
-        serviceInstanceMock.getAllByType = sinon.stub().returns(deferred.promise);
+        serviceInstancesMock.getAllByType = sinon.stub().returns(deferred.promise);
 
         createController();
         deferred.reject();
@@ -95,27 +95,27 @@ describe("Unit: ServiceInstancesController", function () {
 
     it('on targetChanged, get space summary second time', function () {
         var deferred = $q.defer();
-        serviceInstanceMock.getAllByType = sinon.stub().returns(deferred.promise);
+        serviceInstancesMock.getAllByType = sinon.stub().returns(deferred.promise);
         createController();
         deferred.resolve();
         $rootScope.$broadcast('targetChanged');
         $rootScope.$digest();
-        expect(serviceInstanceMock.getAllByType.called).to.be.true;
+        expect(serviceInstancesMock.getAllByType.called).to.be.true;
     });
 
     it('on instanceCreated, get space summary second time', function () {
         var deferred = $q.defer();
-        serviceInstanceMock.getAllByType = sinon.stub().returns(deferred.promise);
+        serviceInstancesMock.getAllByType = sinon.stub().returns(deferred.promise);
         createController();
         deferred.resolve();
         scope.$emit('instanceCreated');
         $rootScope.$digest();
-        expect(serviceInstanceMock.getAllByType.called).to.be.true;
+        expect(serviceInstancesMock.getAllByType.called).to.be.true;
     });
 
     it('init, no space set, do not get space summary', function () {
         _targetProvider.space = null;
-        var getAllByTypeSpied = sinon.spy(serviceInstanceMock, 'getAllByType');
+        var getAllByTypeSpied = sinon.spy(serviceInstancesMock, 'getAllByType');
 
         createController();
 
@@ -126,10 +126,10 @@ describe("Unit: ServiceInstancesController", function () {
         var instance = { guid: 12345 };
 
         var deferredAll = $q.defer();
-        serviceInstanceMock.getAllByType = sinon.stub().returns(deferredAll.promise);
+        serviceInstancesMock.getAllByType = sinon.stub().returns(deferredAll.promise);
 
         var deferred = $q.defer();
-        serviceInstanceMock.deleteInstance = sinon.stub().returns(deferred.promise);
+        serviceInstancesMock.deleteInstance = sinon.stub().returns(deferred.promise);
 
         createController();
         controller.deleteInstance(instance);
@@ -137,7 +137,7 @@ describe("Unit: ServiceInstancesController", function () {
         deferred.resolve();
 
         $rootScope.$digest();
-        expect(serviceInstanceMock.deleteInstance.calledWith(instance.guid)).to.be.true;
+        expect(serviceInstancesMock.deleteInstance.calledWith(instance.guid)).to.be.true;
 
     });
 
@@ -145,10 +145,10 @@ describe("Unit: ServiceInstancesController", function () {
         var instance = { guid: 12345 };
 
         var deferredAll = $q.defer();
-        serviceInstanceMock.getAllByType = sinon.stub().returns(deferredAll.promise);
+        serviceInstancesMock.getAllByType = sinon.stub().returns(deferredAll.promise);
 
         var deferred = $q.defer();
-        serviceInstanceMock.deleteInstance = sinon.stub().returns(deferred.promise);
+        serviceInstancesMock.deleteInstance = sinon.stub().returns(deferred.promise);
         createController();
         deferred.resolve();
 
@@ -157,17 +157,17 @@ describe("Unit: ServiceInstancesController", function () {
         $rootScope.$digest();
 
         expect(controller.deleteState.value).to.be.equal(controller.deleteState.values.DEFAULT);
-        expect(serviceInstanceMock.deleteInstance .called).to.be.true;
+        expect(serviceInstancesMock.deleteInstance .called).to.be.true;
     });
 
     it('deleteInstance, error, set status error and show notification', function () {
         var instance = { guid: 12345 };
 
         var deferredAll = $q.defer();
-        serviceInstanceMock.getAllByType = sinon.stub().returns(deferredAll.promise);
+        serviceInstancesMock.getAllByType = sinon.stub().returns(deferredAll.promise);
 
         var deferred = $q.defer();
-        serviceInstanceMock.deleteInstance = sinon.stub().returns(deferred.promise);
+        serviceInstancesMock.deleteInstance = sinon.stub().returns(deferred.promise);
         deferred.reject({status: 500});
 
         notificationService.genericError = sinon.stub();
@@ -181,7 +181,7 @@ describe("Unit: ServiceInstancesController", function () {
     });
 
     it('deleteInstance, empty instance to delete, do not delete instance', function () {
-        var deleteSpied = sinon.spy(serviceInstanceMock, 'deleteInstance');
+        var deleteSpied = sinon.spy(serviceInstancesMock, 'deleteInstance');
 
         controller.deleteInstance();
 

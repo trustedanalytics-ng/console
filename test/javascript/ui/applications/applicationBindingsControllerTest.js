@@ -18,7 +18,7 @@ describe("Unit: ApplicationBindingsController", function () {
 
     var controller,
         createController,
-        serviceInstanceResource,
+        serviceInstancesResource,
         serviceBindingResource,
         applicationResource,
         _state,
@@ -36,9 +36,9 @@ describe("Unit: ApplicationBindingsController", function () {
 
     beforeEach(module('app'));
 
-    beforeEach(inject(function ($controller, _$rootScope_, ServiceInstanceResource,
+    beforeEach(inject(function ($controller, _$rootScope_, ServiceInstancesResource,
                                 ServiceBindingResource, applicationBindingExtractor, State, $stateParams, ApplicationResource, _$q_) {
-        serviceInstanceResource = ServiceInstanceResource;
+        serviceInstancesResource = ServiceInstancesResource;
         serviceBindingResource = ServiceBindingResource;
         applicationResource = ApplicationResource;
         _state = new State();
@@ -52,7 +52,7 @@ describe("Unit: ApplicationBindingsController", function () {
 
         $stateParams.appId = SAMPLE_APPLICATION.guid;
 
-        serviceInstanceResource.getAll = function () {
+        serviceInstancesResource.getAll = function () {
         };
         applicationResource.createBinding = sinon.stub();
         serviceBindingResource.deleteBinding = function () {

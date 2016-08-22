@@ -89,7 +89,7 @@ describe("Unit: ServiceController", function () {
                 serviceExtractor: serviceExtractor,
                 NotificationService: notificationService,
                 ServiceResource: serviceMock,
-                ServiceInstanceResource: serviceInstanceMock,
+                ServiceInstancesResource: serviceInstanceMock,
                 $scope: scope,
                 targetProvider: _targetProvider,
                 ngDialog: {},

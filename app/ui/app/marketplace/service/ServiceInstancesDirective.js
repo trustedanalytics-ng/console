@@ -16,7 +16,7 @@
 (function () {
     "use strict";
 
-    App.controller('ServiceInstancesController', function (ServiceInstanceResource, $scope, targetProvider, State,
+    App.controller('ServiceInstancesController', function (ServiceInstancesResource, $scope, targetProvider, State,
         NotificationService) {
 
         var self = this,
@@ -31,7 +31,7 @@
         self.deleteState = new State().setDefault();
 
         self.getInstances = function () {
-            getInstancesData(self, targetProvider.getSpace(), id, ServiceInstanceResource);
+            getInstancesData(self, targetProvider.getSpace(), id, ServiceInstancesResource);
         };
 
         var updateInstances = function () {
@@ -60,7 +60,7 @@
             }
 
             self.deleteState.setPending();
-            ServiceInstanceResource
+            ServiceInstancesResource
                 .supressGenericError()
                 .deleteInstance(instance.guid)
                 .then(function () {
@@ -100,8 +100,8 @@
     });
 
 
-    function getInstancesData(self, space, serviceId, ServiceInstanceResource) {
-        ServiceInstanceResource
+    function getInstancesData(self, space, serviceId, ServiceInstancesResource) {
+        ServiceInstancesResource
             .withErrorMessage('Failed to retrieve service instances')
             .getAllByType(space.guid, serviceId)
             .then(function (instances) {

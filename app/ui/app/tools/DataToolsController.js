@@ -17,7 +17,7 @@
     "use strict";
 
     App.controller('DataToolsController', function ($scope, $http, $q, targetProvider, AtkInstanceResource, State,
-        NotificationService, serviceExtractor, ServiceResource, ServiceInstanceResource, ApplicationResource,
+        NotificationService, serviceExtractor, ServiceResource, ServiceInstancesResource, ApplicationResource,
         spaceUserService, UserProvider) {
 
         var GATEWAY_TIMEOUT_ERROR = 504;
@@ -42,7 +42,7 @@
 
         $scope.createInstance = function (name) {
             $scope.newInstanceState.setPending();
-            ServiceInstanceResource
+            ServiceInstancesResource
                 .supressGenericError()
                 .createInstance(
                     name,
@@ -75,7 +75,7 @@
                 .then(function () {
                     $scope.state.setPending();
                     $scope.deleteState.setPending();
-                    ServiceInstanceResource
+                    ServiceInstancesResource
                         .withErrorMessage('Error while deleting a service instance')
                         .deleteInstance(serviceGuid)
                         .then(function() {
