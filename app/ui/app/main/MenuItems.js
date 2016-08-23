@@ -127,15 +127,11 @@
                     "text": "Manage organization users",
                     "sref": "app.manage.orgusers",
                     "access": ["admin", "currentOrgManager"]
-                }, {
-                    "text": "Manage space users",
-                    "sref": "app.manage.spaceusers",
-                    "access": ["admin", "currentOrgManager"]
-                }, {
+                } /*, {
                     "text": "Manage organizations",
                     "sref": "app.manage.organizations.manage",
                     "access": ["admin", "anyOrgManager"]
-                }
+                } */
             ],
             "access": ["admin", "anyOrgManager"]
         }, {

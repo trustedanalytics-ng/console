@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-App.config(function ($stateProvider, $urlRouterProvider, LazyLoadProvider, AppConfig, UserView, $sceProvider) {
+App.config(function ($stateProvider, $urlRouterProvider, LazyLoadProvider, AppConfig, $sceProvider) {
     'use strict';
 
     // This is workaround for marketplace icons not loading
@@ -407,25 +407,7 @@ App.config(function ($stateProvider, $urlRouterProvider, LazyLoadProvider, AppCo
             targetHeader: {org: true, space: false, managedOnly: true},
             controller: 'ManageUsersController',
             controllerAs: 'ctrl',
-            templateUrl: getViewPath('manageusers/users/user.html'),
-            resolve: angular.extend(LazyLoadProvider.load(['parsley']), {
-                userViewType: function () {
-                    return UserView.ORGANIZATIONS;
-                }
-            })
-        })
-        .state('app.manage.spaceusers', {
-            url: '/spaceusers',
-            title: 'Manage users in your space',
-            targetHeader: {org: true, space: true, managedOnly: true},
-            controller: 'ManageUsersController',
-            controllerAs: 'ctrl',
-            templateUrl: getViewPath('manageusers/users/user.html'),
-            resolve: angular.extend(LazyLoadProvider.load(['parsley']), {
-                userViewType: function () {
-                    return UserView.SPACES;
-                }
-            })
+            templateUrl: getViewPath('manageusers/users/user.html')
         })
         .state('app.manage.organizations', {
             url: '/organizations',

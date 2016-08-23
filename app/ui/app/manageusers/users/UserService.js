@@ -16,14 +16,51 @@
 (function () {
     "use strict";
 
-    App.factory('UserService', function ($injector, UserView) {
-        return function (userViewType) {
-            if (userViewType === UserView.ORGANIZATIONS) {
-                return $injector.get('orgUserService');
+    App.factory('UserService', function (Restangular, targetProvider, $q) {
+
+        var service = Restangular.service("orgs");
+
+        function getOrgId() {
+            return (targetProvider.getOrganization()).guid;
+        }
+
+        function getUsersResource() {
+            return service.one(getOrgId()).all("users");
+        }
+
+        service.getAll = function () {
+            if (getOrgId()) {
+                return getUsersResource().getList();
             }
-            else if (userViewType === UserView.SPACES) {
-                return $injector.get('spaceUserService');
-            }
+
+            var deferred = $q.defer();
+            deferred.reject();
+            return deferred.promise;
         };
+
+        service.targetAvailable = function () {
+            return typeof getOrgId() !== 'undefined';
+        };
+
+        service.addUser = function (user) {
+            return getUsersResource().post(user);
+        };
+
+        //service.updateUserRoles = function (user) {
+        //    return getUsersResource().one(user.guid).customPOST({roles: user.roles});
+        //};
+
+        service.getRoles = function () {
+            return {
+                "admin": "Organization Admin",
+                "user": "Regular User"
+            };
+        };
+
+        service.deleteUser = function (userId) {
+            return getUsersResource().one(userId).remove();
+        };
+
+        return service;
     });
 }());

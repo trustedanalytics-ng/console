@@ -21,12 +21,12 @@
 
         return {
 
-            deleteUser: function (user, state, userViewType) {
-                return NotificationService.confirm('confirm-delete', {userToDelete: user, userViewType: userViewType})
+            deleteUser: function (user, state) {
+                return NotificationService.confirm('confirm-delete', {userToDelete: user})
                     .then(function onConfirmDelete() {
                         state.setPending();
                         var userId = user.guid;
-                        return UserService(userViewType).deleteUser(userId);
+                        return UserService.deleteUser(userId);
                     })
                     .then(function () {
                         NotificationService.success('User ' + user.username + ' has been deleted');

@@ -23,16 +23,15 @@
 table.table.user-list(ng-show='state.isLoaded() && users.length > 0', ng-table='tableParams', template-header="users-table-header")
     tr.user-list-item(data-ng-repeat='user in $data')
         td {{user.username}}
-        td(ng-repeat="(avRole, avRoleName) in availableRoles")
+        td(ng-repeat="(avRole, avRoleName) in notUserRoles")
             .checkbox.c-checkbox
                 label
                     input(type="checkbox"
-                            ng-disabled="isCheckboxDisabled(avRole, user.guid, user.username)"
                             ng-model="roleCheckboxes[user.guid][avRole]"
                             ng-click="updateUserRoles(user, avRole)")
                     span.fa.fa-check
         td
-            a.delete-user.fa-times.fa(ng-click='deleteUser(user)', ng-hide="roleCheckboxes[user.guid]['managers'] && countManagers() <= 1")
+            a.delete-user.fa-times.fa(ng-click='deleteUser(user)', ng-show="isDeleteButtonAvailable(user)")
 
 div(ng-show='state.isLoaded() && users.length === 0')
     | No users available
@@ -40,7 +39,7 @@ div(ng-show='state.isLoaded() && users.length === 0')
 script(type="text/ng-template" id="users-table-header")
     tr
         th(sortable="'username'") Username
-        th(ng-repeat="(avRole, avRoleName) in availableRoles") {{avRoleName}}
+        th(ng-repeat="(avRole, avRoleName) in notUserRoles") {{avRoleName}}
         th
 
 script(type="text/ng-template", id="confirm-delete")
@@ -48,8 +47,7 @@ script(type="text/ng-template", id="confirm-delete")
         p
             | The user will be removed from this
             = ' '
-            span(ng-if="data.userViewType === 1") organization,
-            span(ng-if="data.userViewType === 2") space,
+            span organization,
             = ' '
             | are you sure you want to proceed with removing
             = ' '

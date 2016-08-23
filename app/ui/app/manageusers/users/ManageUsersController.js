@@ -17,11 +17,9 @@
     "use strict";
 
     /*jshint newcap: false*/
-    App.controller('ManageUsersController', function ($scope, UserService, userViewType, ngTableParams, State,
-        UserRoleMapperService, UsersListService, UserActionsNotificationsService, UserProvider, UserView, ManageUsersHelper) {
+    App.controller('ManageUsersController', function ($scope, UserService, ngTableParams, State,
+        UserRoleMapperService, UsersListService, UserActionsNotificationsService, UserProvider, ManageUsersHelper) {
         $scope.state = new State();
-        $scope.viewTypes = UserView;
-        $scope.viewType = userViewType;
         $scope.changeTab = function (tab) {
             $scope.tab = tab;
         };
@@ -30,7 +28,7 @@
             $scope.currentUser = user;
         });
 
-        var userService = UserService(userViewType);
+        var userService = UserService;
 
         /*jshint latedef: false */
         loadUsers();
@@ -38,26 +36,21 @@
         $scope.$on('targetChanged', loadUsers);
 
         $scope.targetAvailable = userService.targetAvailable;
-        $scope.targetType = userService.getTargetType();
         $scope.userToAdd = {};
         $scope.availableRoles = userService.getRoles();
-        $scope.roleCheckboxes = {};
+        $scope.notUserRoles = _.omit($scope.availableRoles, 'user');
+        //$scope.roleCheckboxes = {};
 
-        $scope.$watch('users', function () {
-            $scope.roleCheckboxes = UserRoleMapperService.mapRolesToCheckboxes($scope.users);
-            $scope.countManagers();
-        });
+        //$scope.$watch('users', function () {
+        //    $scope.roleCheckboxes = UserRoleMapperService.mapRolesToCheckboxes($scope.users);
+        //});
 
-        $scope.updateUserRoles = function (user) {
-            ManageUsersHelper.updateUserRoles(user, $scope.roleCheckboxes, $scope.users, userService);
-        };
-
-        $scope.countManagers = function () {
-            return ManageUsersHelper.countManagers($scope.users);
-        };
+        //$scope.updateUserRoles = function (user) {
+        //    ManageUsersHelper.updateUserRoles(user, $scope.roleCheckboxes, $scope.users, userService);
+        //};
 
         $scope.deleteUser = function (userToBeDeleted) {
-            UserActionsNotificationsService.deleteUser(userToBeDeleted, $scope.state, userViewType)
+            UserActionsNotificationsService.deleteUser(userToBeDeleted, $scope.state)
                 .then(function onSuccess() {
                     loadUsers();
                 });
@@ -76,15 +69,14 @@
                 });
         };
 
-        $scope.isCheckboxDisabled = function (avRole, guid, username) {
-            return avRole === 'managers' && $scope.roleCheckboxes[guid][avRole] &&
-                ($scope.countManagers() <= 1 || $scope.currentUser.email === username);
-        };
-
         function resetAddUser() {
             $scope.userToAdd = {};
             $scope.changeTab(1);
         }
+
+        $scope.isDeleteButtonAvailable = function (user) {
+            return user.username !== $scope.currentUser.email;
+        };
 
         function loadUsers() {
             $scope.state.setPending();

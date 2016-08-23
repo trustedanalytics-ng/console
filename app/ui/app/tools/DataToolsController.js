@@ -17,8 +17,7 @@
     "use strict";
 
     App.controller('DataToolsController', function ($scope, $http, $q, targetProvider, AtkInstanceResource, State,
-        NotificationService, serviceExtractor, ServiceResource, ServiceInstancesResource, spaceUserService,
-            UserProvider) {
+        NotificationService, serviceExtractor, ServiceResource, ServiceInstancesResource) {
 
         var GATEWAY_TIMEOUT_ERROR = 504;
         var state = new State().setPending();
@@ -35,10 +34,10 @@
 
         $scope.$on('targetChanged', function () {
             org = targetProvider.getOrganization();
-            initializeInstances($scope, $q, org, AtkInstanceResource, spaceUserService, NotificationService, UserProvider);
+            initializeInstances($scope, org, AtkInstanceResource, NotificationService);
         });
 
-        initializeInstances($scope, $q, org, AtkInstanceResource, spaceUserService, NotificationService, UserProvider);
+        initializeInstances($scope, org, AtkInstanceResource, NotificationService);
 
         $scope.createInstance = function (name) {
             $scope.newInstanceState.setPending();
@@ -89,14 +88,11 @@
         };
     });
 
-    function initializeInstances($scope, $q, org, AtkInstanceResource, spaceUserService, NotificationService, UserProvider) {
+    function initializeInstances($scope, org, AtkInstanceResource, NotificationService) {
         $scope.state.setPending();
         getAtkInstances($scope, org, AtkInstanceResource)
-            .then(function() {
-                return canCurrentUserCreateInstance($scope, $q, org, spaceUserService, UserProvider);
-            })
-            .then(function(canCreate) {
-                if (canCreate) {
+            .then(function () {
+                if (!$scope.instances) {
                     var defaultInstanceName = "atk-" + org.name;
                     confirmCreatingImmediateInstance($scope, NotificationService, defaultInstanceName);
                 }
@@ -114,25 +110,6 @@
             });
     }
 
-    function canCurrentUserCreateInstance($scope, $q, org, spaceUserService, UserProvider) {
-        var deferred = $q.defer();
-        if (org.guid && org.name && !$scope.instances) {
-            $scope.state.setPending();
-            if(UserProvider.isAdmin()) {
-                deferred.resolve(true);
-            } else {
-                spaceUserService.getSpaceUser()
-                    .then(function(currentUser) {
-                        deferred.resolve(isSpaceDeveloper(currentUser));
-                    })
-                    .catch(deferred.reject);
-            }
-        } else {
-            deferred.resolve(false);
-        }
-        return deferred.promise;
-    }
-
     function confirmCreatingImmediateInstance($scope, NotificationService, defaultInstanceName) {
         NotificationService.confirm('confirm-creating-instance', {instanceToCreate: defaultInstanceName})
             .then(function (instanceToCreate) {
@@ -144,12 +121,4 @@
         notificationService.success("Creating an TAP Analytics Toolkit instance may take a while. You can try to " +
         "refresh the page after in a minute or two.", "Task scheduled");
     }
-
-    function isSpaceDeveloper(user) {
-        if (user && _.contains(user.roles, "developers")) {
-            return true;
-        }
-        return false;
-    }
-
 }());
