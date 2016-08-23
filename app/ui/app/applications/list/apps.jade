@@ -27,7 +27,7 @@ h3
                     | {{ app.name }}
 
                 td.status(data-title="'Status'", sortable="'state'", filter="{ 'state': 'select' }", filter-data='appStates()')
-                    app-state(state="app.state")
+                    | {{ app.state }}
 
                 td(data-title="'Instances'", sortable="'running_instances'")
                     | {{ app.running_instances }}
@@ -39,7 +39,7 @@ h3
                     span(ng-if='!app.urls.length') -
 
                 td
-                    a(ui-sref='app.application({ appId: app.guid })') See details &raquo;
+                    a(ui-sref='app.application({ appId: app.id })') See details &raquo;
 
         div(ng-if='!applications.length')
             | You have no applications

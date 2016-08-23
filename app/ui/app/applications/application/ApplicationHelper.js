@@ -20,21 +20,12 @@
     App.factory('ApplicationHelper', function(ServiceInstancesResource, ApplicationResource, NotificationService, $q, $state) {
 
         return {
-            loadInstances: loadInstances,
             restageApplication: restageApplication,
             startApplication: startApplication,
             stopApplication: stopApplication,
-            loadApplicationSummary: loadApplicationSummary,
+            getApplication: getApplication,
             deleteApp: deleteApp
         };
-
-        function loadInstances(state, spaceGuid) {
-            return ServiceInstancesResource.getAll(spaceGuid)
-                .then(function(instances) {
-                    state.setLoaded();
-                    return instances;
-                });
-        }
 
         function restageApplication(state, appId) {
             instanceAction(state, appId,'RESTAGING');
@@ -71,39 +62,16 @@
                 });
         }
 
-        function loadApplicationSummary(state, appId) {
-            var application, instances;
-            return ApplicationResource.getApplication(appId)
-                .then(function onSuccess(_application_) {
-                    application = _application_;
-                    application.env = application.environment_json ?
-                        Object.keys(application.environment_json).map(function (k) {
-                            return { key: k, value: application.environment_json[k] };
-                        }) : [];
-                })
-                .then(function onSuccess() {
-                    return loadInstances(state, application.space_guid);
-                })
-                .then(function(_instances_) {
-                    instances = _instances_;
-                })
-                .then(function() {
-                    return {
-                        application: application,
-                        instances: instances
-                    };
-                })
-                .catch(function onError(response) {
-                    state.setError(response.status);
-                    return $q.reject();
-                });
+        function getApplication(appId) {
+            return ApplicationResource
+                .withErrorMessage('Failed to load application details')
+                .getApplication(appId);
         }
 
         function deleteApp(state, appId) {
             state.setPending();
 
-            ApplicationResource
-                .withErrorMessage('Deleting application failed')
+            /*ApplicationResource
                 .getOrphanServices(appId)
                 .then(function onSuccess(servicesToDelete) {
                     state.setLoaded();
@@ -121,9 +89,16 @@
                         .finally(function onError() {
                             state.setLoaded();
                         });
+                })*/
+            ApplicationResource
+                .withErrorMessage('Deleting application failed')
+                .deleteApplication(appId)
+                .then(function onSuccess() {
+                    $state.go('app.applications');
+                    NotificationService.success('Application has been deleted');
                 })
                 .catch(function onError() {
-                    state.setError();
+                    state.setLoaded();
                 });
         }
     });

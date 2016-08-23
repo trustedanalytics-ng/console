@@ -17,7 +17,7 @@
     "use strict";
 
     App.controller('ApplicationsController', function (ApplicationResource, targetProvider, $scope, ngTableParams,
-        $q, AtkInstanceResource, CommonTableParams, State) {
+        $q, AtkInstanceResource, CommonTableParams, State, ApplicationStates) {
 
         $scope.state = new State().setPending();
         $scope.details = [];
@@ -25,17 +25,10 @@
         function getApplications() {
             return ApplicationResource
                 .withErrorMessage('Failed to load applications list')
-                .getAll(targetProvider.getSpace().guid)
-                .then(function (applications) {
-                    return applications;
-                });
+                .getAll(targetProvider.getOrganization().guid);
         }
 
         var updateApplications = function () {
-            if (_.isEmpty(targetProvider.getSpace())) {
-                return;
-            }
-
             $scope.state.setPending();
             getApplications()
                 .then(function (applications) {
@@ -58,16 +51,21 @@
 
         $scope.appStates = function () {
             var def = $q.defer();
-            def.resolve([
-                {id: 'STARTED', title: 'STARTED'},
-                {id: 'STARTING', title: 'STARTING'},
-                {id: 'STOPPED', title: 'STOPPED'}
-            ]);
+            def.resolve(_.chain(ApplicationStates)
+                .values()
+                .map(function(v) {
+                    return {
+                        id: v,
+                        title: v
+                    };
+                })
+                .value()
+            );
             return def;
         };
 
         $scope.checkStatusProblem = function (app) {
-            return app.running_instances === 0 && app.state === 'STARTED';
+            return app.running_instances === 0 && app.state === ApplicationStates.RUNNING;
         };
     });
 }());

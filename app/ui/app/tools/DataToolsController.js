@@ -17,8 +17,8 @@
     "use strict";
 
     App.controller('DataToolsController', function ($scope, $http, $q, targetProvider, AtkInstanceResource, State,
-        NotificationService, serviceExtractor, ServiceResource, ServiceInstancesResource, ApplicationResource,
-        spaceUserService, UserProvider) {
+        NotificationService, serviceExtractor, ServiceResource, ServiceInstancesResource, spaceUserService,
+            UserProvider) {
 
         var GATEWAY_TIMEOUT_ERROR = 504;
         var state = new State().setPending();

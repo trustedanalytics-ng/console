@@ -23,6 +23,9 @@
   "path": "/catalog",
   "name": "servicecatalog"
 }, {
+  "path": "/applications",
+  "name": "servicecatalog"
+}, {
   "path": "/orgs/[^/]+/name",
   "name": "user-management"
 }, {
@@ -33,9 +36,6 @@
   "name": "router-metrics-provider"
 }, {
   "path": "/orgs/[^/]+/users",
-  "name": "user-management"
-}, {
-  "path": "/spaces/[^/]+/users",
   "name": "user-management"
 }, {
   "path": "/orgs/[^/]+/atkinstances",

@@ -17,18 +17,18 @@
     "use strict";
 
     App.factory('ApplicationResource', function (Restangular) {
-        var service = Restangular.service("apps");
+        var service = Restangular.service("applications");
 
         service.deleteApplication = function (id, cascade) {
             return this.one(id).remove({cascade: cascade});
         };
 
-        service.getAll = function (spaceId) {
-            return this.getList({space: spaceId});
+        service.getAll = function (organizationId) {
+            return this.getList({org: organizationId});
         };
 
-        service.getAllByServiceType = function (spaceId, serviceLabel) {
-            return this.getList({space: spaceId, service_label: serviceLabel});
+        service.getAllByServiceType = function (organizationId, serviceLabel) {
+            return this.getList({org: organizationId, service_label: serviceLabel});
         };
 
         service.getApplication = function (id) {

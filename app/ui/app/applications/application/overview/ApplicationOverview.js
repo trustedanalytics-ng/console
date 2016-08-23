@@ -19,7 +19,6 @@
     App.component('applicationOverview', {
         bindings: {
             application: '<',
-            instances: '<',
             onDelete: '&',
             onRestage: '&',
             onStart: '&',
@@ -27,16 +26,13 @@
             onRefresh: '&'
         },
         templateUrl: 'app/applications/application/overview/overview.html',
-        controller: function () {
-            this.getAppInstances = function () {
-                var application = this.application || {};
-                return _.filter(this.instances, function (instance) {
-                    return _.findWhere(instance.bound_apps, {
-                        guid: application.guid
-                    });
-                });
-            };
+        controller: function($scope, ApplicationStates) {
+            this.ApplicationStates = ApplicationStates;
 
+            this.checkStatusProblem = function () {
+                var app = $scope.application;
+                return app && app.running_instances === 0 && app.state === ApplicationStates.RUNNING;
+            };
         }
     });
 

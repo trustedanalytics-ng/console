@@ -19,7 +19,6 @@ describe("Unit: ApplicationController", function () {
     var controller,
         createController,
         applicationResource,
-        serviceInstancesResource,
         notificationService,
         applicationHelper,
         state,
@@ -41,11 +40,10 @@ describe("Unit: ApplicationController", function () {
        targetProvider.refresh = sinon.stub().returns([]);
     }));
 
-    beforeEach(inject(function ($controller, ApplicationResource,
-                                ServiceInstancesResource, $routeParams,
-                                State, _$q_, $rootScope, _$state_, ApplicationHelper) {
+    beforeEach(inject(function ($controller, ApplicationResource,  $routeParams, State, _$q_, $rootScope,
+            _$state_, ApplicationHelper) {
+
         state = new State();
-        serviceInstancesResource = ServiceInstancesResource;
         applicationResource = ApplicationResource;
         applicationHelper = ApplicationHelper;
         $q = _$q_;
@@ -97,40 +95,13 @@ describe("Unit: ApplicationController", function () {
         expect($scope.state.value, 'state').to.be.equal(state.values.ERROR);
     });
 
-    it('getApplication success, set application and download instances', function () {
+    it('getApplication success, set application', function () {
         var application = { guid: 'a1'};
         createAndInitializeController(application);
         $scope.$digest();
 
         expect($scope.application, 'application').to.be.deep.equal(application);
         expect($scope.state.value, 'state').to.be.equal(state.values.LOADED);
-        expect(serviceInstancesResource.getAll.called).to.be.true;
-    });
-
-    it('getApplication success and get instances success, download instances', function () {
-        var application = { guid: 'a1'};
-        var instances = getSampleInstances();
-        createAndInitializeController(application, instances);
-        expect($scope.instances, 'instances').to.deep.be.equal(instances);
-        expect($scope.state.value, 'state').to.be.equal(state.values.LOADED);
-    });
-
-    it('getApplication success but get instances error, set state error', function () {
-        var deferred = $q.defer();
-        var application = { guid: 'a1'};
-        applicationResource.getApplication = sinon.stub().returns(deferred.promise);
-        deferred.resolve(application);
-
-        getSampleInstances();
-        var deferredInstances = $q.defer();
-        serviceInstancesResource.getAll = sinon.stub().returns(deferredInstances.promise);
-        deferredInstances.reject({ status: 404 });
-
-        createController();
-
-        $scope.$digest();
-
-        expect($scope.state.isError(), 'state').to.be.true;
     });
 
     it('restage, set restage status', function(){
@@ -168,7 +139,7 @@ describe("Unit: ApplicationController", function () {
 
         $scope.$digest();
 
-        expect(applicationResource.getOrphanServices.calledWith(APP_ID)).to.be.true;
+        //expect(applicationResource.getOrphanServices.calledWith(APP_ID)).to.be.true;
         expect(applicationResource.deleteApplication.calledWith(APP_ID)).to.be.true;
         expect($state.go.called).to.be.true;
     });
@@ -264,12 +235,6 @@ describe("Unit: ApplicationController", function () {
         application = application || { guid: APP_ID };
         applicationResource.getApplication = sinon.stub().returns(deferred.promise);
         deferred.resolve(application);
-
-        instances = instances || [];
-
-        var deferredInstances = $q.defer();
-        serviceInstancesResource.getAll = sinon.stub().returns(deferredInstances.promise);
-        deferredInstances.resolve(instances);
 
         createController();
         $scope.$digest();

@@ -34,7 +34,6 @@ describe("Unit: AppsController", function () {
         $q = _$q_;
         $scope = $rootScope.$new();
         _targetProvider = (new TestHelpers()).stubTargetProvider({});
-        _targetProvider.space = space;
         _targetProvider.org = org;
 
         applicationResource = {
@@ -61,14 +60,6 @@ describe("Unit: AppsController", function () {
         createController();
         expect($scope.state.isPending(), 'pending').to.be.true;
         expect(applicationResource.getAll).to.be.calledOnce;
-    });
-
-    it('init, empty space, do not request for applications', function () {
-        _targetProvider.space = null;
-
-        createController();
-
-        expect(applicationResource.getAll).to.be.not.called;
     });
 
     it('on targetChanged, get applications', function () {

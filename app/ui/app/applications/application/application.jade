@@ -17,7 +17,7 @@
 
     h3(ng-bind='application.name')
 
-    div(ng-show='true || state.isLoaded()')
+    //div
         ul.nav.nav-tabs
             li(ng-class='{active: isTabActive("app.application")}')
                 a(ui-sref='app.application({appid: appId})') Overview

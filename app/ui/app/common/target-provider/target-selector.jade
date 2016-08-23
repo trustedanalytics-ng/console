@@ -16,17 +16,6 @@
 
 .target-container
 
-   .group-section(ng-if="targetHeader.space")
-      label Space:
-      .btn-group(uib-dropdown='' is-open='targetSpace.listIsOpen')
-         button.btn.btn-default.space-button(type='button', uib-dropdown-toggle="", ng-disabled="!targetSpace.available.length")
-            | {{ targetSpace.selected.name }}
-            span.caret
-
-         ul(aria-labelledby='spaceDropdown', role='menu' target-selector-dropdown).dropdown-menu.dropdown-menu-right.animated.fadeInUpShort
-            li(ng-repeat='space in targetSpace.available')
-               a(ng-click='targetSpace.set(space, $event)') {{ space.name }}
-
    .group-section(ng-if="targetHeader.org")
       label Organization:
       .btn-group(uib-dropdown='' is-open='organization.listIsOpen')

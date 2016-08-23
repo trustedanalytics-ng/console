@@ -53,9 +53,13 @@
 
 .application {
 
+  .table {
+    table-layout: fixed;
+  }
 
   .table td:first-child {
     font-weight: bold;
+    width: 200px;
   }
 
   .env-list {
