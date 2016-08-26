@@ -39,11 +39,11 @@
             "sref": "app.dashboard",
             "icon": "icon-speedometer"
         }, {
-            "text": "Data catalog",
+            "text": "Data Catalog",
             "sref": "app.datacatalog",
             "icon": "icon-folder-alt"
         }, {
-            "text": "Model catalog",
+            "text": "Model Catalog",
             "sref": "app.modelcatalog",
             "icon": "icon-folder-alt",
             "tool": "h2o"
@@ -52,11 +52,11 @@
             "icon": "icon-hourglass",
             "items": [
                 {
-                    "text": "Import data",
+                    "text": "Import Data",
                     "sref": "app.jobsscheduler.importdata"
                 },
                 {
-                    "text": "Job browser",
+                    "text": "Job Browser",
                     "sref": "app.jobsscheduler.jobs.workflowjobs"
                 }
             ]
@@ -116,7 +116,7 @@
 
             ]
         }, {
-            "text": "User management",
+            "text": "User Management",
             "icon": "icon-people",
             "items": [
                 {
@@ -124,15 +124,15 @@
                     "sref": "app.manage.invite.send",
                     "access": ["admin"]
                 }, {
-                    "text": "Manage organization users",
+                    "text": "Manage Organization Users",
                     "sref": "app.manage.orgusers",
                     "access": ["admin", "currentOrgManager"]
                 }, {
-                    "text": "Manage space users",
+                    "text": "Manage Space Users",
                     "sref": "app.manage.spaceusers",
                     "access": ["admin", "currentOrgManager"]
                 }, {
-                    "text": "Manage organizations",
+                    "text": "Manage Organizations",
                     "sref": "app.manage.organizations.manage",
                     "access": ["admin", "anyOrgManager"]
                 }
