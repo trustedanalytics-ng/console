@@ -17,14 +17,10 @@ describe("Unit: UsersRoleMapperService", function () {
     var UserRoleMapperService;
     var checkboxes = {
         "1234": {
-            billing_managers: false,
-            managers: false,
-            auditors: true
+            admin: true
         },
         "2345": {
-            billing_managers: false,
-            managers: true,
-            auditors: true
+            admin: false
         }
     };
     beforeEach(module('app'));
@@ -35,31 +31,37 @@ describe("Unit: UsersRoleMapperService", function () {
 
     it('should convert user roles to checkboxes', function() {
         var roles = UserRoleMapperService.mapCheckboxesToRoles({guid: "1234"}, checkboxes);
-        expect(roles).to.be.deep.equal(["auditors"]);
+        expect(roles).to.be.deep.equal(["admin"]);
     });
 
     it('should convert user checkboxes to roles', function() {
         var users = [
             {
                 guid: "1234",
-                roles: ["auditors"]
+                role: "admin"
             },
             {
                 guid: "2345",
-                roles: ["auditors", "managers"]
+                role: null
+            },
+            {
+                guid: "3456"
             }
         ];
 
         var expectedCheckboxes = {
             "1234": {
-                auditors: true
+                admin: true
             },
             "2345": {
-                auditors: true,
-                managers: true
+                admin: false
+            },
+            "3456": {
+                admin: false
             }
         };
         var resultCheckboxes = UserRoleMapperService.mapRolesToCheckboxes(users);
+        console.log(resultCheckboxes);
         expect(resultCheckboxes).to.be.deep.equal(expectedCheckboxes);
     });
 

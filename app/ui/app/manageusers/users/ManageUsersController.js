@@ -39,11 +39,11 @@
         $scope.userToAdd = {};
         $scope.availableRoles = userService.getRoles();
         $scope.notUserRoles = _.omit($scope.availableRoles, 'user');
-        //$scope.roleCheckboxes = {};
+        $scope.roleCheckboxes = {};
 
-        //$scope.$watch('users', function () {
-        //    $scope.roleCheckboxes = UserRoleMapperService.mapRolesToCheckboxes($scope.users);
-        //});
+        $scope.$watch('users', function () {
+            $scope.roleCheckboxes = UserRoleMapperService.mapRolesToCheckboxes($scope.users);
+        });
 
         //$scope.updateUserRoles = function (user) {
         //    ManageUsersHelper.updateUserRoles(user, $scope.roleCheckboxes, $scope.users, userService);
