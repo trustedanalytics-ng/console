@@ -36,15 +36,14 @@
 
         function onTargetChanged() {
             $scope.organization = targetProvider.getOrganization();
-            $scope.space = targetProvider.getSpace();
-            getInstances($scope, ToolsInstanceResource, $scope.organization.guid, $scope.space.guid, $scope.instanceType);
+            getInstances($scope, ToolsInstanceResource, $scope.organization.guid, $scope.instanceType);
         }
 
         $scope.createInstance = function (name) {
             $scope.state.setPending();
             ServiceInstancesResource
                 .supressGenericError()
-                .createInstance(name, $scope.servicePlanGuid, $scope.organization.guid, $scope.space.guid)
+                .createInstance(name, $scope.servicePlanGuid, $scope.organization.guid)
                 .then(function () {
                     NotificationService.success('Creating an ' + $scope.brokerName +
                         ' instance may take a while. You can try to refresh the page after few seconds.');
@@ -58,7 +57,7 @@
                     }
                 })
                 .finally(function () {
-                    getInstances($scope, ToolsInstanceResource, $scope.organization.guid, $scope.space.guid, $scope.instanceType);
+                    getInstances($scope, ToolsInstanceResource, $scope.organization.guid, $scope.instanceType);
                     $scope.newInstanceName = "";
                 });
         };
@@ -76,7 +75,7 @@
                         ' may take a while. You can try to refresh the page after few seconds.');
                 })
                 .finally(function () {
-                    getInstances($scope, ToolsInstanceResource, $scope.organization.guid, $scope.space.guid, $scope.instanceType);
+                    getInstances($scope, ToolsInstanceResource, $scope.organization.guid, $scope.instanceType);
                 });
         };
 
@@ -111,10 +110,10 @@
         });
     };
 
-    function getInstances($scope, ToolsInstanceResource, orgId, spaceId, serviceType) {
-        if (orgId && spaceId && serviceType) {
+    function getInstances($scope, ToolsInstanceResource, orgId, serviceType) {
+        if (serviceType) {
             $scope.state.setPending();
-            ToolsInstanceResource.getToolsInstances(orgId, spaceId, serviceType)
+            ToolsInstanceResource.getToolsInstances(orgId, serviceType)
                 .then(function (response) {
                     $scope.instances = getInstancesFromResponse(response);
                     $scope.anyRows = (Object.keys($scope.instances).length) ? true : false;

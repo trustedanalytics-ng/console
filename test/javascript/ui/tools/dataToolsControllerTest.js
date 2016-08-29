@@ -27,7 +27,6 @@ describe("Unit: DataToolsController", function () {
         state,
         $q,
         SAMPLE_ORGANIZATION = { guid: 'o1' },
-        SAMPLE_SPACE = { guid: 's1' },
         SAMPLE_ATK_RESPONSE = Object.freeze({
             "instances" : [{
                 "name" : "atk1",
@@ -55,7 +54,7 @@ describe("Unit: DataToolsController", function () {
         scope = rootScope.$new();
         $q = _$q_;
         atkInstancesResource = {
-            getAll: function() {}
+            getAll: sinon.stub().returns($q.defer().promise)
         };
 
         atkScoringEngineResource = {
@@ -118,16 +117,6 @@ describe("Unit: DataToolsController", function () {
         expect(scope.organization).to.be.deep.equal(SAMPLE_ORGANIZATION);
     });
 
-    it('targetChanged, empty organization, do not get atk instances', function () {
-        var getAllSpied = sinon.spy(atkInstancesResource, 'getAll');
-        targetProvider.organization = {};
-        targetProvider.empty = false;
-
-        rootScope.$broadcast('targetChanged');
-
-        expect(getAllSpied.called).to.be.not.ok;
-    });
-
     it('targetChanged, get atk instances', function () {
         var orgId = null;
         atkInstancesResource.getAll = function(_orgId) {
@@ -171,12 +160,11 @@ describe("Unit: DataToolsController", function () {
             name: name,
             organization_guid: SAMPLE_ORGANIZATION.guid,
             service_plan_guid: SAMPLE_ATK_RESPONSE.service_plan_guid,
-            space_guid: SAMPLE_SPACE.guid,
         };
 
         expect(serviceInstancesResource.createInstance.called, 'call create service').to.be.ok;
         expect(serviceInstancesResource.createInstance.calledWith(post.name, post.service_plan_guid,
-            post.organization_guid, post.space_guid), 'call create service with proper arguments').to.be.ok;
+            post.organization_guid), 'call create service with proper arguments').to.be.ok;
     });
 
     it('createNewInstance, success, load atk instances', function () {
@@ -251,7 +239,6 @@ describe("Unit: DataToolsController", function () {
             return deferred.promise;
         };
         targetProvider.organization = angular.copy(SAMPLE_ORGANIZATION);
-        targetProvider.space = angular.copy(SAMPLE_SPACE);
         targetProvider.empty = false;
 
         rootScope.$broadcast('targetChanged');

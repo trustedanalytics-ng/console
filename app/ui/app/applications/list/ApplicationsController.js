@@ -65,7 +65,7 @@
         };
 
         $scope.checkStatusProblem = function (app) {
-            return app.running_instances === 0 && app.state === ApplicationStates.RUNNING;
+            return app && app.running_instances === 0 && app.state === ApplicationStates.RUNNING;
         };
     });
 }());

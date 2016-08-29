@@ -19,10 +19,9 @@
     App.factory('ToolsInstanceResource', function (Restangular) {
         var service = Restangular.service("tools/service_instances");
 
-        service.getToolsInstances = function (orgId, spaceId, serviceType) {
+        service.getToolsInstances = function (orgId, serviceType) {
             return this.one().get({
                 org: orgId,
-                space: spaceId,
                 service: serviceType
             });
         };

@@ -19,9 +19,19 @@ set -e
 VERSION=`node -e "console.log(require('./package.json').version)"`
 PROJECT_NAME=`node -e "console.log(require('./package.json').name)"`
 PACKAGE_CATALOG="docker-package"
+PROD_MODE="true"
 
-# build project
-npm install && node ./node_modules/gulp/bin/gulp.js build
+while getopts "d" opt; do
+    case $opt in
+        d)  PROD_MODE="false"
+            ;;
+    esac
+done
+
+if [ "$PROD_MODE" = "true" ]; then
+    # build project
+    npm install && node ./node_modules/gulp/bin/gulp.js build
+fi
 
 # re-create tmp catalog
 rm -rf ${PACKAGE_CATALOG}

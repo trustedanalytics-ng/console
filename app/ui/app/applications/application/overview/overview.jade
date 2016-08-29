@@ -51,6 +51,12 @@ div
             td
                 div(ng-repeat='url in $ctrl.application.urls')
                     a(ng-href='{{ url | ensureProtocol }}') {{ url }}
+        tr
+            td Runtime environment:
+            td.runtime-environment(ng-if="$ctrl.application.imageType")
+                | {{ $ctrl.application.imageType | lowercase }}
+            td(ng-if="!$ctrl.application.imageType")
+                = '<unknown>'
         //tr
             td Services bound:
             td
@@ -68,3 +74,16 @@ div
                         span {{ meta.key }}
                         = ': '
                         | {{ meta.value || '&lt;empty&gt;' }}
+
+        tr
+            td Created:
+            td
+                | {{ $ctrl.application.auditTrail.createdOn * 1000 | date:'medium' }}
+                = ' by '
+                | {{ $ctrl.application.auditTrail.createdBy }}
+        tr
+            td Last update:
+            td
+                | {{ $ctrl.application.auditTrail.lastUpdatedOn * 1000 | date:'medium' }}
+                = ' by '
+                | {{ $ctrl.application.auditTrail.lastUpdateBy }}

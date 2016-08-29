@@ -61,15 +61,6 @@ describe("Unit: ServiceInstancesController", function () {
         expect(controller).not.to.be.null;
     });
 
-    it('init, no space set, do not get instances', function () {
-        _targetProvider.space = null;
-        var getAllByTypeSpied = sinon.spy(serviceInstancesMock, 'getAllByType');
-
-        createController();
-
-        expect(getAllByTypeSpied.called).to.be.false;
-    });
-
     it('init, got instances, set instances and state loaded', function () {
         var instances = getServiceInstances();
         var deferred = $q.defer();
@@ -111,15 +102,6 @@ describe("Unit: ServiceInstancesController", function () {
         scope.$emit('instanceCreated');
         $rootScope.$digest();
         expect(serviceInstancesMock.getAllByType.called).to.be.true;
-    });
-
-    it('init, no space set, do not get space summary', function () {
-        _targetProvider.space = null;
-        var getAllByTypeSpied = sinon.spy(serviceInstancesMock, 'getAllByType');
-
-        createController();
-
-        expect(getAllByTypeSpied.called).to.be.false;
     });
 
     it('deleteInstance, set status pending and delete entity', function () {

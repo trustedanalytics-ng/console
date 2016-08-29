@@ -41,43 +41,37 @@
         self.organization = function () {
             return targetProvider.getOrganization();
         };
-        self.space = function () {
-            return targetProvider.getSpace();
-        };
 
         self.getService = function () {
             getServiceData(self, id, ServiceResource, serviceExtractor);
         };
 
         self.createServiceInstance = function (plan) {
-            if (targetProvider.getSpace()) {
-                self.newInstanceState.setPending();
-                ServiceInstancesResource
-                    .supressGenericError()
-                    .createInstance(
-                        self.newInstance.name,
-                        plan.guid,
-                        targetProvider.getOrganization().guid,
-                        targetProvider.getSpace().guid,
-                        transformParams(self.newInstance.params)
-                    )
-                    .then(function () {
+            self.newInstanceState.setPending();
+            ServiceInstancesResource
+                .supressGenericError()
+                .createInstance(
+                    self.newInstance.name,
+                    plan.guid,
+                    targetProvider.getOrganization().guid,
+                    transformParams(self.newInstance.params)
+                )
+                .then(function () {
+                    self.newInstanceState.setDefault();
+                    NotificationService.success('Instance has been created');
+                    $scope.$broadcast('instanceCreated');
+                    initNewInstance();
+                })
+                .catch(function (error) {
+                    if (error.status === GATEWAY_TIMEOUT_ERROR) {
                         self.newInstanceState.setDefault();
-                        NotificationService.success('Instance has been created');
-                        $scope.$broadcast('instanceCreated');
-                        initNewInstance();
-                    })
-                    .catch(function (error) {
-                        if (error.status === GATEWAY_TIMEOUT_ERROR) {
-                            self.newInstanceState.setDefault();
-                            NotificationService.success("Creating an instance may take a while. Please refresh the page after a minute or two.", "Task scheduled");
-                        }
-                        else {
-                            self.newInstanceState.setError();
-                            NotificationService.genericError(error.data, 'Error creating new service instance');
-                        }
-                    });
-            }
+                        NotificationService.success("Creating an instance may take a while. Please refresh the page after a minute or two.", "Task scheduled");
+                    }
+                    else {
+                        self.newInstanceState.setError();
+                        NotificationService.genericError(error.data, 'Error creating new service instance');
+                    }
+                });
         };
 
         self.tryDeleteOffering = function() {

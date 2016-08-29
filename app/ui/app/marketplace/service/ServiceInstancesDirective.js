@@ -31,15 +31,13 @@
         self.deleteState = new State().setDefault();
 
         self.getInstances = function () {
-            getInstancesData(self, targetProvider.getSpace(), id, ServiceInstancesResource);
+            getInstancesData(self, targetProvider.getOrganization(), id, ServiceInstancesResource);
         };
 
         var updateInstances = function () {
             self.instancesState.setPending();
             self.deleteState.setDefault();
-            if (targetProvider.getSpace()) {
-                self.getInstances();
-            }
+            self.getInstances();
         };
         updateInstances();
 
@@ -84,7 +82,6 @@
         });
 
         self.organization = targetProvider.getOrganization;
-        self.space = targetProvider.getSpace;
     });
 
 
@@ -100,10 +97,10 @@
     });
 
 
-    function getInstancesData(self, space, serviceId, ServiceInstancesResource) {
+    function getInstancesData(self, organization, serviceId, ServiceInstancesResource) {
         ServiceInstancesResource
             .withErrorMessage('Failed to retrieve service instances')
-            .getAllByType(space.guid, serviceId)
+            .getAllByType(organization.guid, serviceId)
             .then(function (instances) {
                 self.instances =_.each(instances, function(instance) {
                     instance.last_operation.state = normalizeLastOperationState(instance.last_operation.state);

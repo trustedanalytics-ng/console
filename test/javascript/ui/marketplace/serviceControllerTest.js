@@ -151,16 +151,6 @@ describe("Unit: ServiceController", function () {
         expect(controller.newInstanceState.value).to.be.equals(state.values.PENDING);
     });
 
-    it('createServiceInstance, no space, do not create ServiceInstance', function () {
-        _targetProvider.space = null;
-        createController();
-        controller.newInstance = {};
-
-        controller.createServiceInstance({});
-
-        expect(serviceInstanceMock.createInstance.called).to.be.false;
-    });
-
     it('createServiceInstance, success, set status loaded and refresh space summary', function () {
         createController();
         var emitSpied = sinon.spy(scope, '$broadcast');

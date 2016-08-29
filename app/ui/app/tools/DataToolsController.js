@@ -47,8 +47,7 @@
                 .createInstance(
                     name,
                     $scope.servicePlanGuid,
-                    targetProvider.getOrganization().guid,
-                    targetProvider.getSpace().guid
+                    targetProvider.getOrganization().guid
                 )
                 .then(function onSuccess() {
                     $scope.newInstanceState.setDefault();
@@ -91,20 +90,18 @@
     });
 
     function initializeInstances($scope, $q, org, AtkInstanceResource, spaceUserService, NotificationService, UserProvider) {
-        if (org.guid) {
-            $scope.state.setPending();
-            getAtkInstances($scope, org, AtkInstanceResource)
-                .then(function() {
-                    return canCurrentUserCreateInstance($scope, $q, org, spaceUserService, UserProvider);
-                })
-                .then(function(canCreate) {
-                    if (canCreate) {
-                        var defaultInstanceName = "atk-" + org.name;
-                        confirmCreatingImmediateInstance($scope, NotificationService, defaultInstanceName);
-                    }
-                    $scope.state.setLoaded();
-                });
-        }
+        $scope.state.setPending();
+        getAtkInstances($scope, org, AtkInstanceResource)
+            .then(function() {
+                return canCurrentUserCreateInstance($scope, $q, org, spaceUserService, UserProvider);
+            })
+            .then(function(canCreate) {
+                if (canCreate) {
+                    var defaultInstanceName = "atk-" + org.name;
+                    confirmCreatingImmediateInstance($scope, NotificationService, defaultInstanceName);
+                }
+                $scope.state.setLoaded();
+            });
     }
 
     function getAtkInstances($scope, org, AtkInstanceResource) {

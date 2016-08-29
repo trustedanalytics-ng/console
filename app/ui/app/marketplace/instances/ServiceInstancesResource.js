@@ -42,9 +42,9 @@
             return this.one(serviceId).remove();
         };
 
-        service.getAllByType = function (spaceId, serviceId) {
+        service.getAllByType = function (organizationId, serviceId) {
             return this.getList({
-                space: spaceId,
+                org: organizationId,
                 broker: serviceId
             });
         };
