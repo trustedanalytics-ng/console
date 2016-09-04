@@ -17,48 +17,39 @@
 (function() {
     'use strict';
 
-    App.factory('ApplicationHelper', function(ServiceInstancesResource, ApplicationResource, NotificationService, $q, $state) {
+    App.factory('ApplicationHelper', function(ApplicationResource, NotificationService, $q, $state) {
 
         return {
-            restageApplication: restageApplication,
+            restartApplication: restartApplication,
             startApplication: startApplication,
             stopApplication: stopApplication,
             getApplication: getApplication,
-            deleteApp: deleteApp
+            deleteApplication: deleteApplication
         };
 
-        function restageApplication(state, appId) {
-            instanceAction(state, appId,'RESTAGING');
+        function restartApplication(appId) {
+            return instanceAction(appId, 'restart');
         }
 
-        function startApplication(state, appId) {
-            instanceAction(state, appId,'STARTED');
+        function startApplication(appId) {
+            return instanceAction(appId, 'start');
         }
 
-        function stopApplication(state, appId) {
-            instanceAction(state, appId, 'STOPPED');
+        function stopApplication(appId) {
+            return instanceAction(appId, 'stop');
         }
 
-        function instanceAction(state, appId, action) {
-            state.setPending();
-
+        function instanceAction(appId, action) {
             var msg = {
-                'STOPPED' : ['Stopping the application has been scheduled.', 'Stopping the application failed.'],
-                'STARTED' : ['Starting application has been scheduled.', 'Starting application failed'],
-                'RESTAGING': ['Restage has been scheduled', 'Restaging application failed']
+                stop : ['Application has been stopped', 'Stopping the application failed'],
+                start : ['Application has been started', 'Starting application failed'],
+                restart: ['Application has been restarted', 'Restarting application failed']
             };
-
-            ApplicationResource.postStatus(appId, {
-                state: action
-            })
+            return ApplicationResource
+                .withErrorMessage(msg[action][1])
+                [action](appId)
                 .then(function onSuccess() {
                     NotificationService.success(msg[action][0]);
-                })
-                .catch(function onError() {
-                    NotificationService.error(msg[action][1]);
-                })
-                .finally(function () {
-                    state.setLoaded();
                 });
         }
 
@@ -68,28 +59,9 @@
                 .getApplication(appId);
         }
 
-        function deleteApp(state, appId) {
+        function deleteApplication(state, appId) {
             state.setPending();
 
-            /*ApplicationResource
-                .getOrphanServices(appId)
-                .then(function onSuccess(servicesToDelete) {
-                    state.setLoaded();
-                    NotificationService.confirm('confirm-delete', {servicesToDelete: servicesToDelete})
-                        .then(function (cascade) {
-                            state.setPending();
-                            return ApplicationResource
-                                .withErrorMessage('Deleting application failed')
-                                .deleteApplication(appId, cascade[0]);
-                        })
-                        .then(function onSuccess() {
-                            $state.go('app.applications');
-                            NotificationService.success('Application has been deleted');
-                        })
-                        .finally(function onError() {
-                            state.setLoaded();
-                        });
-                })*/
             ApplicationResource
                 .withErrorMessage('Deleting application failed')
                 .deleteApplication(appId)

@@ -18,37 +18,29 @@ describe("Unit: ApplicationController", function () {
 
     var controller,
         createController,
-        applicationResource,
-        notificationService,
         applicationHelper,
         state,
         $q,
-        $state,
         $scope,
-        APP_ID = "app-guid";
+        APP_ID = "app-guid",
+        SAMPLE_APP = { guid: APP_ID };
 
-    beforeEach(module('app', function($provide) {
-        notificationService = sinon.stub({
-            success: function () {},
-            error: function () {}
-        });
+    beforeEach(module('app'));
 
-        $provide.value('NotificationService', notificationService);
-    }));
-
-    beforeEach(inject(function(targetProvider) {
-       targetProvider.refresh = sinon.stub().returns([]);
-    }));
-
-    beforeEach(inject(function ($controller, ApplicationResource,  $routeParams, State, _$q_, $rootScope,
-            _$state_, ApplicationHelper) {
-
-        state = new State();
-        applicationResource = ApplicationResource;
-        applicationHelper = ApplicationHelper;
+    beforeEach(inject(function(_$q_, $rootScope, $controller, State) {
         $q = _$q_;
         $scope = $rootScope.$new();
-        $state = _$state_;
+
+        applicationHelper = {
+            startApplication: sinon.stub().returns($q.defer().promise),
+            stopApplication: sinon.stub().returns($q.defer().promise),
+            restartApplication: sinon.stub().returns($q.defer().promise),
+            getApplication: sinon.stub().returns($q.defer().promise),
+            deleteApplication: sinon.stub().returns($q.defer().promise)
+        };
+
+        state = new State();
+
         createController = function () {
             controller = $controller('ApplicationController', {
                 $stateParams: {appId: APP_ID},
@@ -65,19 +57,16 @@ describe("Unit: ApplicationController", function () {
     });
 
     it('init, set state pending and request for the application', function () {
-        var getApplicationSpied = sinon.spy(applicationResource, 'getApplication');
-
         createController();
 
         expect($scope.state.value, 'state').to.be.equal(state.values.PENDING);
-        expect(getApplicationSpied.called, 'getApplication called').to.be.true;
-        expect(getApplicationSpied.calledWith(APP_ID), 'getApplication calledWith').to.be.true;
+        expect(applicationHelper.getApplication, 'called').to.be.called;
+        expect(applicationHelper.getApplication, 'called with').to.be.calledWith(APP_ID);
     });
 
     it('getApplication error 404, set state error not found', function () {
-        var deferred = $q.defer();
-        applicationResource.getApplication = sinon.stub().returns(deferred.promise);
-        deferred.reject({ status: 404 });
+        applicationHelper.getApplication = sinon.stub().returns(failedPromise({ status: 404 }));
+
         createController();
         $scope.$digest();
 
@@ -85,9 +74,7 @@ describe("Unit: ApplicationController", function () {
     });
 
     it('getApplication error unknown, set state error', function () {
-        var deferred = $q.defer();
-        applicationResource.getApplication = sinon.stub().returns(deferred.promise);
-        deferred.reject({ status: 500 });
+        applicationHelper.getApplication = sinon.stub().returns(failedPromise({ status: 500 }));
 
         createController();
         $scope.$digest();
@@ -96,116 +83,66 @@ describe("Unit: ApplicationController", function () {
     });
 
     it('getApplication success, set application', function () {
-        var application = { guid: 'a1'};
-        createAndInitializeController(application);
-        $scope.$digest();
+        createAndInitializeController(SAMPLE_APP);
 
-        expect($scope.application, 'application').to.be.deep.equal(application);
+        expect($scope.application, 'application').to.be.deep.equal(SAMPLE_APP);
         expect($scope.state.value, 'state').to.be.equal(state.values.LOADED);
     });
 
     it('restage, set restage status', function(){
-        var deferredStatus = $q.defer();
-        applicationResource.postStatus = sinon.stub().returns(deferredStatus.promise);
-        notificationService.success = sinon.stub();
-
-        var application = { guid: APP_ID };
-
-        createAndInitializeController(application);
+        createAndInitializeController(SAMPLE_APP);
 
         $scope.restage();
 
-        deferredStatus.resolve();
-        $scope.$digest();
-        expect(applicationResource.postStatus.calledWith(APP_ID, {state: 'RESTAGING'})).to.be.true;
+        expect(applicationHelper.restartApplication).to.be.calledWith(APP_ID);
     });
 
     it('delete, delete application resource', function(){
-        var deferredDelete = $q.defer();
-        var deferredOrphanServices = $q.defer();
-        applicationResource.deleteApplication = sinon.stub().returns(deferredDelete.promise);
-        applicationResource.getOrphanServices = sinon.stub().returns(deferredOrphanServices.promise);
-
-        var deferredConfirm = $q.defer();
-        notificationService.confirm = sinon.stub().returns(deferredConfirm.promise);
-        notificationService.success = sinon.stub();
-        $state.go = sinon.stub();
+        applicationHelper.deleteApplication = sinon.stub().returns(successPromise());
         createAndInitializeController();
 
         $scope.delete();
-        deferredConfirm.resolve(arguments);
-        deferredDelete.resolve();
-        deferredOrphanServices.resolve();
-
         $scope.$digest();
 
-        //expect(applicationResource.getOrphanServices.calledWith(APP_ID)).to.be.true;
-        expect(applicationResource.deleteApplication.calledWith(APP_ID)).to.be.true;
-        expect($state.go.called).to.be.true;
+        expect(applicationHelper.deleteApplication, 'deleteApplication').to.be.calledWith($scope.state, APP_ID);
     });
 
     it('start, notifications service called with success', function(){
-        var deferredStatus = $q.defer();
-        applicationResource.postStatus = sinon.stub().returns(deferredStatus.promise);
-        notificationService.success = sinon.stub();
-        application = { guid: APP_ID };
-
-        createAndInitializeController(application);
+        createAndInitializeController(SAMPLE_APP);
 
         $scope.start();
 
-        deferredStatus.resolve();
-        $scope.$digest();
-        expect(applicationResource.postStatus.calledWith(APP_ID, {state: "STARTED"})).to.be.true;
-        expect(notificationService.success.calledOnce).to.be.true;
+        expect(applicationHelper.startApplication).to.be.calledWith(APP_ID);
     });
 
     it('start, set error status if something crashes', function(){
-        var deferredStatus = $q.defer();
-        applicationResource.postStatus = sinon.stub().returns(deferredStatus.promise);
-        notificationService.error = sinon.stub();
-        application = { guid: APP_ID };
-
-        createAndInitializeController(application);
+        applicationHelper.start = sinon.stub().returns(failedPromise());
+        createAndInitializeController(SAMPLE_APP);
 
         $scope.start();
-
-        deferredStatus.reject();
         $scope.$digest();
-        expect(applicationResource.postStatus.calledWith(APP_ID, {state: "STARTED"})).to.be.true;
-        expect(notificationService.error.calledOnce).to.be.true;
+
+        expect(applicationHelper.startApplication).to.be.calledWith(APP_ID);
     });
 
     it('stop, notifications service called with success', function(){
-        var deferredStatus = $q.defer();
-        applicationResource.postStatus = sinon.stub().returns(deferredStatus.promise);
-        notificationService.success = sinon.stub();
-        application = { guid: APP_ID };
-
-        createAndInitializeController(application);
+        applicationHelper.stop = sinon.stub().returns(successPromise());
+        createAndInitializeController(SAMPLE_APP);
 
         $scope.stop();
-
-        deferredStatus.resolve();
         $scope.$digest();
-        expect(applicationResource.postStatus.calledWith(APP_ID, {state: "STOPPED"})).to.be.true;
-        expect(notificationService.success.calledOnce).to.be.true;
+
+        expect(applicationHelper.stopApplication).to.be.calledWith(APP_ID);
     });
 
     it('stop, set error status if something crashes', function(){
-        var deferredStatus = $q.defer();
-        applicationResource.postStatus = sinon.stub().returns(deferredStatus.promise);
-        notificationService.error = sinon.stub();
-        application = { guid: APP_ID };
-
-        createAndInitializeController(application);
+        applicationHelper.stop = sinon.stub().returns(failedPromise());
+        createAndInitializeController(SAMPLE_APP);
 
         $scope.stop();
-
-        deferredStatus.reject();
         $scope.$digest();
-        expect(applicationResource.postStatus.calledWith(APP_ID, {state: "STOPPED"})).to.be.true;
-        expect(notificationService.error.calledOnce).to.be.true;
+
+        expect(applicationHelper.stopApplication).to.be.calledWith(APP_ID);
     });
 
     function getSampleInstances() {
@@ -231,13 +168,23 @@ describe("Unit: ApplicationController", function () {
     }
 
     function createAndInitializeController(application, instances) {
-        var deferred = $q.defer();
         application = application || { guid: APP_ID };
-        applicationResource.getApplication = sinon.stub().returns(deferred.promise);
-        deferred.resolve(application);
+        applicationHelper.getApplication = sinon.stub().returns(successPromise(application));
 
         createController();
         $scope.$digest();
+    }
+
+    function successPromise(param) {
+        var deferred = $q.defer();
+        deferred.resolve(param);
+        return deferred.promise;
+    }
+
+    function failedPromise(param) {
+        var deferred = $q.defer();
+        deferred.reject(param);
+        return deferred.promise;
     }
 
 });

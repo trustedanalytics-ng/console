@@ -43,19 +43,25 @@
         };
 
         $scope.restage = function () {
-            ApplicationHelper.restageApplication($scope.state, appId);
+            $scope.state.setPending();
+            ApplicationHelper.restartApplication(appId)
+                .then($scope.refresh);
         };
 
         $scope.start = function () {
-            ApplicationHelper.startApplication($scope.state, appId);
+            $scope.state.setPending();
+            ApplicationHelper.startApplication(appId)
+                .then($scope.refresh);
         };
 
         $scope.stop = function () {
-            ApplicationHelper.stopApplication($scope.state, appId);
+            $scope.state.setPending();
+            ApplicationHelper.stopApplication(appId)
+                .then($scope.refresh);
         };
 
         $scope.delete = function () {
-            ApplicationHelper.deleteApp($scope.state, appId);
+            ApplicationHelper.deleteApplication($scope.state, appId);
         };
 
         function loadApplication() {

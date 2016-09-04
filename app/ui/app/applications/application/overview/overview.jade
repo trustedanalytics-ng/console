@@ -24,11 +24,12 @@ div
     h4 Actions
     div.actions
         button.btn.btn-primary.fa-times(ng-click='$ctrl.onDelete()') Delete
-        //button.btn.btn-primary.fa-play(ng-click='$ctrl.onStart()'
-                ng-disabled="$ctrl.application.state.toLowerCase() === 'started'") Start
-        //button.btn.btn-primary.fa-stop(ng-click='$ctrl.onStop()'
-                ng-disabled="$ctrl.application.state.toLowerCase() === 'stopped'") Stop
-        //button.btn.btn-primary.fa-refresh(ng-click='$ctrl.onRestage()') Restart
+        button.btn.btn-primary.fa-play(ng-click='$ctrl.onStart()'
+                ng-disabled="$ctrl.application.state === $ctrl.ApplicationStates.RUNNING") Start
+        button.btn.btn-primary.fa-stop(ng-click='$ctrl.onStop()'
+                ng-disabled="$ctrl.application.state === $ctrl.ApplicationStates.STOPPED") Stop
+        button.btn.btn-primary.fa-refresh(ng-click='$ctrl.onRestage()'
+                ng-disabled="$ctrl.application.state !== $ctrl.ApplicationStates.RUNNING") Restart
 
     h4 Metrics
     table.table.metrics

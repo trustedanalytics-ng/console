@@ -35,6 +35,18 @@
             return this.one(id).get();
         };
 
+        service.restart = function(appId) {
+            return this.one(appId).customPUT(null, 'restart');
+        };
+
+        service.start = function(appId) {
+            return this.one(appId).customPUT(null, 'start');
+        };
+
+        service.stop = function(appId) {
+            return this.one(appId).customPUT(null, 'stop');
+        };
+
         service.postStatus = function (appId, status) {
             return this.one(appId).all("status").post(status);
         };
