@@ -111,7 +111,7 @@
             .withErrorMessage('Failed to retrieve service details')
             .getService(id)
             .then(function (serviceData) {
-                self.service = serviceExtractor.extractService(serviceData.service || {});
+                self.service = serviceExtractor.extractService(serviceData || {});
                 self.selectedPlan = self.service.plans[0];
                 self.deletable = serviceData.deletable;
                 self.state.setLoaded();

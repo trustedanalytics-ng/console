@@ -23,6 +23,9 @@
   "path": "/catalog",
   "name": "servicecatalog"
 }, {
+  "path": "/services",
+  "name": "servicecatalog"
+}, {
   "path": "/applications",
   "name": "servicecatalog"
 }, {
@@ -37,9 +40,6 @@
 }, {
   "path": "/orgs/[^/]+/users",
   "name": "user-management"
-}, {
-  "path": "/orgs/[^/]+/atkinstances",
-  "name": "app-launcher-helper"
 }, {
   "path": "/platform_context",
   "name": "platformcontext"

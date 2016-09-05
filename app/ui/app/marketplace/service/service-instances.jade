@@ -13,9 +13,9 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 //-
-.panel.instances(ng-show='ctrl.space() && ctrl.organization()')
+.panel.instances
     .header
-        | Running instances in space {{ ctrl.organization().name }}/{{ ctrl.space().name }}
+        | Running instances
 
     spinner(ng-show='ctrl.instancesState.isPending() || ctrl.deleteState.isPending()')
 
@@ -23,7 +23,7 @@
         .panel-body Error while downloading service instances list
 
     div(ng-show='ctrl.instancesState.isLoaded() && !ctrl.instances.length')
-        .panel-body No instances running in that space
+        .panel-body No running instances
 
     table.table(ng-if='ctrl.instancesState.isLoaded() && ctrl.instances.length\
     && !ctrl.deleteState.isPending()')
@@ -39,10 +39,10 @@
         tbody
             tr(ng-repeat="instance in ctrl.instances | orderBy: 'name'")
                 td {{ instance.name }}
-                td {{ instance.service_plan.name }}
+                td {{ instance.planName }}
                 td
                     a.app-bound(ng-repeat='app in instance.bound_apps', ui-sref='app.application({ appId: app.guid })') {{ app.name }}
-                td(class="state-{{instance.last_operation.state}}")  {{instance.last_operation.state}}
+                td(class="state state-{{ ctrl.getNormalizedState(instance) }}")  {{instance.state}}
                 td
                     a(ng-if='instance.dashboard_url', ng-href='{{ instance.dashboard_url }}', target="_blank") Go to dashboard &raquo;
                 td
@@ -61,7 +61,3 @@ script(type="text/ng-template", id="confirm-delete")
         .pull-right
             button.btn.btn-primary(type='button', ng-click='confirm()') Delete
             button.btn.btn-default(type='button', ng-click="cancel()") Cancel
-
-.panel.instances(ng-show='!ctrl.space() || !ctrl.organization()')
-    .header Running instances
-    | Space has to be chosen in order to see running instances

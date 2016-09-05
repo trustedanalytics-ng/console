@@ -82,6 +82,10 @@
         });
 
         self.organization = targetProvider.getOrganization;
+
+        self.getNormalizedState = function(instance) {
+            return instance.state.replace(/\s+/g, '-').toLowerCase();
+        };
     });
 
 
@@ -102,18 +106,12 @@
             .withErrorMessage('Failed to retrieve service instances')
             .getAllByType(organization.guid, serviceId)
             .then(function (instances) {
-                self.instances =_.each(instances, function(instance) {
-                    instance.last_operation.state = normalizeLastOperationState(instance.last_operation.state);
-                });
+                self.instances = instances;
                 self.instancesState.setLoaded();
             })
             .catch(function () {
                 self.instancesState.setError();
             });
-    }
-
-    function normalizeLastOperationState(lastOperationState) {
-        return lastOperationState.replace(/\s+/g, '-').toLowerCase();
     }
 
 }());
