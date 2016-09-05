@@ -28,7 +28,7 @@ var NO_PROXY = (process.env.no_proxy || '').split(',');
 function injectProxy(httpObject, agent) {
     var originalRequest = httpObject.request;
     httpObject.request = function(options, callback) {
-        var options = _.isString(options) ? url.parse(options) : options;
+        options = _.isString(options) ? url.parse(options) : options;
 
         if (!hostInNoProxy(options.host)) {
             _.defaults(options, {
