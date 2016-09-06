@@ -63,7 +63,7 @@
   "path": "/platform_tests/tests",
   "name": "platform-tests"
 }, {
-  "path": "/v1/analytics/h2o/models/organizations",
+  "path": "/models",
   "name": "model-catalog"
 }, {
   "path": "/v1/oozie",

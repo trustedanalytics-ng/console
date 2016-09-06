@@ -23,7 +23,8 @@ describe("Unit: ModelsController", function() {
         targetProvider,
         notificationService,
         state,
-        $q;
+        $q,
+        modelsMock;
 
     beforeEach(module('app'));
 
@@ -31,7 +32,8 @@ describe("Unit: ModelsController", function() {
         $provide.value('targetProvider', targetProvider);
     }));
 
-    beforeEach(inject(function ($controller, $rootScope, _$q_, State) {
+    beforeEach(inject(function ($controller, $rootScope, _$q_, State, ModelsMock) {
+        modelsMock = ModelsMock;
         scope = $rootScope.$new();
         $q = _$q_;
         state = new State();
@@ -51,7 +53,7 @@ describe("Unit: ModelsController", function() {
         };
 
         ModelResource = {
-            getInstances: sinon.stub().returns($q.defer().promise)
+            getModels: sinon.stub().returns($q.defer().promise)
         };
 
         h2oPublisherResource = {
@@ -75,7 +77,7 @@ describe("Unit: ModelsController", function() {
     it('init, set pending and get instances', function () {
         createController();
         expect(scope.state.isPending(), 'pending').to.be.true;
-        expect(ModelResource.getInstances).to.be.called;
+        expect(ModelResource.getModels).to.be.called;
     });
 
     it('targetChanged, get instances', function () {
@@ -83,30 +85,20 @@ describe("Unit: ModelsController", function() {
 
         scope.$emit('targetChanged');
 
-        expect(ModelResource.getInstances).to.be.calledTwice;
+        expect(ModelResource.getModels).to.be.calledTwice;
     });
 
-    it('publish, success, set state on loaded', function () {
+    it('searchChanged, empty searchText, should show all models', function () {
         createController();
-
-        var publishDefferred = $q.defer();
-        var successSpied = sinon.spy(notificationService, 'success');
-        h2oPublisherResource.postDataModel = sinon.stub().returns(publishDefferred.promise);
-        publishDefferred.resolve();
-        scope.publish();
-        scope.$digest();
-        expect(successSpied.called).to.be.true;
-        expect(scope.state.value).to.be.equals(scope.state.values.LOADED);
+        scope.models = modelsMock;
+        scope.$emit('searchChanged');
+        expect(JSON.stringify(scope.models)).to.be.equals(JSON.stringify(scope.filteredModels));
     });
 
-    it('publish, error, set state on error', function () {
+    it('searchChanged, set pagination page to 1', function () {
         createController();
-
-        var publishDefferred = $q.defer();
-        h2oPublisherResource.postDataModel = sinon.stub().returns(publishDefferred.promise);
-        publishDefferred.reject();
-        scope.publish();
-        scope.$digest();
-        expect(scope.state.value).to.be.equals(scope.state.values.LOADED);
+        var spy = sinon.spy(scope.tableParams, 'page');
+        scope.$emit('searchChanged');
+        expect(spy.calledWith(1)).to.be.true;
     });
 });

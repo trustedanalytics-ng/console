@@ -16,10 +16,18 @@
 (function () {
     "use strict";
 
-    App.controller('ModelsController', function ($scope, State, ModelResource, CommonTableParams,
-                                                    targetProvider, H2OPublisherResource, NotificationService) {
+    App.controller('ModelsController', function ($scope, State, ModelResource, CommonTableParams, targetProvider) {
         var state = new State().setPending();
+        var searchFields = [ "name", "revision", "algorithm" ];
         $scope.state = state;
+
+        $scope.$on('searchChanged', function (event, searchText) {
+            $scope.filteredModels = _.filter($scope.models, function (model) {
+                return isModelMatching(model, searchText);
+            });
+            $scope.tableParams.reload();
+            $scope.tableParams.page(1);
+        });
 
         $scope.$on('targetChanged', function () {
             $scope.state.setPending();
@@ -27,10 +35,10 @@
         });
 
         function getInstances() {
-            ModelResource.getInstances(targetProvider.getOrganization().guid)
-                .then(function (response) {
-                    $scope.instances = response;
-                    $scope. filteredModels = getAllExtendedModels();
+            ModelResource.getModels(targetProvider.getOrganization().guid)
+                .then(function (models) {
+                    $scope.models = models;
+                    $scope.filteredModels = $scope.models;
                     $scope.state = state.setLoaded();
                 }).catch(function onError() {
                     state.setError();
@@ -38,44 +46,18 @@
         }
         getInstances();
 
-        function getAllExtendedModels() {
-            _.map($scope.instances, function(instance) {
-                _.each(instance.models, function(model) {
-                   extendModel(instance, model);
-                });
-            });
-            return _.flatten(_.pluck($scope.instances, "models"), true);
-        }
-
         $scope.tableParams = CommonTableParams.getTableParams($scope, function () {
             return $scope.filteredModels;
-
         });
 
-        $scope.publish = function(model) {
-            $scope.state.setPending();
-            H2OPublisherResource
-                .withErrorMessage('Error when publishing data model')
-                .postDataModel(model, targetProvider.getOrganization().guid)
-                .then(function () {
-                    NotificationService.success('Data Model has been uploaded');
-
-                })
-                .finally(function() {
-                    $scope.state.setLoaded();
+        function isModelMatching(model, searchText) {
+            return !searchText || _.some(searchFields, function (field) {
+                    return contains(model[field], searchText);
                 });
-        };
+        }
 
-        $scope.downloadPath = function(modelName) {
-            return '/rest/h2o/engines/' + modelName + '/downloads';
-        };
-
-        function extendModel(instance, model) {
-            model.guid = instance.guid;
-            model.login = instance.login;
-            model.password = instance.password;
-            model.hostname = instance.hostname;
-            return model;
+        function contains(str, searchText) {
+            return str.toLowerCase().indexOf(searchText) > -1;
         }
 
     });

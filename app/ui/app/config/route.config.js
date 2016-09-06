@@ -374,6 +374,10 @@ App.config(function ($stateProvider, $urlRouterProvider, LazyLoadProvider, AppCo
             controllerAs: 'ctrl',
             templateUrl: getViewPath('modelcatalog/modelcatalog.html')
         })
+        .state('app.modelcatalog.model', {
+            url: '/model/:modelId',
+            targetHeader: {org: true, space: false}
+        })
         .state('app.manage', {
             url: '/manage',
             abstract: true,

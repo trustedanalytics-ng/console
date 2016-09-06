@@ -15,27 +15,24 @@
 //-
 
 h3
-   | Models Inventory
+   | Model Catalog
 .modelcatalog
    .panel
       spinner(ng-show='state.isPending()')
       div(ng-if='state.isLoaded()')
          .models
-            div(ng-if='!filteredModels.length')
-               h4 No models for this instance
-            table.table-striped(ng-show='filteredModels.length', ng-table="tableParams", show-filter="true" class="table")
+            div(ng-if='!models.length')
+               h4 No available models
+            div(ng-if='models.length')
+               section.search
+                  search-bar
+                  .divider
+            table.table-striped.list(ng-show='models.length', ng-table="tableParams", class="table")
                tr(ng-repeat="model in $data")
-                  td(data-title="'Name'" filter="{ 'name': 'text'}" sortable="'name'")
+                  td(data-title="'Name'" sortable="'name'")
                      | {{model.name}}
-                  td(data-title="'Algorithm'" filter="{ 'algo_full_name': 'text'}" sortable="'algo_full_name'") {{ model.algo_full_name }}
-                  td(data-title="'Type'") {{ model.type }}
-                  td(data-title="'Timestamp'" sortable="'timestamp'") {{ model.timestamp | date: 'yyyy-MM-dd h:mm:ss a' }}
-                  td(data-title="'Publishing'")
-                     button.btn.btn-primary(ng-click='publish(model)') Publish Scoring Engine
-                  td(data-title="'Downloading'")
-                     form(name="downloadDataModel" action='{{downloadPath(model.name)}}'
-                     enctype='application/x-www-form-urlencoded' method='post')
-                        input(name='host' value='http://' + '{{model.hostname}}' type='hidden')
-                        input(name='username' value='{{model.login}}' type='hidden')
-                        input(name='password' value='{{model.password}}' type='hidden')
-                        button.btn.btn-primary(type='submit') Download Scoring Engine
+                  td(data-title="'Version'" sortable="'version'") {{ model.revision }}
+                  td(data-title="'Added Date'" sortable="'addedOn'") {{ model.addedOn }}
+                  td(data-title="'Algorithm'" sortable="'algorithm'") {{ model.algorithm }}
+                  td
+                     a(ui-sref='app.modelcatalog.model({modelId: model.id})') See details &raquo;

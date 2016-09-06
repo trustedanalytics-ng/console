@@ -17,6 +17,55 @@
 .modelcatalog {
 
   .panel {
-    padding: 25px 20px;
+    padding: 40px 30px;
+
+    .models {
+      section {
+        width: 100%;
+
+        search-bar {
+          display: block;
+          max-width: 400px;
+          position: relative;
+          em {
+            position: absolute;
+            right: 12px;
+            top: 25%;
+            font-size: 14px;
+          }
+        }
+
+        .divider {
+          margin: 35px 0;
+          display: block;
+          position: relative;
+          height: 0;
+          font-size: 1px;
+          line-height: 0;
+          clear: both;
+          border: none;
+          border-top: 1px solid #ccc;
+        }
+      }
+
+      table.list tr td {
+        text-align: center;
+      }
+
+      div div .ng-table-pager {
+        text-align: center;
+
+        .ng-table-counts {
+          border: 1px solid #ADADAD;
+          border-right: none;
+          button {
+            z-index: 2;
+            border-right: 1px solid #ADADAD;
+            margin-left: 0;
+          }
+        }
+      }
+    }
+
   }
 }

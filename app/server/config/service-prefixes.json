@@ -52,10 +52,6 @@
     "value":"/rest"
   },
   {
-    "name":"model-catalog",
-    "value":"/rest"
-  },
-  {
     "name":"workflow-scheduler",
     "value":"/rest"
   },

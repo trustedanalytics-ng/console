@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015 Intel Corporation
+ * Copyright (c) 2016 Intel Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,18 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 (function () {
     "use strict";
 
-    App.factory('ModelResource', function (Restangular) {
-        var resource = Restangular.service("models");
-
-        resource.getModels = function(orgId) {
-            return this.one().customGET("", {'orgId': orgId});
-        };
-
-        return resource;
-    });
-
-
+    App.value('ModelsMock', [
+            {
+                name: 'name',
+                revision: 'v1',
+                algorithm: 'alg'
+            }, {
+                name: 'test',
+                revision: 'v2',
+                algorithm: 'mnk'
+            }, {
+                name: 'sample-model',
+                revision: 'v11',
+                algorithm: 'algorithm-name'
+            }
+        ]
+    )
 }());
