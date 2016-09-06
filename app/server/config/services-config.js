@@ -56,7 +56,7 @@ function serviceDomainRewrite(service, path) {
 
 function getServiceByPath(requestUrl) {
     return _.find(serviceMappings, function(service){
-        return requestUrl.match(service.path);
+        return requestUrl.match(defaults.reverse_proxy.request_prefix + service.path);
     });
 }
 
