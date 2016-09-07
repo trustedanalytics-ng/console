@@ -19,10 +19,7 @@
     App.factory('ServiceInstancesResource', function (Restangular) {
         var service = Restangular.service("services");
 
-        service.getSummary = function(service_keys) {
-            var params = _.pick({
-                service_keys: service_keys
-            }, _.identity);
+        service.getSummary = function() {
             return this.one('summary').get(params);
         };
 

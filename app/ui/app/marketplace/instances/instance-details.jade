@@ -31,20 +31,20 @@
       h4 Metadata
       table.table
          tr
+            td Offering name
+            td {{serviceInstance.serviceName}}
+         tr
             td Instance name
             td {{serviceInstance.name}}
          tr
             td State
-            td {{serviceInstance.last_operation.state}}
+            td {{serviceInstance.state}}
          tr
             td Plan instantiated
-            td {{serviceInstance.service_plan.name}}
+            td {{serviceInstance.planName}}
          tr
-            td Instance Creator
-            td {{serviceInstance.metadata.creator_name}}
-         tr
-            td Service Type
-            td {{serviceInstance.service_plan.service.label}}
+            td Created on
+            td {{serviceInstance.auditTrail.createdOn * 1000 | date:'medium'}} by {{serviceInstance.auditTrail.createdBy}}
          tr(ng-show="credentials.login")
             td Login
             td {{ credentials.login }}

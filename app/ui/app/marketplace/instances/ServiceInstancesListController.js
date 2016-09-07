@@ -21,66 +21,18 @@
 
         var state = new State().setPending();
         $scope.state = state;
-        $scope.exports = [];
-        $scope.vcap = {};
+
+        refreshContent();
 
         UserProvider.isAdmin().then(function (isAdmin) {
             $scope.admin = isAdmin;
-            refreshContent();
         });
 
         $scope.$on('targetChanged', function () {
             refreshContent();
         });
 
-        $scope.addExport = function (key) {
-            $scope.exports.push(key);
-            refreshVcapConfiguraton(ServiceInstancesMapper);
-        };
-
-        $scope.removeExport = function (key) {
-            $scope.exports = _.without($scope.exports, key);
-            refreshVcapConfiguraton(ServiceInstancesMapper);
-        };
-
-        $scope.hasKeys = function(instance) {
-            return !_.isEmpty(instance.service_keys);
-        };
-
-        $scope.isExported = function(key) {
-            return _.contains($scope.exports, key);
-        };
-
-        $scope.addKey = function(keyName, instance) {
-            state.setPending();
-            ServiceInstancesListHelper
-                .addKey(keyName, instance.guid)
-                .then(function() {
-                    refreshContent();
-                })
-                .catch(function() {
-                    state.setLoaded();
-                });
-        };
-
-        $scope.deleteKey = function(key) {
-            NotificationService.confirm('delete-key-confirm')
-                .then(function() {
-                    state.setPending();
-                    ServiceKeysResource
-                        .withErrorMessage('Removing service key failed')
-                        .deleteKey(key.guid)
-                        .then(function() {
-                            NotificationService.success("Service key has been deleted");
-                            refreshContent();
-                        })
-                        .catch(function() {
-                            state.setLoaded();
-                        });
-                });
-        };
-
-        $scope.exposeInstance = function(instance, visibility) {
+        /*$scope.exposeInstance = function(instance, visibility) {
             state.setPending();
             ServiceInstancesListHelper
                 .exposeInstance(instance.guid, visibility)
@@ -90,26 +42,15 @@
                 .catch(function() {
                     state.setLoaded();
                 });
-        };
+        };*/
 
         function refreshContent() {
             state.setPending();
-            $scope.exports = [];
-            $scope.vcap = {};
-            if (targetProvider.getSpace().guid) {
-                ServiceInstancesListHelper
-                    .refreshContent($scope)
-                    .finally(function () {
-                        state.setLoaded();
-                    });
-            } else {
-                state.setLoaded();
-            }
-        }
-
-        function refreshVcapConfiguraton(ServiceInstancesMapper) {
-            $scope.vcap = ServiceInstancesMapper.getVcapConfiguration($scope.services, $scope.exports);
-            $scope.file = blobFilter(jsonFilter($scope.vcap));
+            ServiceInstancesListHelper
+                .refreshContent($scope)
+                .finally(function () {
+                    state.setLoaded();
+                });
         }
     });
 }());
