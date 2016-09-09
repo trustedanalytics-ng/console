@@ -27,11 +27,47 @@ h3
                section.search
                   search-bar
                   .divider
+               section.filter
+                  h3 Filter
+                  .filters
+                     .model-type
+                        label.outstanding Model Type:
+                        .select-wrapper
+                           select.form-control(ng-model="filters.selectedType"
+                              ng-class="{ 'placeholder': filters.selectedType === modelTypes[0]}"
+                              ng-change="matchSelectedType(filters.selectedType)")
+                              option(
+                                 ng-repeat="modelType in modelTypes"
+                                 value="{{modelType}}") {{ modelType }}
+                           span
+                              em.fa.fa-caret-down(aria-hidden="true")
+                     .model-date-range
+                        label.outstanding Model Added Date Range:
+                        .date-wrapper.form-inline
+                           .form-group
+                              label.date Start Date
+                              span
+                                 em.fa.fa-calendar
+                              input.form-control.date-range(type="text", uib-datepicker-popup="dd-MM-yyyy"
+                                 placeholder="dd-MM-yyyy" ng-model="filters.created.from" is-open="dp.createdOpened"
+                                 ng-click="openCreated()" datepicker-options="dp.options")
+                           .form-group
+                              label.date End Date
+                              span
+                                 em.fa.fa-calendar
+                              input.form-control.date-range(type="text", uib-datepicker-popup="dd-MM-yyyy"
+                                 placeholder="dd-MM-yyyy" ng-model="filters.created.to" is-open="dp.toOpened"
+                                 ng-click="openTo()")
+                     .button-filter
+                        button.btn-primary.fa-close(ng-click="clearFilters()") Clear Filters
+                  .divider
+
             table.table-striped.list(ng-show='models.length', ng-table="tableParams", class="table")
                tr(ng-repeat="model in $data")
-                  td(data-title="'Name'" sortable="'name'")
+                  td(data-title="'Model Name'" sortable="'name'")
                      | {{model.name}}
-                  td(data-title="'Added Date'" sortable="'addedOn'") {{ model.addedOn }}
+                  td(data-title="'Added Date'" sortable="'addedOn'")
+                     | {{ getModelCreationTimestamp(model) | date : dd-MM-yyyy }}
                   td(data-title="'Method'" sortable="'algorithm'") {{ model.algorithm }}
                   td(data-title="'Type'" sortable="'type'") {{ model.creationTool }}
                   td

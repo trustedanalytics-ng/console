@@ -20,16 +20,23 @@
     App.value('ModelsMock', [
             {
                 name: 'name',
-                revision: 'v1',
-                algorithm: 'alg'
+                type: 'H2O',
+                algorithm: 'alg',
+                addedOn: Date.now() + 48 * 3600 * 1000
             }, {
                 name: 'test',
-                revision: 'v2',
-                algorithm: 'mnk'
+                type: 'H2O',
+                addedOn: Date.now() + 24 * 3600 * 1000
             }, {
                 name: 'sample-model',
-                revision: 'v11',
-                algorithm: 'algorithm-name'
+                type: 'Other',
+                algorithm: 'algorithm-name',
+                addedOn: Date.now() - 24 * 3600 * 1000
+            }, {
+                name: 'mock-model',
+                type: 'SparkTK',
+                algorithm: 'mock-spark',
+                addedOn: Date.now() - 48 * 3600 * 1000
             }
         ]
     )

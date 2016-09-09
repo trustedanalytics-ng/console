@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+$bootstrap-input-text-color: #555;
+
 .modelcatalog {
 
   .panel {
@@ -27,6 +29,11 @@
           display: block;
           max-width: 400px;
           position: relative;
+
+          input {
+            height: 40px;
+          }
+
           em {
             position: absolute;
             right: 12px;
@@ -44,7 +51,100 @@
           line-height: 0;
           clear: both;
           border: none;
-          border-top: 1px solid #ccc;
+          border-top: 1px solid $color-divider;
+        }
+
+        &.filter {
+          h3 {
+            font-size: 20px;
+            font-weight: lighter;
+            color: #333;
+          }
+          label {
+
+            &.outstanding {
+              color: $color-blue-label;
+            }
+
+            &.date {
+              color: $text-placeholder-color;
+              font-weight: 400;
+            }
+          }
+          .filters {
+            padding: 0 10px;
+            width: 100%;
+
+            .model-type {
+              display: inline-block;
+
+              .select-wrapper {
+                max-width: 300px;
+                position: relative;
+
+                span em {
+                  position: absolute;
+                  top: 50%;
+                  transform: translateY(-50%);
+                  font-size: 16px;
+                  right: 10px;
+                  color: $text-placeholder-color;
+                  pointer-events: none;
+                }
+              }
+
+              select.form-control {
+                position: relative;
+                color: $bootstrap-input-text-color;
+                border-radius: 0;
+                height: 40px;
+                content: "";
+                appearance: none;
+                -webkit-appearance: none;
+                -moz-appearance: none;
+
+                &.placeholder {
+                  color: $text-placeholder-color;
+                }
+
+                option {
+                  color: $bootstrap-input-text-color;
+                }
+              }
+            }
+
+            .model-date-range {
+              width: auto;
+              display: inline-block;
+
+              .form-group {
+
+                &:last-child {
+                  padding-left: 15px;
+                }
+
+                span em.fa {
+                  color: $text-placeholder-color;
+                  padding: 0 12px;
+                }
+              }
+
+              input.form-control.date-range {
+                height: 40px;
+              }
+            }
+
+            .button-filter {
+              margin-top: 30px;
+              button {
+                padding: 6px 12px;
+                border: transparent;
+                &::before {
+                  margin-right: 10px;
+                }
+              }
+            }
+          }
         }
       }
 
@@ -66,7 +166,6 @@
         }
       }
     }
-
   }
 }
 

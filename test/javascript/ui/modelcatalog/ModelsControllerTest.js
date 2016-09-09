@@ -24,7 +24,8 @@ describe("Unit: ModelsController", function() {
         notificationService,
         state,
         $q,
-        modelsMock;
+        modelsMock,
+        deferred;
 
     beforeEach(module('app'));
 
@@ -37,6 +38,7 @@ describe("Unit: ModelsController", function() {
         scope = $rootScope.$new();
         $q = _$q_;
         state = new State();
+        deferred = $q.defer();
 
         targetProvider = {
             getOrganization: sinon.stub().returns({ guid: 'o1' })
@@ -53,7 +55,7 @@ describe("Unit: ModelsController", function() {
         };
 
         ModelResource = {
-            getModels: sinon.stub().returns($q.defer().promise)
+            getModels: sinon.stub().returns(deferred.promise)
         };
 
         h2oPublisherResource = {
@@ -80,19 +82,23 @@ describe("Unit: ModelsController", function() {
         expect(ModelResource.getModels).to.be.called;
     });
 
+    it('init, getInstances, set defaultFilter on success', function () {
+        var defaultFilters = {
+            selectedType: 'Choose Model Type',
+            created: {}
+        };
+        createController();
+        deferred.resolve();
+        scope.$digest();
+        expect(scope.filters).to.be.deep.equal(defaultFilters);
+    });
+
     it('targetChanged, get instances', function () {
         createController();
 
         scope.$emit('targetChanged');
 
         expect(ModelResource.getModels).to.be.calledTwice;
-    });
-
-    it('searchChanged, empty searchText, should show all models', function () {
-        createController();
-        scope.models = modelsMock;
-        scope.$emit('searchChanged');
-        expect(JSON.stringify(scope.models)).to.be.equals(JSON.stringify(scope.filteredModels));
     });
 
     it('searchChanged, set pagination page to 1', function () {

@@ -23,6 +23,11 @@
             $scope.search = function () {
                 $scope.$emit('searchChanged', $scope.value);
             };
+
+            $scope.$on('resetSearch', function () {
+                $scope.value = '';
+                $scope.$emit('searchChanged', '');
+            });
         }
     });
 }());
