@@ -22,6 +22,7 @@ App.config(function ($stateProvider, $urlRouterProvider, LazyLoadProvider, AppCo
     $urlRouterProvider.when('/app/datacatalog', '/app/datacatalog/datasets');
     $urlRouterProvider.when('/app/versiontracking', '/app/versiontracking/snapshots');
     $urlRouterProvider.when('/app/marketplace', '/app/marketplace/services');
+    $urlRouterProvider.when('/app/modelcatalog', '/app/modelcatalog/models');
     $urlRouterProvider.when('/app/platformdashboard', '/app/platformdashboard/summary');
     $urlRouterProvider.when('/app/jobsscheduler/jobs', '/app/jobsscheduler/jobs/workflowjobs');
 
@@ -369,6 +370,11 @@ App.config(function ($stateProvider, $urlRouterProvider, LazyLoadProvider, AppCo
         })
         .state('app.modelcatalog', {
             url: '/modelcatalog',
+            abstract: true,
+            template: '<ui-view />'
+        })
+        .state('app.modelcatalog.models', {
+            url: '/models',
             targetHeader: {org: true, space: false},
             controller: 'ModelsController',
             controllerAs: 'ctrl',
@@ -376,7 +382,10 @@ App.config(function ($stateProvider, $urlRouterProvider, LazyLoadProvider, AppCo
         })
         .state('app.modelcatalog.model', {
             url: '/model/:modelId',
-            targetHeader: {org: true, space: false}
+            targetHeader: {org: true, space: false},
+            controller: 'ModelsDetailsController',
+            controllerAs: 'ctrl',
+            templateUrl: getViewPath('modelcatalog/model-details.html')
         })
         .state('app.manage', {
             url: '/manage',

@@ -18,7 +18,7 @@
 
     App.controller('ModelsController', function ($scope, State, ModelResource, CommonTableParams, targetProvider) {
         var state = new State().setPending();
-        var searchFields = [ "name", "revision", "algorithm" ];
+        var searchFields = [ "name", "algorithm", "type" ];
         $scope.state = state;
 
         $scope.$on('searchChanged', function (event, searchText) {

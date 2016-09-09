@@ -56,16 +56,63 @@
         text-align: center;
 
         .ng-table-counts {
-          border: 1px solid #ADADAD;
+          border: 1px solid $table-border-grey;
           border-right: none;
           button {
             z-index: 2;
-            border-right: 1px solid #ADADAD;
+            border-right: 1px solid $table-border-grey;
             margin-left: 0;
           }
         }
       }
     }
 
+  }
+}
+
+/********************************* MODEL DETAILS VIEW ****************************/
+
+.model-details {
+
+  .panel {
+    padding: 25px 30px;
+  }
+
+  h4 {
+    margin-top: 30px;
+
+    &:first-child {
+      margin-top: 0;
+      margin-bottom: 20px;
+    }
+  }
+
+  .actions {
+    button {
+      margin-right: 10px;
+
+      &::before {
+        margin-right: 10px;
+      }
+    }
+  }
+
+  .table {
+    width: 100%;
+    tr {
+      border: 1px none $table-border-light-grey;
+      border-style: solid none;
+
+      td {
+        padding: 15px 0;
+        vertical-align: middle;
+      }
+
+      td:first-child {
+        font-size: 15px;
+        font-weight: bold;
+        width: 160px;
+      }
+    }
   }
 }

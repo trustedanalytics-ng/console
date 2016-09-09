@@ -31,8 +31,8 @@ h3
                tr(ng-repeat="model in $data")
                   td(data-title="'Name'" sortable="'name'")
                      | {{model.name}}
-                  td(data-title="'Version'" sortable="'version'") {{ model.revision }}
                   td(data-title="'Added Date'" sortable="'addedOn'") {{ model.addedOn }}
-                  td(data-title="'Algorithm'" sortable="'algorithm'") {{ model.algorithm }}
+                  td(data-title="'Method'" sortable="'algorithm'") {{ model.algorithm }}
+                  td(data-title="'Type'" sortable="'type'") {{ model.creationTool }}
                   td
                      a(ui-sref='app.modelcatalog.model({modelId: model.id})') See details &raquo;
