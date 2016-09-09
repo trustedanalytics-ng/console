@@ -30,6 +30,7 @@
         $scope.newInstanceState = newInstanceState;
 
         var org = targetProvider.getOrganization();
+        var space = targetProvider.getSpace();
         $scope.organization = org;
 
         $scope.$on('targetChanged', function () {

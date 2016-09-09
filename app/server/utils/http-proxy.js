@@ -23,16 +23,26 @@ var httpObjects = {
     'http': require('http'),
     'https': require('https')
 };
+var NO_PROXY = (process.env.no_proxy || '').split(',');
 
 function injectProxy(httpObject, agent) {
     var originalRequest = httpObject.request;
     httpObject.request = function(options, callback) {
         options = _.isString(options) ? url.parse(options) : options;
-        _.defaults(options, {
-            agent: agent
-        });
+
+        if (!hostInNoProxy(options.host)) {
+            _.defaults(options, {
+                agent: agent
+            });
+        }
         return originalRequest(options, callback);
     };
+}
+
+function hostInNoProxy(host) {
+    return _.some(NO_PROXY, function(noProxyHost) {
+        return host.endsWith(noProxyHost);
+    });
 }
 
 function initProxyForProtocol(schema) {
