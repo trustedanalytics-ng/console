@@ -60,7 +60,7 @@
             self.deleteState.setPending();
             ServiceInstancesResource
                 .supressGenericError()
-                .deleteInstance(instance.guid)
+                .deleteInstance(instance.id)
                 .then(function () {
                     self.deleteState.setDefault();
                     NotificationService.success('Instance has been deleted');
@@ -82,6 +82,8 @@
         });
 
         self.organization = targetProvider.getOrganization;
+
+        self.refresh = updateInstances;
 
         self.getNormalizedState = function(instance) {
             return instance.state.replace(/\s+/g, '-').toLowerCase();

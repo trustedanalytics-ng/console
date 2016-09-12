@@ -19,19 +19,14 @@
     App.factory('ServiceInstancesResource', function (Restangular) {
         var service = Restangular.service("services");
 
-        service.getSummary = function() {
-            return this.one('summary').get(params);
-        };
-
-        service.createInstance = function (name, planGuid, orgGuid, params) {
-            var parameters = _.extend({}, params, {
-                name: name
-            });
-            return this.post({
+        service.createInstance = function(offeringId, name, planGuid) {
+            return this.one().post(offeringId, {
                 name: name,
-                service_plan_guid: planGuid,
-                organization_guid: orgGuid,
-                parameters: parameters
+                type: 'SERVICE',
+                metadata: [{
+                    key: 'PLAN_ID',
+                    value: planGuid
+                }]
             });
         };
 

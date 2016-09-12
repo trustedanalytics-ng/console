@@ -119,7 +119,7 @@ describe("Unit: ServiceInstancesController", function () {
         deferred.resolve();
 
         $rootScope.$digest();
-        expect(serviceInstancesMock.deleteInstance.calledWith(instance.guid)).to.be.true;
+        expect(serviceInstancesMock.deleteInstance.calledWith(instance.id)).to.be.true;
 
     });
 

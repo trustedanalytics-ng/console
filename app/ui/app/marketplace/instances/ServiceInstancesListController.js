@@ -17,16 +17,12 @@
     "use strict";
 
     App.controller('ServiceInstancesListController', function ($scope, State, targetProvider, ServiceInstancesResource,
-        ServiceKeysResource, NotificationService, jsonFilter, blobFilter, KubernetesServicesResource, ServiceInstancesMapper, ServiceInstancesListHelper, UserProvider) {
+        NotificationService, jsonFilter, blobFilter, KubernetesServicesResource, ServiceInstancesMapper, ServiceInstancesListHelper) {
 
         var state = new State().setPending();
         $scope.state = state;
 
         refreshContent();
-
-        UserProvider.isAdmin().then(function (isAdmin) {
-            $scope.admin = isAdmin;
-        });
 
         $scope.$on('targetChanged', function () {
             refreshContent();

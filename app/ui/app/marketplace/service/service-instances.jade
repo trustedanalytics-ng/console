@@ -15,6 +15,8 @@
 //-
 .panel.instances
     .header
+        button.btn.btn-primary.fa-refresh.pull-right(ng-hide='ctrl.instancesState.isPending() || ctrl.deleteState.isPending()'
+            ng-click='ctrl.refresh()') Refresh
         | Running instances
 
     spinner(ng-show='ctrl.instancesState.isPending() || ctrl.deleteState.isPending()')
@@ -46,7 +48,7 @@
                 td
                     a(ng-if='instance.dashboard_url', ng-href='{{ instance.dashboard_url }}', target="_blank") Go to dashboard &raquo;
                 td
-                    a(ui-sref='app.marketplace.instance({instanceId: instance.guid})') See details &raquo;
+                    a(ui-sref='app.marketplace.instance({instanceId: instance.id})') See details &raquo;
                 td
                     a.delete(ng-click='ctrl.tryDeleteInstance(instance)')
 | {{ instanceToDelete.name }}
