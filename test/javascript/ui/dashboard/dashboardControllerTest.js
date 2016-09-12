@@ -21,7 +21,6 @@ describe("Unit: DashboardController", function () {
         createController,
         targetProvider,
         OrgMetricsResource,
-        LoadChartResource,
         $q;
 
     beforeEach(module('app'));
@@ -40,10 +39,6 @@ describe("Unit: DashboardController", function () {
 
         };
 
-        LoadChartResource = {
-            supressGenericError: sinon.stub().returnsThis(),
-            getChart: sinon.stub().returns($q.defer().promise)
-        };
 
         OrgMetricsResource = {
             getMetrics: sinon.stub().returns($q.defer().promise)
@@ -53,7 +48,6 @@ describe("Unit: DashboardController", function () {
             sut = $controller('DashboardController', {
                 $scope: scope,
                 targetProvider: targetProvider,
-                LoadChartResource: LoadChartResource,
                 OrgMetricsResource: OrgMetricsResource
             });
         };
@@ -70,7 +64,6 @@ describe("Unit: DashboardController", function () {
 
         expect(scope.state.isPending(), 'pending').to.be.true;
         expect(OrgMetricsResource.getMetrics).to.be.called;
-        expect(LoadChartResource.getChart).to.be.called;
     });
 
     it('init, empty organization, do not call metrics', function () {
@@ -87,7 +80,6 @@ describe("Unit: DashboardController", function () {
         scope.$emit('targetChanged');
 
         expect(OrgMetricsResource.getMetrics).to.be.calledTwice;
-        expect(LoadChartResource.getChart).to.be.calledOnce;
     });
 
     it('targetChanged, empty organization, do not get metrics', function () {

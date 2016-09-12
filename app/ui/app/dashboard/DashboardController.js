@@ -17,7 +17,7 @@
     "use strict";
 
     App.controller('DashboardController', function ($scope, targetProvider, State, OrgMetricsResource, $timeout,
-        LoadChartResource, UserProvider) {
+         UserProvider) {
 
         var state = new State().setPending(),
             metricsTimeoutHandler,
@@ -25,10 +25,8 @@
             TIMEOUT = 15 * 1000; // 15s
 
         $scope.state = state;
-        $scope.loadChart = {
-            values: null,
-            state: new State().setPending()
-        };
+
+
         $scope.organizations = targetProvider.getOrganizations();
 
         $scope.$on('targetChanged', function () {
@@ -51,7 +49,6 @@
 
 
         getMetrics();
-        getLoadData();
 
         $scope.$watchCollection('organizations', function(orgs) {
             $scope.anyOrgManager = UserProvider.isAnyOrgManager(orgs);
@@ -75,22 +72,5 @@
                     });
             }
         }
-
-        function getLoadData() {
-            $timeout.cancel(loadTimeoutHandler);
-            LoadChartResource.supressGenericError()
-                .getChart()
-                .then(function onSuccess(data) {
-                    $scope.loadChart.values = _.sortBy(data, 'timestamp');
-                    $scope.loadChart.state.setLoaded();
-                })
-                .catch(function onError() {
-                    $scope.loadChart.state.setError();
-                })
-                .finally(function () {
-                    loadTimeoutHandler = $timeout(getLoadData, TIMEOUT);
-                });
-        }
-
     });
 }());

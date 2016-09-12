@@ -20,10 +20,6 @@
     "value":"/rest"
   },
   {
-    "name":"metrics-provider",
-    "value":"/rest"
-  },
-  {
     "name":"router-metrics-provider",
     "value":"/rest"
   },
