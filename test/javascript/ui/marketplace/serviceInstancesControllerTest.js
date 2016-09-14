@@ -37,6 +37,8 @@ describe("Unit: ServiceInstancesController", function () {
         $q = _$q_;
         $rootScope = _$rootScope_;
         scope = $rootScope.$new();
+        // TODO: remove when DPNG-10877 is done
+        scope.serviceName = "sample-name";
 
         notificationService = {
             success: function(){},
@@ -84,7 +86,7 @@ describe("Unit: ServiceInstancesController", function () {
         expect(controller.instancesState.value).to.be.equal(controller.instancesState.values.ERROR);
     });
 
-    it('on targetChanged, get space summary second time', function () {
+    it('on targetChanged, get instances second time', function () {
         var deferred = $q.defer();
         serviceInstancesMock.getAllByType = sinon.stub().returns(deferred.promise);
         createController();
@@ -94,7 +96,7 @@ describe("Unit: ServiceInstancesController", function () {
         expect(serviceInstancesMock.getAllByType.called).to.be.true;
     });
 
-    it('on instanceCreated, get space summary second time', function () {
+    it('on instanceCreated, get instances second time', function () {
         var deferred = $q.defer();
         serviceInstancesMock.getAllByType = sinon.stub().returns(deferred.promise);
         createController();
@@ -173,11 +175,11 @@ describe("Unit: ServiceInstancesController", function () {
     function getServiceInstances() {
         return [
             {"guid":"3a4eb3e4-2654-4b47-8430-3f808ad171e0","name":"test1","service_plan":"shared","bounded_apps":0,
-                last_operation: {state: "succeded"}},
+                last_operation: {state: "succeded"}, serviceName: "sample-name"},
             {"guid":"36d4d970-bbcf-456e-ac35-f00b81a33f16","name":"security-codes-db","service_plan":"free","bounded_apps":2,
-                last_operation: {state: "succeded"}},
+                last_operation: {state: "succeded"}, serviceName: "sample-name"},
             {"guid":"68ec22a2-56fe-4aa9-b591-9c694f194721","name":"pancho-kafka","service_plan":"shared","bounded_apps":3,
-                last_operation: {state: "succeded"}}
+                last_operation: {state: "succeded"}, serviceName: "sample-name"}
         ];
     }
 });

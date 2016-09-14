@@ -33,7 +33,18 @@ describe("Unit: ServiceInstanceDetailsControllerTest", function () {
         $httpBackend,
         redirect = 'app.marketplace.instances';
 
+    var SAMPLE_INSTANCE;
+
     beforeEach(module('app'));
+
+    beforeEach(function() {
+        SAMPLE_INSTANCE = {
+            id: 'sample-guid',
+            auditTrail: {
+                createdOn: 123
+            }
+        };
+    });
 
     beforeEach(inject(function ($controller, $rootScope, _$q_, State, _$state_, _$httpBackend_) {
         rootScope = $rootScope;
@@ -94,10 +105,13 @@ describe("Unit: ServiceInstanceDetailsControllerTest", function () {
         expect(serviceInstanceResource.getById).to.be.called;
     });
 
-    it('init, getById success, set state on loaded', function () {
-        serviceInstanceDeferred.resolve();
+    it('init, getById success, instance loaded', function () {
+        serviceInstanceDeferred.resolve(SAMPLE_INSTANCE);
         scope.$digest();
-        expect(scope.state.value).to.be.equals(state.values.LOADED);
+
+        expect(scope.state.value).to.be.equal(state.values.LOADED);
+        expect(scope.serviceInstance.id).to.be.equal(SAMPLE_INSTANCE.id);
+        expect(scope.serviceInstance.auditTrail.createdOnMilisec).to.be.equal(123000);
     });
 
     it('init, getById  404 error, redirect to instances page', function () {
@@ -164,4 +178,5 @@ describe("Unit: ServiceInstanceDetailsControllerTest", function () {
         scope.$digest();
         expect(genericErrorSpied.called).to.be.true;
     });
+
 });

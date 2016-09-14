@@ -30,6 +30,7 @@
 
         ServiceInstancesResource.getById(instanceId)
             .then(function (serviceInstance) {
+                fillTimestamps(serviceInstance);
                 $scope.serviceInstance = serviceInstance;
                 $scope.state.setLoaded();
             })
@@ -80,4 +81,11 @@
                 });
         };
     });
+
+    function fillTimestamps(instance) {
+        if(!instance.auditTrail) {
+            return;
+        }
+        instance.auditTrail.createdOnMilisec = instance.auditTrail.createdOn * 1000;
+    }
 }());

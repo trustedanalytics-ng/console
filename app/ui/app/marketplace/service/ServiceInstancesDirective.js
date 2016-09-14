@@ -24,14 +24,14 @@
 
         var GATEWAY_TIMEOUT_ERROR = 504;
 
-        var state = new State();
+        var state = new State().setPending();
         self.state = state;
 
         self.instancesState = new State().setLoaded();
         self.deleteState = new State().setDefault();
 
         self.getInstances = function () {
-            getInstancesData(self, targetProvider.getOrganization(), id, ServiceInstancesResource);
+            getInstancesData(self, targetProvider.getOrganization(), id, $scope.serviceName, ServiceInstancesResource);
         };
 
         var updateInstances = function () {
@@ -39,7 +39,13 @@
             self.deleteState.setDefault();
             self.getInstances();
         };
-        updateInstances();
+
+        // TODO: remove scope watch when DPNG-10877 is done - just update on init
+        $scope.$watch('serviceName', function(value) {
+            if(value) {
+                updateInstances();
+            }
+        });
 
         $scope.$on('instanceCreated', function () {
             updateInstances();
@@ -103,12 +109,13 @@
     });
 
 
-    function getInstancesData(self, organization, serviceId, ServiceInstancesResource) {
+    function getInstancesData(self, organization, serviceId, serviceName, ServiceInstancesResource) {
         ServiceInstancesResource
             .withErrorMessage('Failed to retrieve service instances')
             .getAllByType(organization.guid, serviceId)
             .then(function (instances) {
-                self.instances = instances;
+                // TODO: remove filtering when DPNG-10877 is done
+                self.instances = _.where(instances, {serviceName: serviceName});
                 self.instancesState.setLoaded();
             })
             .catch(function () {
