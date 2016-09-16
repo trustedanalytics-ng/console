@@ -17,7 +17,7 @@
 (function() {
     'use strict';
 
-    App.factory('ApplicationHelper', function(ApplicationResource, NotificationService, $q, $state) {
+    App.factory('ApplicationHelper', function(ServiceInstancesResource, ApplicationResource, NotificationService, $q, $state) {
 
         return {
             restartApplication: restartApplication,
@@ -53,10 +53,22 @@
                 });
         }
 
+        function loadInstances() {
+            return ServiceInstancesResource.getAll()
+                .then(function (instances) {
+                    return instances;
+                });
+        }
+
         function getApplication(appId) {
-            return ApplicationResource
-                .withErrorMessage('Failed to load application details')
-                .getApplication(appId);
+            var promises = [ApplicationResource.withErrorMessage('Failed to load application details').getApplication(appId), loadInstances()];
+            return $q.all(promises)
+                .then(function(values) {
+                    return {
+                        application : values[0],
+                        instances : values[1]
+                    };
+                });
         }
 
         function deleteApplication(state, appId) {

@@ -51,14 +51,6 @@
             return this.one(appId).all("status").post(status);
         };
 
-        service.createBinding = function (appId, serviceId) {
-            return this.one(appId).all("service_bindings").post({service_instance_guid: serviceId});
-        };
-
-        service.getAllBindings = function (appId) {
-            return this.one(appId).all("service_bindings").customGET("");
-        };
-
         service.getOrphanServices = function (appId) {
             return this.one(appId).all("orphan_services").customGET("");
         };

@@ -65,9 +65,11 @@
         };
 
         function loadApplication() {
+
             ApplicationHelper.getApplication(appId)
-                .then(function(application){
-                    $scope.application = application;
+                .then(function(data) {
+                    $scope.instances = data.instances;
+                    $scope.application = data.application;
                     $scope.state.setLoaded();
                 })
                 .catch(function onError(response) {

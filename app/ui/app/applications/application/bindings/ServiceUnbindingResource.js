@@ -13,14 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 (function () {
     "use strict";
 
-    App.factory('ServiceBindingResource', function (Restangular) {
-        var service = Restangular.service("bind");
+    App.factory('ServiceUnbindingResource', function (Restangular) {
+        var service = Restangular.service("unbind");
 
-        service.createBinding = function (appId, serviceId) {
+        service.deleteBinding = function (appId, serviceId) {
             return this.one(serviceId).one(appId).post();
         };
 

@@ -22,9 +22,11 @@ describe("Unit: ApplicationHelper", function () {
         $state,
         State,
         ApplicationResource,
+        ServiceInstancesResource,
         NotificationService,
         SAMPLE_GUID = "sample-guid-123",
-        SAMPLE_APP = { id: SAMPLE_GUID };
+        SAMPLE_APP = { id: SAMPLE_GUID },
+        SAMPLE_INSTANCES = {id: "i1"};
 
     beforeEach(module('app'));
 
@@ -33,6 +35,10 @@ describe("Unit: ApplicationHelper", function () {
             withErrorMessage: sinon.stub().returnsThis()
         };
         $provide.value('ApplicationResource', ApplicationResource);
+        ServiceInstancesResource = {
+            withErrorMessage: sinon.stub().returnsThis()
+        };
+        $provide.value('ServiceInstancesResource', ServiceInstancesResource);
         NotificationService = {
             success: sinon.stub()
         };
@@ -43,10 +49,12 @@ describe("Unit: ApplicationHelper", function () {
         $provide.value('$state', $state);
     }));
 
-    beforeEach(inject(function(ApplicationHelper, _$q_, _$rootScope_, _State_) {
+    beforeEach(inject(function(ServiceInstancesResource, ApplicationHelper, _$q_, _$rootScope_, _State_) {
         $q = _$q_;
         $rootScope = _$rootScope_;
         State = _State_;
+
+        ServiceInstancesResource.getAll = sinon.stub().returns($q.defer().promise);
 
         ApplicationResource.getApplication = sinon.stub().returns($q.defer().promise);
         ApplicationResource.start = sinon.stub().returns($q.defer().promise);
@@ -55,16 +63,6 @@ describe("Unit: ApplicationHelper", function () {
 
         sut = ApplicationHelper;
     }));
-
-    beforeEach(inject(function($httpBackend, $rootScope) {
-        // workaround for 'Unexpected request GER /rest/orgs' issued by router.
-        // I couldn't find better solution for it so far.
-        $httpBackend.expectGET('/rest/orgs').respond(function() {
-           return null;
-        });
-        $rootScope.$digest();
-    }));
-
 
     it('should not be null', function () {
         expect(sut).not.to.be.null;
@@ -136,15 +134,23 @@ describe("Unit: ApplicationHelper", function () {
         expect(NotificationService.success).not.to.be.called;
     });
 
-    it('getApplication, pass resource result', function() {
-        var resourceResult = $q.defer().promise;
-        ApplicationResource.getApplication = sinon.stub().returns(resourceResult);
+    it('getApplication, return instances and application', function() {
+        ApplicationResource.getApplication = sinon.stub().returns(successPromise(SAMPLE_APP));
+        ServiceInstancesResource.getAll = sinon.stub().returns(successPromise(SAMPLE_INSTANCES));
 
-        var result = sut.getApplication(SAMPLE_GUID)
+        var instances = [];
+        var application = { guid: 'a1'};
+
+        sut.getApplication(SAMPLE_GUID)
+            .then(function(data) {
+                instances = data.instances;
+                application = data.application;
+        });
         $rootScope.$apply();
 
         expect(ApplicationResource.getApplication).to.be.calledWith(SAMPLE_GUID);
-        expect(result).to.be.equal(resourceResult);
+        expect(instances).to.be.equal(SAMPLE_INSTANCES);
+        expect(application).to.be.equal(SAMPLE_APP);
     });
 
     it('deleteApplication, success, go to list and display success message', function() {

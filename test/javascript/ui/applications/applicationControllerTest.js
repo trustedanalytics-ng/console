@@ -19,6 +19,8 @@ describe("Unit: ApplicationController", function () {
     var controller,
         createController,
         applicationHelper,
+        applicationResource,
+        serviceInstancesResource,
         state,
         $q,
         $scope,
@@ -27,7 +29,7 @@ describe("Unit: ApplicationController", function () {
 
     beforeEach(module('app'));
 
-    beforeEach(inject(function(_$q_, $rootScope, $controller, State) {
+    beforeEach(inject(function(_$q_, $rootScope, $controller, State, ServiceInstancesResource, ApplicationResource) {
         $q = _$q_;
         $scope = $rootScope.$new();
 
@@ -38,6 +40,9 @@ describe("Unit: ApplicationController", function () {
             getApplication: sinon.stub().returns($q.defer().promise),
             deleteApplication: sinon.stub().returns($q.defer().promise)
         };
+
+        applicationResource = ApplicationResource;
+        serviceInstancesResource = ServiceInstancesResource;
 
         state = new State();
 
@@ -85,7 +90,7 @@ describe("Unit: ApplicationController", function () {
     it('getApplication success, set application', function () {
         createAndInitializeController(SAMPLE_APP);
 
-        expect($scope.application, 'application').to.be.deep.equal(SAMPLE_APP);
+        expect($scope.appId, 'appId').to.be.deep.equal(SAMPLE_APP.guid);
         expect($scope.state.value, 'state').to.be.equal(state.values.LOADED);
     });
 
@@ -168,8 +173,18 @@ describe("Unit: ApplicationController", function () {
     }
 
     function createAndInitializeController(application, instances) {
-        application = application || { guid: APP_ID };
-        applicationHelper.getApplication = sinon.stub().returns(successPromise(application));
+        var application = application || SAMPLE_APP;
+        var instances = instances || getSampleInstances();
+
+        var deferred = $q.defer();
+        applicationResource.getApplication = sinon.stub().returns(deferred.promise);
+        deferred.resolve(application);
+
+        var deferredInstances = $q.defer();
+        serviceInstancesResource.getAll = sinon.stub().returns(deferredInstances.promise);
+        deferredInstances.resolve(instances);
+
+        applicationHelper.getApplication = sinon.stub().returns(successPromise(application, instances));
 
         createController();
         $scope.$digest();

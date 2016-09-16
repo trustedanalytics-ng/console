@@ -29,6 +29,18 @@
   "path": "/applications",
   "name": "servicecatalog"
 }, {
+  "path": "/services",
+  "name": "servicecatalog"
+}, {
+  "path": "/bindings",
+  "name": "servicecatalog"
+}, {
+  "path": "/unbind",
+  "name": "servicecatalog"
+}, {
+  "path": "/bind",
+  "name": "servicecatalog"
+}, {
   "path": "/orgs/[^/]+/name",
   "name": "user-management"
 }, {

@@ -17,7 +17,7 @@
     "use strict";
 
     App.controller('ApplicationBindingsController', function ($scope, ApplicationResource, ServiceBindingResource,
-            applicationBindingExtractor, State, $stateParams, NotificationService) {
+    BindingsResource, ServiceUnbindingResource, applicationBindingExtractor, State, $stateParams, NotificationService) {
 
             var appId = $stateParams.appId;
 
@@ -26,7 +26,7 @@
             $scope.appId = appId;
 
             $scope.loadBindings = function () {
-                loadBindings($scope, ApplicationResource, applicationBindingExtractor);
+                loadBindings($scope, BindingsResource, applicationBindingExtractor);
             };
 
             $scope.setApplication = function (application) {
@@ -52,9 +52,9 @@
                     return;
                 }
                 state.value = state.values.PENDING;
-                ApplicationResource
+                ServiceBindingResource
                     .withErrorMessage('Failed to bind the service')
-                    .createBinding($scope.application.guid, service.guid)
+                    .createBinding($scope.appId, service.id)
                     .then(function () {
                         NotificationService.success('Service has been bound');
                     })
@@ -68,9 +68,9 @@
                     return;
                 }
                 state.value = state.values.PENDING;
-                var binding = _.findWhere($scope.bindings, {service_instance_guid: service.guid});
+                var binding = _.findWhere($scope.bindings, {service_instance_guid: service.id});
                 if (binding) {
-                    ServiceBindingResource.deleteBinding(binding.guid)
+                    ServiceUnbindingResource.deleteBinding($scope.appId, service.id)
                         .then(function () {
                             NotificationService.success('Service has been unbound');
                             $scope.loadBindings();
@@ -94,15 +94,15 @@
         var bounderServiceIds = _.pluck($scope.bindings, 'service_instance_guid');
 
         $scope.servicesBound = $scope.services.filter(function (s) {
-            return _.contains(bounderServiceIds, s.guid);
+            return _.contains(bounderServiceIds, s.id);
         });
         $scope.servicesAvailable = _.difference($scope.services, $scope.servicesBound);
 
         $scope.state.value = $scope.state.values.LOADED;
     }
 
-    function loadBindings($scope, ApplicationResource, applicationBindingExtractor) {
-        return ApplicationResource.getAllBindings($scope.appId)
+    function loadBindings($scope, BindingsResource, applicationBindingExtractor) {
+        return BindingsResource.getAllBindings($scope.appId)
             .then(function onSuccess(bindings) {
                 $scope.bindings = applicationBindingExtractor.extract(bindings);
                 updateInstances($scope);
