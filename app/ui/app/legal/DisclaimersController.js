@@ -16,15 +16,14 @@
 (function () {
     "use strict";
 
-    App.controller('DisclaimersController', function ($scope, PlatformContextProvider) {
+    App.controller('DisclaimersController', function ($scope, PlatformInfoProvider) {
         $scope.tools = {};
 
-        PlatformContextProvider.getPlatformContext()
-            .then(function success(platformContext) {
-                var list = platformContext.external_tools.list;
+        PlatformInfoProvider.getExternalTools()
+            .then(function success(platformInfo) {
                 $scope.tools = _.object(
-                    _.pluck(list, 'name'),
-                    _.pluck(list, 'available')
+                    _.pluck(platformInfo, 'name'),
+                    _.pluck(platformInfo, 'available')
                 );
             });
 

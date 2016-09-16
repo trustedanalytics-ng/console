@@ -28,21 +28,40 @@ describe("Unit: ToolsInstanceListController", function () {
         scope,
         notificationService,
         organization = { guid: 111, name: "org" },
-        space = { guid: 222, name: "space" };
+        SAMPLE_OFFERING = {
+            metadata: {
+                guid: 'offering-id'
+            },
+            entity: {
+                service_plans: [{
+                    metadata: {
+                        guid: 'plan-id'
+                    }
+                }]
+            }
+        };
 
     beforeEach(module('app'));
 
-    beforeEach(inject(function ($controller, $location, TestHelpers, _$rootScope_, _$q_,
-                                ToolsInstanceResource, ServiceInstancesResource, ServiceResource) {
-        toolsInstanceMock = ToolsInstanceResource;
-        serviceInstancesMock = ServiceInstancesResource;
-        serviceResourceMock = ServiceResource;
-        locationMock = $location;
-
-        _targetProvider = new TestHelpers().stubTargetProvider();
+    beforeEach(inject(function ($controller, $location, TestHelpers, _$rootScope_, _$q_, ServiceResource) {
         $q = _$q_;
         $rootScope = _$rootScope_;
         scope = $rootScope.$new();
+
+        serviceInstancesMock = {
+            withErrorMessage: sinon.stub().returnsThis(),
+            supressGenericError: sinon.stub().returnsThis(),
+            getAll: sinon.stub().returns($q.defer().promise),
+            deleteInstance: sinon.stub().returns($q.defer().promise),
+            createInstance: sinon.stub().returns($q.defer().promise)
+        };
+        serviceResourceMock = {
+            withErrorMessage: sinon.stub().returnsThis(),
+            getAll: sinon.stub().returns($q.defer().promise)
+        };
+        locationMock = $location;
+
+        _targetProvider = new TestHelpers().stubTargetProvider();
 
         notificationService = {
             confirm: function() {},
@@ -56,7 +75,6 @@ describe("Unit: ToolsInstanceListController", function () {
         };
 
         _targetProvider.organization = organization;
-        _targetProvider.space = space;
 
         createController = function() {
             controller = $controller('ToolsInstancesListController', {
@@ -65,12 +83,18 @@ describe("Unit: ToolsInstanceListController", function () {
                 $location: locationMock,
                 targetProvider: _targetProvider,
                 NotificationService: notificationService,
-                ToolsInstanceResource: toolsInstanceMock,
                 ServiceInstancesResource: serviceInstancesMock,
                 ServiceResource: serviceResourceMock,
                 $state: state
             });
         };
+    }));
+
+    beforeEach(inject(function($httpBackend) {
+        // workaround for 'Unexpected request GER /rest/orgs' issued by router.
+        $httpBackend.expectGET('/rest/orgs').respond(function () {
+            return null;
+        });
     }));
 
     it('should not be null', function () {
@@ -79,110 +103,51 @@ describe("Unit: ToolsInstanceListController", function () {
 
 
     it('createInstance, create instance of service', function () {
-
-        var spyCreateInstance = sinon.spy(serviceInstancesMock, 'createInstance');
-
         createController();
+        scope.offering = SAMPLE_OFFERING;
         scope.createInstance('lala');
 
-        expect(spyCreateInstance.called, 'createInstance called').to.be.true;
-
+        expect(serviceInstancesMock.createInstance.called, 'createInstance called').to.be.true;
     });
 
 
     it('deleteInstance, delete entity ok, list refreshed', function () {
-        var appId = 123;
-        var apps = {
-            app01: {
-                hostname: "name.org",
-                login: "login",
-                password: "password"
-            },
-            plain: sinon.stub().returns(this)
-        };
-
-        var servicePlans = [
-            {
-                metadata: { guid: "guid"},
-                entity: {
-                    name: "name",
-                    free: true
-                }
-            }
-        ];
-
-        var deferredApp = $q.defer();
-        serviceInstancesMock.deleteInstance = sinon.stub().returns(deferredApp.promise);
-
-        var deferredAppGetToolsInstances = $q.defer();
-        toolsInstanceMock.getToolsInstances = sinon.stub().returns(deferredAppGetToolsInstances.promise);
-
-        var deferredGetPlan = $q.defer();
-        serviceResourceMock.getAllServicePlansForLabel = sinon.stub().returns(deferredGetPlan.promise);
-
-        var confirmDeferred = $q.defer();
-        notificationService.confirm = sinon.stub().returns(confirmDeferred.promise);
+        serviceInstancesMock.deleteInstance = sinon.stub().returns(getResolvedPromise());
+        serviceResourceMock.getAll = sinon.stub().returns(getResolvedPromise());
+        notificationService.confirm = sinon.stub().returns(getResolvedPromise());
 
 
         createController();
-        scope.deleteInstance(appId);
-
-        deferredGetPlan.resolve(servicePlans);
-        deferredApp.resolve();
-        deferredAppGetToolsInstances.resolve(apps);
-        confirmDeferred.resolve(arguments);
-
+        scope.deleteInstance('1234');
         $rootScope.$digest();
 
-        expect( serviceInstancesMock.deleteInstance.calledWith(appId), 'deleteInstance calledWith').to.be.true;
+        expect(serviceInstancesMock.deleteInstance.calledWith('1234'), 'deleteInstance calledWith').to.be.true;
 
     });
 
 
     it('deleteInstance, not confirmed, deleteInstance should not be called', function () {
-        var appId = 123;
-        var servicePlans = [
-            {
-                metadata: { guid: "guid"},
-                entity: {
-                    name: "name",
-                    free: true
-                }
-            }
-        ];
-
-        var deferredApp = $q.defer();
-        toolsInstanceMock.deleteInstance = sinon.stub().returns(deferredApp.promise);
-
-        var deferredAppGetToolsInstances = $q.defer();
-        toolsInstanceMock.getToolsInstances = sinon.stub().returns(deferredAppGetToolsInstances.promise);
-
-        var confirmDeferred = $q.defer();
-        notificationService.confirm = sinon.stub().returns(confirmDeferred.promise);
-
-        var deferredGetPlan = $q.defer();
-        serviceResourceMock.getAllServicePlansForLabel = sinon.stub().returns(deferredGetPlan.promise);
-
-        var apps = {
-            app01: {
-                hostname: "name.org",
-                login: "login",
-                password: "password"
-            },
-            plain: sinon.stub().returns(this)
-        };
+        notificationService.confirm = sinon.stub().returns(getRejectedPromise());
+        serviceInstancesMock.getAll = sinon.stub().returns(getResolvedPromise());
 
         createController();
-        scope.deleteInstance(appId);
+        scope.deleteInstance('1234');
 
-        deferredGetPlan.resolve(servicePlans);
-        deferredApp.reject();
-        deferredAppGetToolsInstances.resolve(apps);
-        confirmDeferred.reject(arguments);
+        scope.$apply();
 
-        $rootScope.$digest();
-
-        expect( toolsInstanceMock.deleteInstance.called, 'deleteInstance called').to.be.false;
+        expect(serviceInstancesMock.deleteInstance.called, 'deleteInstance called').to.be.false;
 
     });
+
+    function getResolvedPromise(data) {
+        var deferred = $q.defer();
+        deferred.resolve(data);
+        return deferred.promise;
+    }
+
+    function getRejectedPromise(data) {
+        var deferred = $q.defer();
+        deferred.reject(data);
+        return deferred.promise;
+    }
 });

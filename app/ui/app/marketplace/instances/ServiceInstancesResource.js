@@ -20,7 +20,7 @@
         var service = Restangular.service("services");
 
         service.createInstance = function(offeringId, name, planGuid) {
-            return this.one().post(offeringId, {
+            return service.one().post(offeringId, {
                 name: name,
                 type: 'SERVICE',
                 metadata: [{
@@ -31,22 +31,22 @@
         };
 
         service.deleteInstance = function (serviceId) {
-            return this.one(serviceId).remove();
+            return service.one(serviceId).remove();
         };
 
         service.getAllByType = function (organizationId, serviceId) {
-            return this.getList({
+            return service.getList({
                 org: organizationId,
                 broker: serviceId
             });
         };
 
         service.getAll = function () {
-            return this.getList();
+            return service.getList();
         };
 
         service.getById = function (instanceId) {
-            return this.one(instanceId).get();
+            return service.one(instanceId).get();
         };
 
         return service;

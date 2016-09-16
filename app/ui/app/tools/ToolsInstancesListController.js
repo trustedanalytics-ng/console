@@ -17,33 +17,42 @@
     "use strict";
 
     App.controller('ToolsInstancesListController', function ($scope, $location, targetProvider, State,
-        NotificationService, ToolsInstanceResource, ServiceResource, ServiceInstancesResource, $state) {
+        NotificationService, ServiceResource, ServiceInstancesResource, $state) {
 
         var GATEWAY_TIMEOUT_ERROR = 504;
 
         $scope.servicePlanGuid = "";
-        $scope.state = new State();
+        var state = new State().setPending();
+        $scope.state = state;
 
         var SERVICE_LABEL = $location.path().split('/').pop();
         $scope.instanceType = SERVICE_LABEL;
         $scope.brokerName = $state.current.entityDisplayName;
+        $scope.organization = targetProvider.getOrganization();
 
-        $scope.$on('targetChanged', onTargetChanged);
+        $scope.$on('targetChanged', refreshInstances);
 
-        onTargetChanged();
-        setServicePlan($scope, ServiceResource, SERVICE_LABEL);
+        refreshInstances();
+        getOffering($scope, ServiceResource, SERVICE_LABEL);
 
-
-        function onTargetChanged() {
-            $scope.organization = targetProvider.getOrganization();
-            getInstances($scope, ToolsInstanceResource, $scope.organization.guid, $scope.instanceType);
+        function refreshInstances() {
+            state.setPending();
+            getInstances($scope, ServiceInstancesResource, SERVICE_LABEL)
+                .then(function() {
+                    state.setLoaded();
+                })
+                .catch(function() {
+                    state.setError();
+                });
         }
 
         $scope.createInstance = function (name) {
             $scope.state.setPending();
+            var offeringId = $scope.offering.metadata.guid;
+            var planId = $scope.offering.entity.service_plans[0].metadata.guid;
             ServiceInstancesResource
                 .supressGenericError()
-                .createInstance(name, $scope.servicePlanGuid, $scope.organization.guid)
+                .createInstance(offeringId, name, planId)
                 .then(function () {
                     NotificationService.success('Creating an ' + $scope.brokerName +
                         ' instance may take a while. You can try to refresh the page after few seconds.');
@@ -57,7 +66,7 @@
                     }
                 })
                 .finally(function () {
-                    getInstances($scope, ToolsInstanceResource, $scope.organization.guid, $scope.instanceType);
+                    refreshInstances();
                     $scope.newInstanceName = "";
                 });
         };
@@ -75,7 +84,7 @@
                         ' may take a while. You can try to refresh the page after few seconds.');
                 })
                 .finally(function () {
-                    getInstances($scope, ToolsInstanceResource, $scope.organization.guid, $scope.instanceType);
+                    refreshInstances();
                 });
         };
 
@@ -91,58 +100,27 @@
             });
         };
 
-        $scope.hasService = function (instances) {
-            return _.some(instances, function (instance) {
-                return instance.service;
-            });
-        };
-
     });
 
-    var checkIsObject = function (value) {
-        return typeof(value) === typeof({});
-    };
 
-    var getInstancesFromResponse = function (apps) {
-        var result = apps.plain();
-        return _.omit(result, function (val) {
-            return !checkIsObject(val);
-        });
-    };
-
-    function getInstances($scope, ToolsInstanceResource, orgId, serviceType) {
-        if (serviceType) {
-            $scope.state.setPending();
-            ToolsInstanceResource.getToolsInstances(orgId, serviceType)
-                .then(function (response) {
-                    $scope.instances = getInstancesFromResponse(response);
-                    $scope.anyRows = (Object.keys($scope.instances).length) ? true : false;
-                    $scope.state.setLoaded();
-                })
-                .catch(function () {
-                    $scope.state.setError();
-                });
-        } else {
-            $scope.anyRows = false;
-        }
-    }
-
-    var getServicePlanGuid = function (servicePlans) {
-        return _.map(
-            _.filter(servicePlans, function predicate(plan) {
-                return plan.entity.free;
-            }),
-            function getGuid(plan) {
-                return plan.metadata.guid;
-            }
-        )[0];
-    };
-
-    function setServicePlan($scope, ServiceResource, serviceLabel) {
-        $scope.state.setPending();
-        ServiceResource.getAllServicePlansForLabel(serviceLabel)
-            .then(function (servicePlans) {
-                $scope.servicePlanGuid = getServicePlanGuid(servicePlans);
+    function getInstances($scope, ServiceInstancesResource, offeringName) {
+        return ServiceInstancesResource
+            .withErrorMessage('Failed to load instances')
+            .getAll()
+            .then(function (response) {
+                $scope.instances = _.filter(response, {serviceName: offeringName});
             });
     }
+
+    function getOffering($scope, ServiceResource, offeringName) {
+        return ServiceResource
+            .withErrorMessage('Failed to load offering')
+            .getAll()
+            .then(function(offerings) {
+                $scope.offering = _.find(offerings, function(offering) {
+                    return offering.entity.label === offeringName;
+                });
+            });
+    }
+
 }());

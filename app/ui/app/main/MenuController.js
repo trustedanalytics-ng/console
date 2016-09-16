@@ -15,7 +15,7 @@
  */
 (function () {
     App.controller('MenuController', function ($rootScope, $scope, $state, $window, UserProvider, targetProvider,
-        MenuItems, PlatformContextProvider) {
+        MenuItems, PlatformInfoProvider) {
 
         $scope.menuItems = MenuItems;
         $scope.access = {};
@@ -25,7 +25,7 @@
         $scope.organizations = targetProvider.getOrganizations();
 
         function updateExternalTools() {
-            getExternalTools(PlatformContextProvider, targetProvider, $scope);
+            getExternalTools(PlatformInfoProvider, targetProvider, $scope);
         }
         updateExternalTools();
 
@@ -125,12 +125,9 @@
     }
 
 
-    function getExternalTools(PlatformContextProvider, targetProvider, $scope) {
-        if(!targetProvider.getOrganization().guid) {
-            return;
-        }
-        PlatformContextProvider
-            .getExternalTools(targetProvider.getOrganization().guid)
+    function getExternalTools(PlatformInfoProvider, targetProvider, $scope) {
+        PlatformInfoProvider
+            .getExternalTools()
             .then(function (externalTools) {
                 $scope.tools = externalTools;
             });

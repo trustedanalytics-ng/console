@@ -16,18 +16,14 @@
 (function () {
     "use strict";
 
-    App.factory('ServiceResource', function (Restangular) {
+    App.factory('ServiceResource', function (Restangular, targetProvider) {
         var service = Restangular.service("catalog");
         service.getService = function (id) {
             return this.one(id).get();
         };
 
-        service.getListBySpace = function (space) {
-            return this.one().customGET("", {space: space});
-        };
-
-        service.getAllServicePlansForLabel = function (label) {
-            return this.one(label).one("service_plans").get();
+        service.getAll = function () {
+            return this.one().customGET("", {org: targetProvider.getOrganization().guid});
         };
 
         service.deleteService = function(id) {

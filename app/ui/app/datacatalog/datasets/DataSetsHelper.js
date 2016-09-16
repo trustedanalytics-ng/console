@@ -17,12 +17,12 @@
 (function () {
     'use strict';
 
-    App.factory('DataSetsHelper', function (PlatformContextProvider, DataSetResource) {
+    App.factory('DataSetsHelper', function (PlatformInfoProvider, DataSetResource) {
 
         return {
             getFormatIcon: getFormatIcon,
             prepareQuery: prepareQuery,
-            loadPlatformContext: loadPlatformContext,
+            loadPlatformInfo: loadPlatformInfo,
             search: search
         };
 
@@ -91,8 +91,8 @@
             };
         }
 
-        function loadPlatformContext(tool) {
-            return PlatformContextProvider.getPlatformContext()
+        function loadPlatformInfo(tool) {
+            return PlatformInfoProvider.getPlatformInfo()
                 .then(function onSuccess(data) {
                     var DEFAULT_TOOL = 'arcadia';
                     var externalTools = data.external_tools;

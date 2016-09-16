@@ -21,14 +21,13 @@ h3
       spinner(ng-show="state.isPending()")
       div(ng-show="state.isLoaded()")
          .instances-table
-             table.table.list-group(ng-show="anyRows")
+             table.table.list-group(ng-show="instances.length")
                 thead
                    th Instance Name
                    th(ng-if="hasLogin(instances)") App Login
                    th.passCol(ng-if="hasPassword(instances)") App Password
-                   th
-                      span(ng-if="!hasService(instances)") App Url
-                      span(ng-if="hasService(instances)") Dashboard Url
+                   th Url
+                   th State
                    th(ng-if="hasDeployer(brokerName)") Deploy App
                    th Delete
                 tbody
@@ -48,12 +47,13 @@ h3
                          a(ng-if='instance.hostname || instance.dashboard_url', href='{{ (instance.hostname || instance.dashboard_url) | ensureHttps }}', target="_blank")
                             | {{ instance.hostname || 'Go to dashboard' }}
                          span(ng-if='!instance.hostname && !instance.dashboard_url') -
+                      td {{ instance.state }}
                       td
-                         a.delete(ng-click='deleteInstance(instance.guid)')
-             .no-instances(ng-hide="anyRows")
+                         a.delete(ng-click='deleteInstance(instance.id)')
+             .no-instances(ng-hide="instances.length")
                 | No instances found
 
-         div(ng-show='servicePlanGuid || servicePlans')
+         div(ng-show='offering')
             form(name='newInstanceType', ng-submit='createInstance(newInstanceName)')
                input.form-control(name='instanceName', type='text', required='', placeholder='Instance name',
                   ng-model='newInstanceName', ng-trim="true" pattern-validator="^[a-zA-Z][a-zA-Z0-9-_.]*$")

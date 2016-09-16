@@ -26,7 +26,7 @@
         ARCADIA: 'arcadia'
     });
 
-    App.directive('dPublishDataSet', function (DataTableResource, State, $window, ngDialog, PlatformContextProvider) {
+    App.directive('dPublishDataSet', function (DataTableResource, State, $window, ngDialog, PlatformInfoProvider) {
         return {
             scope: {
                 dataSet: "=data",
@@ -47,7 +47,7 @@
 
                 $scope.availableVisualizationsTools =[];
 
-                PlatformContextProvider.getPlatformContext().then(function (data) {
+                PlatformInfoProvider.getPlatformInfo().then(function (data) {
                     var externalTools = data.external_tools;
                     $scope.availableVisualizationsTools = _.pluck(_.where(externalTools.visualizations, {available: true}), 'name').map(function (name) {
                         return name.toLowerCase();

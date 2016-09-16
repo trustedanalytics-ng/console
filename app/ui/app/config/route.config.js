@@ -255,15 +255,6 @@ App.config(function ($stateProvider, $urlRouterProvider, LazyLoadProvider, AppCo
             templateUrl: getViewPath('tools/tools.html'),
             resolve: LazyLoadProvider.load(['highlightjs'])
         })
-        .state('app.datatools', {
-            url: '/datatools',
-            title: 'Data scientist CLI',
-            targetHeader: {org: true, space: true},
-            controller: 'DataToolsController',
-            controllerAs: 'ctrl',
-            templateUrl: getViewPath('tools/datatools.html'),
-            resolve: LazyLoadProvider.load(['highlightjs'])
-        })
         .state('app.ipython', {
             url: '/ipython',
             title: 'IPython console',

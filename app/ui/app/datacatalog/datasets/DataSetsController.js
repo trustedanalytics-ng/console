@@ -60,7 +60,7 @@
 
         $scope.availableVisualizationsTools =[];
 
-        DataSetsHelper.loadPlatformContext($scope.tool).then(function(data){
+        DataSetsHelper.loadPlatformInfo($scope.tool).then(function(data){
             $scope.availableVisualizationsTools = data.availableVisualizations;
             $scope.tool = data.tool;
         });

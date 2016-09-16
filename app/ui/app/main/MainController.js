@@ -17,7 +17,7 @@
     "use strict";
 
     App.controller('MainController', function($scope, AppConfig, targetProvider, NotificationService, $window, Idle,
-                                              Keepalive, UserProvider, ConfigResource, $http, PlatformContextProvider) {
+                                              Keepalive, UserProvider, ConfigResource, $http, PlatformInfoProvider) {
         $scope.appConfig = AppConfig;
         $scope.year = new Date().getFullYear();
         $scope.infoConfig = {
@@ -49,7 +49,7 @@
         });
 
 
-        PlatformContextProvider.getPlatformContext()
+        PlatformInfoProvider.getPlatformInfo()
             .then(function (response) {
                 $scope.platformInfo = response;
             });

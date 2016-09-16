@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-describe("Unit: PlatformContextProvider", function() {
+describe("Unit: PlatformInfoProvider", function() {
 
     var sut,
-        platformContextResource,
+        platformInfoResource,
         rootScope;
 
-    var PLATFORM_CONTEXT_DEFAULT = Object.freeze({
+    var PLATFORM_INFO_DEFAULT = Object.freeze({
         api_endpoint: "http://api.example.com",
         plain: function() { return this; }
     });
@@ -27,34 +27,34 @@ describe("Unit: PlatformContextProvider", function() {
     beforeEach(module('app'));
 
     beforeEach(module(function($provide){
-        platformContextResource = {
-            getPlatformContext: sinon.stub(),
+        platformInfoResource = {
+            getPlatformInfo: sinon.stub(),
             withErrorMessage: function() { return this; }
         };
-        $provide.value('PlatformContextResource', platformContextResource);
+        $provide.value('PlatformInfoResource', platformInfoResource);
     }));
 
-    beforeEach(inject(function(PlatformContextProvider, $rootScope){
+    beforeEach(inject(function(PlatformInfoProvider, $rootScope){
         rootScope = $rootScope;
-        sut = PlatformContextProvider;
+        sut = PlatformInfoProvider;
     }));
 
-    it('getPlatformContext, query resource and return value', inject(function($q){
-        platformContextResource.getPlatformContext = sinon.spy(function() {
+    it('getPlatformInfo, query resource and return value', inject(function($q){
+        platformInfoResource.getPlatformInfo = sinon.spy(function() {
             var deferred = $q.defer();
-            deferred.resolve(PLATFORM_CONTEXT_DEFAULT);
+            deferred.resolve(PLATFORM_INFO_DEFAULT);
             return deferred.promise;
         });
 
         var result = null;
-        sut.getPlatformContext()
+        sut.getPlatformInfo()
             .then(function(data){
                 result = data;
             });
         rootScope.$apply();
 
-        expect(platformContextResource.getPlatformContext).to.be.called;
-        expect(result).to.be.equal(PLATFORM_CONTEXT_DEFAULT);
+        expect(platformInfoResource.getPlatformInfo).to.be.called;
+        expect(result).to.be.equal(PLATFORM_INFO_DEFAULT);
     }));
 
 });

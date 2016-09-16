@@ -21,14 +21,14 @@ describe("Unit: DataSetsController", function() {
         state,
         dataSetResource,
         q,
-        platformContextProvider,
+        platformInfoProvider,
         cookies,
 
         DEFAULT_TOOL_NAME = 'arcadia';
 
     beforeEach(module('app', function($provide) {
-        platformContextProvider = {
-            getPlatformContext: function() {
+        platformInfoProvider = {
+            getPlatformInfo: function() {
                 return q.defer().promise;
             }
         };
@@ -43,7 +43,7 @@ describe("Unit: DataSetsController", function() {
         };
 
         $provide.value('DataSetResource', dataSetResource);
-        $provide.value('PlatformContextProvider', platformContextProvider);
+        $provide.value('PlatformInfoProvider', platformInfoProvider);
     }));
 
     beforeEach(inject(function($injector, $rootScope, State, $q){
@@ -218,7 +218,7 @@ describe("Unit: DataSetsController", function() {
 
         sample_data.plain = function(){ return this; };
 
-        platformContextProvider.getPlatformContext = sinon.spy(function() {
+        platformInfoProvider.getPlatformInfo = sinon.spy(function() {
             var deferred = q.defer();
             deferred.resolve(sample_data);
             return deferred.promise;
@@ -236,7 +236,7 @@ describe("Unit: DataSetsController", function() {
             {name:DEFAULT_TOOL_NAME,available:true}]}};
         sample_data.plain = function(){return this;};
 
-        platformContextProvider.getPlatformContext = sinon.spy(function() {
+        platformInfoProvider.getPlatformInfo = sinon.spy(function() {
             var deferred = q.defer();
             deferred.resolve(sample_data);
             return deferred.promise;
@@ -254,7 +254,7 @@ describe("Unit: DataSetsController", function() {
             {name:'vistool3',available:true}]}};
         sample_data.plain = function(){return this;};
 
-        platformContextProvider.getPlatformContext = sinon.spy(function() {
+        platformInfoProvider.getPlatformInfo = sinon.spy(function() {
             var deferred = q.defer();
             deferred.resolve(sample_data);
             return deferred.promise;

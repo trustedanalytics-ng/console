@@ -17,7 +17,7 @@
     "use strict";
 
     App.controller('ServicesController', function ($http, serviceExtractor, targetUrlBuilder, $scope, State,
-        targetProvider, ServiceResource) {
+        ServiceResource) {
 
         var self = this,
             searchHandler = null,
@@ -28,17 +28,13 @@
         $scope.currentPage = 1;
         $scope.itemsPerPage = 12;
 
-        self.isSpaceSet = function () {
-            return !_.isEmpty(targetProvider.getSpace());
-        };
-
         self.updateServices = function () {
 
             self.state.setPending();
 
             ServiceResource
                 .withErrorMessage('Failed to retrieve services list')
-                .getListBySpace(targetProvider.getSpace().guid)
+                .getAll()
                 .then(function (data) {
                     data = data || {};
                     self.services = _.sortBy(serviceExtractor.extract(data), function (service) {
@@ -47,7 +43,6 @@
                     self.filtered = self.services;
                     calculatePagination($scope.currentPage, $scope.itemsPerPage);
                     self.state.setLoaded();
-                    self.space = targetProvider.getSpace();
 
                 })
                 .catch(function () {

@@ -16,7 +16,7 @@
 (function () {
     "use strict";
 
-    App.controller('ToolsController', function ($scope, userAgent, CliConfiguration, PlatformContextProvider, State) {
+    App.controller('ToolsController', function ($scope, userAgent, CliConfiguration, PlatformInfoProvider, State) {
         var baseUrl = '',
             cliVersion = 'latest',
             architectureSymbol = getArchitectureSymbol(userAgent),
@@ -26,8 +26,8 @@
         $scope.clis = _.values(CliConfiguration);
         $scope.currentPackage = getCurrentPackage();
 
-        PlatformContextProvider
-            .getPlatformContext()
+        PlatformInfoProvider
+            .getPlatformInfo()
             .then(function onSuccess(platformContext) {
                 cliVersion = platformContext.cli_version || 'latest';
                 baseUrl = platformContext.cli_url || '';

@@ -85,9 +85,6 @@
             "icon": "icon-wrench",
             "items": [
                 {
-                    "text": "TAP Analytics Toolkit",
-                    "sref": "app.datatools"
-                }, {
                     "text": "Seahorse",
                     "sref": "app.seahorse",
                     "tool": 'seahorse'
@@ -133,10 +130,10 @@
                 } */
             ],
             "access": ["admin", "anyOrgManager"]
-        }, {
+        /*}, {
             "text": "Event Log",
             "sref": "app.latestevents",
-            "icon": "icon-book-open"
+            "icon": "icon-book-open"*/
         }
     ]);
 })();

@@ -54,7 +54,7 @@ describe("Unit: ServicesController", function () {
         new TestHelpers().stubTargetProvider(targetProvider);
 
         serviceListDeferred = $q.defer();
-        ServiceResource.getListBySpace = sinon.stub().returns(serviceListDeferred.promise);
+        ServiceResource.getAll = sinon.stub().returns(serviceListDeferred.promise);
         scope = rootScope.$new();
 
         createController = function () {
@@ -108,7 +108,7 @@ describe("Unit: ServicesController", function () {
 
         rootScope.$broadcast('targetChanged');
 
-        expect(ServiceResource.getListBySpace.calledTwice).to.be.true;
+        expect(ServiceResource.getAll.calledTwice).to.be.true;
     });
 
     it('filterService: empty searchText, should find service', function () {

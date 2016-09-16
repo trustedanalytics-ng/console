@@ -21,7 +21,7 @@ describe("Unit: DocumentationController", function () {
         scope,
         state,
         $q,
-        versionResource,
+        platformInfoProvider,
         createController,
         deferred;
 
@@ -34,14 +34,14 @@ describe("Unit: DocumentationController", function () {
         state = new State();
         deferred = $q.defer();
 
-        versionResource = {
-            getSnapshots: sinon.stub().returns(deferred.promise)
+        platformInfoProvider = {
+            getPlatformInfo: sinon.stub().returns(deferred.promise)
         };
 
         createController = function () {
             controller = $controller('DocumentationController', {
                 $scope: scope,
-                VersionResource: versionResource
+                PlatformInfoProvider: platformInfoProvider
             });
         };
 
@@ -56,17 +56,17 @@ describe("Unit: DocumentationController", function () {
         expect(scope.state.value).to.be.equals(state.values.PENDING);
     });
 
-    it('init, getSnapshots called', function () {
-        expect(versionResource.getSnapshots.called).to.be.ok;
+    it('init, getPlatformInfo called', function () {
+        expect(platformInfoProvider.getPlatformInfo.called).to.be.ok;
     });
 
-    it('getSnapshots, success, set state on loaded', function () {
+    it('getPlatformInfo, success, set state on loaded', function () {
         deferred.resolve({response: 'blabla'});
         scope.$digest();
         expect(scope.state.value).to.be.equals(scope.state.values.LOADED);
     });
 
-    it('getSnapshots, reject, set state on error', function () {
+    it('getPlatformInfo, reject, set state on error', function () {
         deferred.reject();
         scope.$digest();
         expect(scope.state.value).to.be.equals(scope.state.values.LOADED);

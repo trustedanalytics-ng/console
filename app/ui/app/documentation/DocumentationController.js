@@ -17,7 +17,7 @@
 (function () {
     "use strict";
 
-    App.controller('DocumentationController', function ($scope, State, VersionResource) {
+    App.controller('DocumentationController', function ($scope, State, PlatformInfoProvider) {
 
         var TAP_WIKI = "https://github.com/trustedanalytics/platform-wiki";
         var platformVersion;
@@ -25,9 +25,9 @@
 
         $scope.state = state;
 
-        VersionResource.getSnapshots()
-            .then(function (response) {
-                platformVersion = response.tap;
+        PlatformInfoProvider.getPlatformInfo()
+            .then(function (platformInfo) {
+                platformVersion = platformInfo.platform_version;
                 getLinkToPlatformWiki();
                 $scope.state.setLoaded();
             })

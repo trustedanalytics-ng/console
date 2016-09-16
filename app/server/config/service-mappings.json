@@ -53,8 +53,8 @@
   "path": "/orgs/[^/]+/users",
   "name": "user-management"
 }, {
-  "path": "/platform_context",
-  "name": "platformcontext"
+  "path": "/platform_info",
+  "name": "servicecatalog"
 }, {
   "path": "/external_tools",
   "name": "platformcontext"

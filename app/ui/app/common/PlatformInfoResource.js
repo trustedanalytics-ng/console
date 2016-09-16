@@ -16,10 +16,10 @@
 (function () {
     "use strict";
 
-    App.factory('PlatformContextResource', function (Restangular) {
-        var context = Restangular.service('platform_context');
+    App.factory('PlatformInfoResource', function (Restangular) {
+        var context = Restangular.service('platform_info');
 
-        context.getPlatformContext = function () {
+        context.getPlatformInfo = function () {
             return this.one().get();
         };
 
