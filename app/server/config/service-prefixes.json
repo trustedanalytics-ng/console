@@ -21,7 +21,7 @@
   },
   {
     "name":"metrics-provider",
-    "value":"/rest"
+    "value":"/api/v1"
   },
   {
     "name":"router-metrics-provider",

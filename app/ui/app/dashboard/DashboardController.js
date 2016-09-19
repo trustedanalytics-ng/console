@@ -25,10 +25,13 @@
             TIMEOUT = 15 * 1000; // 15s
 
         $scope.state = state;
+
         $scope.loadChart = {
             values: null,
             state: new State().setPending()
         };
+        // CHART IS NO LONGER VALID IN 0.8
+
         $scope.organizations = targetProvider.getOrganizations();
 
         $scope.$on('targetChanged', function () {

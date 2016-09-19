@@ -32,7 +32,7 @@
   "path": "/orgs/[^/]+/name",
   "name": "user-management"
 }, {
-  "path": "/orgs/[^/]+/metrics",
+  "path": "/metrics/organization",
   "name": "metrics-provider"
 }, {
   "path": "/metrics/load-data",

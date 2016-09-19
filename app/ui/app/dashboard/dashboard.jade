@@ -22,35 +22,27 @@ spinner(ng-show='state.isPending()')
     .category-title.clearfix
         | Health & metrics
 
-    tile-small-white-numeric(number="data.appsRunning", text="'Applications running'", link="#/app/applications").col-lg-4.col-md-6.col-sm-6
-    tile-small-white-numeric(number="data.appsDown", text="'Applications down'",
+    tile-small-white-numeric(number="data.applications_running_count", text="'Applications running'", link="#/app/applications").col-lg-4.col-md-6.col-sm-6
+    tile-small-white-numeric(number="data.applications_failed_count", text="'Applications down'",
       link="#/app/applications").col-lg-4.col-md-6.col-sm-6
-    tile-small-white-numeric(number="data.totalUsers", text="'Users count'",
+    tile-small-white-numeric(number="data.users_count", text="'Users count'",
       link="#/app/manage/orgusers", link-enabled="canManageUsers()").col-lg-4.col-md-6.col-sm-6
-    tile-load-chart(chart-data="loadChart.values", state="loadChart.state",
-      parent-state="state",).col-lg-12.col-md-12.col-sm-12
+
 
     .category-title.clearfix Quotas
-    tile-progress(value="data.memoryUsage.numerator | memoryConverter: 'GB':'MB'",
-        total="data.memoryUsage.denominator | memoryConverter: 'GB':'MB'",
-        unit="'GB'",
-        title="'Memory usage'").col-lg-4.col-sm-6
-    tile-blue-numeric(number="data.serviceUsage", text="'Service usage'",
-      link="#/app/marketplace/instances").col-lg-4.col-sm-6.tile-height-large
-    tile-blue-numeric(number="data.domainsUsage", text="'Domains usage'",
-      link="#/app/applications").col-lg-4.col-sm-6.tile-height-large
+    tile-blue-numeric(number="data.services_count", text="'Service usage'",
+      link="#/app/marketplace/instances").col-lg-4.col-md-6.col-sm-6.tile-height-small
+    tile-blue-numeric-percentages(number="data.memory_usage_percentage", text="'Memory usage'",
+      link="#/app/marketplace/instances").col-lg-4.col-md-6.col-sm-6.tile-height-small
+    tile-blue-numeric-percentages(number="data.cpu_usage_percentage", text="'CPU usage'",
+      link="#/app/marketplace/instances").col-lg-4.col-md-6.col-sm-6.tile-height-small
 
-    .col-md-4.left-col
-        .category-title Data
-        tile-blue-numeric(number="data.datasetCount", text="'Datasets count'",
-            link="#/app/datacatalog/datasets").tile-height-small
-        tile-blue-numeric(number="data.privateDatasets", text="'Private datasets'",
-            link="#/app/datacatalog/datasets").tile-height-small
-        tile-blue-numeric(number="data.publicDatasets", text="'Public datasets'",
-            link="#/app/datacatalog/datasets").tile-height-small
 
-    .col-md-8
-        .category-title Other
-        tile-news(events="data.latestEvents", link="#/app/events")
+    .category-title.clearfix Data
+    tile-blue-numeric(number="data.private_datasets_count", text="'Private datasets'",
+      link="#/app/datacatalog/datasets").col-lg-4.col-md-6.col-sm-6.tile-height-small
+    tile-blue-numeric(number="data.public_datasets_count", text="'Public datasets'",
+      link="#/app/datacatalog/datasets").col-lg-4.col-md-6.col-sm-6.tile-height-small
+
 
 
