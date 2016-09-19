@@ -17,9 +17,10 @@
     "use strict";
 
     App.factory('OrgMetricsResource', function (Restangular) {
-        var resource = Restangular.service("metrics");
+        var resource = Restangular.service("orgs");
+
         resource.getMetrics = function (orgId) {
-            return this.one().customGET('organization', {org: orgId});
+            return this.one(orgId).one('metrics').get();
         };
 
         return resource;

@@ -42,22 +42,6 @@
         }
     });
 
-    App.component('tileBlueNumericPercentages', {
-        bindings: {
-            number: '<',
-            float: '<?',
-            text: '<',
-            unit: '<?',
-            link: '@'
-        },
-        templateUrl: 'app/dashboard/tile-blue-numeric-percentages.html',
-        controller: function() {
-            this.isVisible = function(data) {
-                return angular.isNumber(data) || (angular.isString(data) && data.length);
-            };
-        }
-    });
-
     App.component('tileProgress', {
         bindings: {
             value: '<',
