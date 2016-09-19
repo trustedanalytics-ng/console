@@ -46,9 +46,9 @@
             return getUsersResource().post(user);
         };
 
-        //service.updateUserRoles = function (user) {
-        //    return getUsersResource().one(user.guid).customPOST({roles: user.roles});
-        //};
+        service.updateUserRoles = function (user, requestedRole) {
+            return getUsersResource().one(user.guid).customPOST({role: requestedRole});
+        };
 
         service.getRoles = function () {
             return {

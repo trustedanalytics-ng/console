@@ -29,11 +29,6 @@ describe("Unit: UsersRoleMapperService", function () {
         UserRoleMapperService = _UserRoleMapperService_;
     }));
 
-    it('should convert user roles to checkboxes', function() {
-        var roles = UserRoleMapperService.mapCheckboxesToRoles({guid: "1234"}, checkboxes);
-        expect(roles).to.be.deep.equal(["admin"]);
-    });
-
     it('should convert user checkboxes to roles', function() {
         var users = [
             {
@@ -61,7 +56,6 @@ describe("Unit: UsersRoleMapperService", function () {
             }
         };
         var resultCheckboxes = UserRoleMapperService.mapRolesToCheckboxes(users);
-        console.log(resultCheckboxes);
         expect(resultCheckboxes).to.be.deep.equal(expectedCheckboxes);
     });
 

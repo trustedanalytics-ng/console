@@ -29,8 +29,8 @@ table.table.user-list(ng-show='state.isLoaded() && users.length > 0', ng-table='
                     input(type="checkbox"
                             ng-model="roleCheckboxes[user.guid][avRole]"
                             ng-click="updateUserRoles(user, avRole)"
-                            ng-disabled="true")
-                    span.fa.fa-check
+                            ng-disabled="isCheckboxDisabled(user)")
+                    span.fa.fa-check(ng-class="{'checkboxDisabled': isCheckboxDisabled(user)}") 
         td
             a.delete-user.fa-times.fa(ng-click='deleteUser(user)', ng-show="isDeleteButtonAvailable(user)")
 

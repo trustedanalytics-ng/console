@@ -20,7 +20,7 @@
     App.factory('ManageUsersHelper', function (UserActionsNotificationsService, UserRoleMapperService) {
 
         return {
-            //updateUserRoles: updateUserRoles,
+            updateUserRoles: updateUserRoles,
             addUser: addUser
         };
 
@@ -42,15 +42,14 @@
                 });
         }
 
-        //function updateUserRoles(user, roleCheckboxes, users, userService) {
-        //    user.roles = UserRoleMapperService.mapCheckboxesToRoles(user, roleCheckboxes);
-        //
-        //    userService.updateUserRoles(user)
-        //        .then(function () {
-        //            UserActionsNotificationsService.userRolesChanged(user);
-        //        })
-        //        .catch(UserActionsNotificationsService.userRolesChangeFailed);
-        //    return countManagers(users);
-        //}
+        function updateUserRoles(user, isCheckboxStatusTrue, userService) {
+            var requestedRole = isCheckboxStatusTrue ? "ADMIN" : "USER";
+
+            userService.updateUserRoles(user, requestedRole)
+                .then(function () {
+                    UserActionsNotificationsService.userRolesChanged(user);
+                })
+                .catch(UserActionsNotificationsService.userRolesChangeFailed);
+        }
     });
 }());

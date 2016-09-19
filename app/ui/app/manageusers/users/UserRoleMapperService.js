@@ -18,13 +18,6 @@
 
     App.service('UserRoleMapperService', function () {
         return {
-            mapCheckboxesToRoles: function (user, roleCheckboxes) {
-                var userFlags = roleCheckboxes[user.guid];
-                return _.filter(_.keys(userFlags), function (value) {
-                    return userFlags[value];
-                });
-            },
-
             mapRolesToCheckboxes: function (users) {
                 var ids = _.pluck(users, 'guid');
                 var roles = _.map(users, function (user) {

@@ -45,9 +45,11 @@
             $scope.roleCheckboxes = UserRoleMapperService.mapRolesToCheckboxes($scope.users);
         });
 
-        //$scope.updateUserRoles = function (user) {
-        //    ManageUsersHelper.updateUserRoles(user, $scope.roleCheckboxes, $scope.users, userService);
-        //};
+        $scope.updateUserRoles = function (user, role) {
+            var checkboxStatus = $scope.roleCheckboxes[user.guid][role];
+            ManageUsersHelper.updateUserRoles(user, checkboxStatus, userService);
+        };
+
 
         $scope.deleteUser = function (userToBeDeleted) {
             UserActionsNotificationsService.deleteUser(userToBeDeleted, $scope.state)
@@ -67,6 +69,10 @@
                 .finally(function () {
                     $scope.state.setLoaded();
                 });
+        };
+
+        $scope.isCheckboxDisabled = function (user) {
+            return user.username === $scope.currentUser.username;
         };
 
         function resetAddUser() {
