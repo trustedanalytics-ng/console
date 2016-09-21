@@ -15,15 +15,15 @@
 //-
 .model-details
     h3 Model: {{model.name}}
-    spinner(ng-show='state.isPending()')
-    .panel(ng-show='state.isLoaded()')
+    spinner(ng-show='state.isPending() || deleteState.isPending()')
+    .panel(ng-show='state.isLoaded() && deleteState.isDefault()')
 
         h4 Actions
 
-        //.actions
-            button.btn.btn-primary.fa-pencil-square-o Edit Metadata
-            button.btn.btn-primary.fa-times Delete
-            button.btn.btn-primary.fa-download Download
+        .actions
+            button.btn.btn-primary.fa-times(ng-click='tryDeleteModel()') Delete
+            //button.btn.btn-primary.fa-pencil-square-o Edit Metadata
+            //button.btn.btn-primary.fa-download Download
 
         h4 Metadata
         table.table
@@ -49,3 +49,15 @@
     .panel.panel-warning(ng-show='state.isError()')
         .panel-heading Error loading content
         .panel-body Model details page is unavailable
+
+script(type="text/ng-template", id="confirm-delete")
+    .ngdialog-message.clearfix
+        | {{ model.name }}
+        p
+            | Are you sure you want to delete
+            = ' '
+            b {{ data.model }}
+            | ?
+        .pull-right
+            button.btn.btn-primary(type='button', ng-click='confirm()') Delete
+            button.btn.btn-default(type='button', ng-click="cancel()") Cancel

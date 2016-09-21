@@ -23,6 +23,7 @@
         var MODEL_NOT_FOUND_ERROR = 404;
         var state = new State().setPending();
         $scope.state = state;
+        $scope.deleteState = new State().setDefault();
 
         ModelResource.getModelMetadata(modelId)
             .then(function (model) {
@@ -38,5 +39,26 @@
                     NotificationService.error(error.data.message || 'An error occurred while loading model details page');
                 }
             });
+
+        $scope.tryDeleteModel = function () {
+            NotificationService.confirm('confirm-delete', {model: $scope.model.name})
+                .then(function () {
+                    $scope.deleteModel();
+                });
+        };
+
+        $scope.deleteModel = function () {
+            $scope.deleteState.setPending();
+            ModelResource
+                .withErrorMessage('Error occurred while deleting a model.')
+                .deleteModel(modelId)
+                .then(function () {
+                    NotificationService.success('Model has been deleted');
+                    $state.go('app.modelcatalog.models');
+                })
+                .finally(function () {
+                    $scope.deleteState.setDefault();
+                });
+        };
     });
 }());

@@ -21,6 +21,7 @@ describe("Unit: ModelsDetailsController", function() {
         scope,
         modelResource,
         modelDetailsDeferred,
+        deleteModelDeffered,
         notificationService,
         state,
         $state,
@@ -36,15 +37,20 @@ describe("Unit: ModelsDetailsController", function() {
         $state = _$state_;
         $q = _$q_;
         state = new State();
+        deleteState = new State();
         $stateParams = _$stateParams_;
         modelDetailsDeferred = $q.defer();
+        deleteModelDeffered = $q.defer();
 
         modelResource = {
-            getModelMetadata: sinon.stub().returns(modelDetailsDeferred.promise)
+            getModelMetadata: sinon.stub().returns(modelDetailsDeferred.promise),
+            deleteModel: sinon.stub().returns(deleteModelDeffered.promise),
+            withErrorMessage: sinon.stub().returnsThis()
         };
 
         notificationService = {
-            success: function() {},
+            success: function () {},
+            withErrorMessage: function () {},
             error: function () {}
         };
 
@@ -72,9 +78,10 @@ describe("Unit: ModelsDetailsController", function() {
         expect(controller).not.to.be.null;
     });
 
-    it('init, set state pending', function () {
+    it('init, set state pending and deleteState default', function () {
         createController();
         expect(scope.state.value).to.be.equals(state.values.PENDING);
+        expect(scope.deleteState.value).to.be.equals(state.values.DEFAULT);
     });
 
     it('init, getModelMetadata called', function () {
@@ -107,5 +114,36 @@ describe("Unit: ModelsDetailsController", function() {
         scope.$digest();
         expect(scope.state.value).to.be.equals(state.values.ERROR);
         expect(errorSpied.called).to.be.true;
+    });
+
+    it('deleteModel, invoke, set deleteState on pending', function () {
+        createController();
+        scope.deleteModel();
+        scope.$digest();
+        expect(scope.deleteState.value).to.be.equals(deleteState.values.PENDING);
+    });
+
+    it('deleteModel, success, redirect to models, set deleteState to default', function () {
+        var successSpied = sinon.spy(notificationService, 'success');
+        var redirectSpied = sinon.spy($state, 'go');
+        createController();
+        deleteModelDeffered.resolve();
+        scope.deleteModel();
+        scope.$digest();
+        expect(successSpied.called).to.be.true;
+        expect(redirectSpied.calledWith(redirect)).to.be.true;
+        expect(scope.deleteState.value).to.be.equals(deleteState.values.DEFAULT);
+    });
+
+    it('deleteModel, delete failed , do not notify about success, set deleteState to default', function () {
+        var successSpied = sinon.spy(notificationService, 'success');
+        var redirectSpied = sinon.spy($state, 'go');
+        createController();
+        deleteModelDeffered.reject({status: 404});
+        scope.deleteModel();
+        scope.$digest();
+        expect(successSpied).not.to.be.called;
+        expect(redirectSpied).not.to.be.called;
+        expect(scope.deleteState.value).to.be.equals(deleteState.values.DEFAULT);
     });
 });

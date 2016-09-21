@@ -23,8 +23,12 @@
             return this.one().customGET("", {'orgId': orgId});
         };
 
-        resource.getModelMetadata = function(modelId){
+        resource.getModelMetadata = function(modelId) {
             return this.one(modelId).get();
+        };
+
+        resource.deleteModel = function (modelId) {
+            return this.one(modelId).remove();
         };
 
         return resource;
