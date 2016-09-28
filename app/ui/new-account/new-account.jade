@@ -53,7 +53,10 @@ html(ng-app='newAccountApp')
                 | Your link is incorrect or has already expired.
 
             .form(ng-if='status == statuses.DEFAULT')
-                h3 You have been invited to join Trusted Analytics platform
+                h3 Congratulations!
+                h3 You have been invited 
+                    .line to join 
+                    .line Trusted Analytics Platform
                 div
                     form(ng-submit='createUser()')
                         .row(title="{{ user.email }}")
