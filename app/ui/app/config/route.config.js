@@ -376,8 +376,20 @@ App.config(function ($stateProvider, $urlRouterProvider, LazyLoadProvider, AppCo
             targetHeader: {org: true, space: false},
             controller: 'ModelsDetailsController',
             controllerAs: 'ctrl',
-            templateUrl: getViewPath('modelcatalog/model-details.html')
+            templateUrl: getViewPath('modelcatalog/model-details.html'),
+            resolve: LazyLoadProvider.load(['xeditable'])
         })
+        //.state('app.modelcatalog.edit', {
+        //    url: '/edit/model/:modelId',
+        //    params: {
+        //        model: {}
+        //    },
+        //    targetHeader: {org: true, space: false},
+        //    controller: 'ModelsEditController',
+        //    controllerAs: 'ctrl',
+        //    templateUrl: getViewPath('modelcatalog/model-edit.html'),
+        //
+        //})
         .state('app.manage', {
             url: '/manage',
             abstract: true,

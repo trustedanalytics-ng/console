@@ -173,6 +173,25 @@ $bootstrap-input-text-color: #555;
 
 .model-details {
 
+  h3 > text-editable span.editable-click {
+    color: $text-color;
+    border-color: transparent;
+    position: relative;
+    font-style: normal;
+
+    &:hover, &:active {
+      border-color: $text-color;
+    }
+
+    &::before {
+      position: absolute;
+      right: -34px;
+      top: 4px;
+      font-size: 20px;
+      border: none;
+    }
+  }
+
   .panel {
     padding: 25px 30px;
   }
@@ -180,10 +199,21 @@ $bootstrap-input-text-color: #555;
   h4 {
     margin-top: 30px;
 
+    &.actions-heading {
+      display: inline-block;
+      padding-right: 15px;
+    }
+
     &:first-child {
       margin-top: 0;
       margin-bottom: 20px;
     }
+  }
+
+  span.not-supported {
+    font-size: 12px;
+    font-weight: 400;
+    color: $text-color-warning;
   }
 
   .actions {
@@ -205,6 +235,133 @@ $bootstrap-input-text-color: #555;
       td {
         padding: 15px 0;
         vertical-align: middle;
+      }
+
+      td:first-child {
+        font-size: 15px;
+        font-weight: bold;
+        width: 160px;
+      }
+    }
+  }
+}
+
+/********************************* MODEL Edit VIEW ****************************/
+
+.model-edit {
+
+  header.edit {
+    position: relative;
+
+    h3 {
+      display: inline-block;
+      cursor: pointer;
+
+      span.editable-click {
+        color: $text-color;
+        border-color: transparent;
+        position: relative;
+
+        &:hover, &:active {
+          border-color: $text-color;
+        }
+
+        &::before {
+          position: absolute;
+          right: -34px;
+          top: 4px;
+          font-size: 20px;
+          border: none;
+        }
+      }
+
+      .editable-buttons {
+        margin-top: 8px;
+        button:last-child {
+          margin-left: 44px;
+        }
+      }
+    }
+
+    button {
+      position: absolute;
+
+      &.cancel {
+        background: $body-background-color;
+        right: 130px;
+      }
+
+      &.save {
+        background-color: $confirm-bg-color;
+        right: 0;
+      }
+
+      &:hover, &:focus {
+        color: white;
+        border-color: transparent;
+        outline: none;
+      }
+    }
+  }
+
+  .panel {
+    padding: 25px 30px;
+  }
+
+  h4 {
+    margin-top: 30px;
+
+    &.actions-heading {
+      display: inline-block;
+      padding-right: 15px;
+    }
+
+    &:first-child {
+      margin-top: 0;
+      margin-bottom: 20px;
+    }
+  }
+
+  span.not-supported {
+    font-size: 12px;
+    font-weight: 400;
+    color: $text-color-warning;
+  }
+
+  .actions {
+
+    button {
+      margin-right: 10px;
+
+      &::before {
+        margin-right: 10px;
+      }
+
+      &.inactive {
+        background: $input-color-placeholder;
+        pointer-events: none;
+      }
+    }
+  }
+
+  .table {
+    width: 100%;
+    tr {
+      border: 1px none $table-border-light-grey;
+      border-style: solid none;
+
+      td {
+        padding: 15px 0;
+        vertical-align: middle;
+
+        textarea {
+          border-radius: 0;
+          height: 100px;
+        }
+
+        .form-control {
+          border-color: $edit-active-border-color;
+        }
       }
 
       td:first-child {

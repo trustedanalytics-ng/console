@@ -17,8 +17,8 @@
 (function () {
     'use strict';
 
-    App.controller('ModelsDetailsController', function ($scope, State, ModelResource,
-                                                       NotificationService, $stateParams, $state) {
+    App.controller('ModelsDetailsController', function ($scope, State, ModelResource, NotificationService,
+                                                        $stateParams, $state) {
         var modelId = $stateParams.modelId;
         var MODEL_NOT_FOUND_ERROR = 404;
         var state = new State().setPending();
@@ -39,6 +39,28 @@
                     NotificationService.error(error.data.message || 'An error occurred while loading model details page');
                 }
             });
+
+        //$scope.goToEditMode = function () {
+        //    $state.go('app.modelcatalog.edit', {modelId: modelId, model: $scope.model});
+        //};
+
+        $scope.updateModelName = function (currentText) {
+            if (currentText === $scope.model.name) {
+                return;
+            }
+
+            $scope.state.setPending();
+            var body = {name: currentText};
+            ModelResource
+                .withErrorMessage("Failed to change model name")
+                .updateModelMetadata($scope.model.id, body)
+                .then(function () {
+                    NotificationService.success("Model Name has been updated");
+                })
+                .finally(function onFinally () {
+                    $scope.state.setLoaded();
+                });
+        };
 
         $scope.tryDeleteModel = function () {
             NotificationService.confirm('confirm-delete', {model: $scope.model.name})

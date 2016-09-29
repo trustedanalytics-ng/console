@@ -22,6 +22,7 @@ describe("Unit: ModelsDetailsController", function() {
         modelResource,
         modelDetailsDeferred,
         deleteModelDeffered,
+        modelUpdateDeferred,
         notificationService,
         state,
         $state,
@@ -40,10 +41,12 @@ describe("Unit: ModelsDetailsController", function() {
         deleteState = new State();
         $stateParams = _$stateParams_;
         modelDetailsDeferred = $q.defer();
+        modelUpdateDeferred = $q.defer();
         deleteModelDeffered = $q.defer();
 
         modelResource = {
             getModelMetadata: sinon.stub().returns(modelDetailsDeferred.promise),
+            updateModelMetadata: sinon.stub().returns(modelUpdateDeferred.promise),
             deleteModel: sinon.stub().returns(deleteModelDeffered.promise),
             withErrorMessage: sinon.stub().returnsThis()
         };
@@ -145,5 +148,19 @@ describe("Unit: ModelsDetailsController", function() {
         expect(successSpied).not.to.be.called;
         expect(redirectSpied).not.to.be.called;
         expect(scope.deleteState.value).to.be.equals(deleteState.values.DEFAULT);
+    });
+
+    it('updateModelName, model name not changed, don\'t call updateModelMetadata method', function () {
+        createController();
+        scope.model = modelsMock[0];
+        scope.updateModelName('name');
+        expect(modelResource.updateModelMetadata.called).to.be.false;
+    });
+
+    it('updateModelName, model name changed, call updateModelMetadata method', function () {
+        createController();
+        scope.model = modelsMock[0];
+        scope.updateModelName('not-name');
+        expect(modelResource.updateModelMetadata.called).to.be.true;
     });
 });

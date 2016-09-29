@@ -16,18 +16,8 @@
 (function () {
     "use strict";
 
-    App.controller('DataSetController', function ($scope, DataSetResource, $stateParams, State, editableOptions,
-        editableThemes, NotificationService, $state, targetProvider) {
-
-        editableOptions.theme = 'bs3';
-
-        editableThemes.bs3.inputClass = 'input-lg';
-        editableThemes.bs3.buttonsClass = 'btn-sm';
-        editableThemes.bs3.submitTpl = '<button type="submit" class="btn btn-success"><span class="fa fa-check"></span></button>';
-        editableThemes.bs3.cancelTpl = '<button type="button" class="btn btn-default" ng-click="$form.$cancel()">' +
-            '<span class="fa fa-times text-muted"></span>' +
-            '</button>';
-
+    App.controller('DataSetController', function ($scope, DataSetResource, $stateParams, State, NotificationService,
+                                                  $state, targetProvider) {
         $scope.errorMessage = '';
 
         var state = new State();
@@ -65,9 +55,9 @@
             privacySettingsState();
         });
 
-        $scope.updateTitle = function (data) {
+        $scope.updateTitle = function (currentText) {
             state.setPending();
-            var body = {title: data};
+            var body = {title: currentText};
             DataSetResource
                 .withErrorMessage('Failed to change dataset name')
                 .update($scope.id, body)

@@ -1,0 +1,56 @@
+//
+   Copyright (c) 2016 Intel Corporation
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+//-
+.model-edit
+   header.edit
+      h3
+         span.fa-pencil-square-o(editable-text='editable.name' e-style='min-width:500px') {{editable.name}}
+      button.cancel.btn.fa-times.pull-right(ng-click="goToModelsListView()") Cancel Edits
+      button.save.btn.fa-check.pull-right(ng-click="updateModel()") Save Edits
+
+   .panel
+      h4.actions-heading Actions
+      span.not-supported(ng-if="model.creationTool === 'Other'")
+         | *This model is not a supported model type, some actions may not be available.
+
+      .actions
+         button.inactive.btn.btn-primary.fa-pencil-square-o Edit Metadata
+         button.btn.btn-primary.fa-times Delete
+         //button.inactive.btn.btn-primary.fa-download Download
+
+      h4 Metadata
+      table.table
+         tr
+            td Type
+            td {{model.creationTool}}
+         tr
+            td Version
+            td {{model.revision}}
+         tr
+            td Method
+            td(ng-if="model.creationTool === 'Other'")
+               input.form-control(ng-model="editable.algorithm")
+         tr
+            td Description
+            td(ng-if="model.creationTool === 'Other'")
+               textarea.form-control(ng-model="editable.description")
+            td(ng-if="model.creationTool !== 'Other'") {{model.description}}
+
+         tr
+            td Added Date
+            td {{model.addedOn}}
+         tr
+            td Creator
+            td {{model.addedBy}}

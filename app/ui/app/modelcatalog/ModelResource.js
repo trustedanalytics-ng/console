@@ -19,11 +19,11 @@
     App.factory('ModelResource', function (Restangular) {
         var resource = Restangular.service("models");
 
-        resource.getModels = function(orgId) {
+        resource.getModels = function (orgId) {
             return this.one().customGET("", {'orgId': orgId});
         };
 
-        resource.getModelMetadata = function(modelId) {
+        resource.getModelMetadata = function (modelId){
             return this.one(modelId).get();
         };
 
@@ -31,7 +31,10 @@
             return this.one(modelId).remove();
         };
 
+        resource.updateModelMetadata = function (modelId, body) {
+            return this.one(modelId).patch(body);
+        };
+
         return resource;
     });
 }());
-

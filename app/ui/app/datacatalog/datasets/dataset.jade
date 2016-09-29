@@ -15,7 +15,7 @@
 //-
 .dataset
     h3(ng-show='state.isLoaded()')
-        span.fa-pencil-square-o(editable-text='dataSet.title', e-style='min-width:500px', onbeforesave='updateTitle($data)') {{ dataSet.title }}
+        text-editable(text='dataSet.title' submit='updateTitle(currentText)')
 
     .panel
 

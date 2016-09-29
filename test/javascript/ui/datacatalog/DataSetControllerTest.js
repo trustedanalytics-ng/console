@@ -60,10 +60,6 @@ describe("Unit: DataSetController", function() {
 
         controller = $injector.get('$controller')('DataSetController', {
             $scope: scope,
-            editableOptions: {},
-            editableThemes: {
-                bs3: {}
-            },
             DataSetResource: dataSetResource,
             NotificationService: notificationService,
             $stateParams: { datasetId: SAMPLE_DATASET.id },

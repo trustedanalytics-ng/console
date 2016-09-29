@@ -14,15 +14,19 @@
    limitations under the License.
 //-
 .model-details
-    h3 Model: {{model.name}}
-    spinner(ng-show='state.isPending() || deleteState.isPending()')
-    .panel(ng-show='state.isLoaded() && deleteState.isDefault()')
+    h3
+       text-editable(text='model.name' submit='updateModelName(currentText)')
+    spinner(ng-show='state.isPending()')
+    .panel(ng-show='state.isLoaded()')
 
-        h4 Actions
+
+        h4.actions-heading Actions
+        span.not-supported(ng-if="model.creationTool === 'Other'")
+         | *This model is not a supported model type, some actions may not be available.
 
         .actions
+            //button.btn.btn-primary.fa-pencil-square-o(ng-click="goToEditMode()") Edit Metadata
             button.btn.btn-primary.fa-times(ng-click='tryDeleteModel()') Delete
-            //button.btn.btn-primary.fa-pencil-square-o Edit Metadata
             //button.btn.btn-primary.fa-download Download
 
         h4 Metadata
