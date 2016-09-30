@@ -26,7 +26,11 @@ function throwError(res, status, name, message, originalError) {
         args.push(originalError);
     }
     console.error.apply(console, args);
-    res.status(status).send(error);
+    try {
+        res.status(status).send(error);
+    } catch(e) {
+        console.error("Failed to send response", e.message, e.stack);
+    }
 }
 
 module.exports = {
