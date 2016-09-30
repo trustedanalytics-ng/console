@@ -113,64 +113,64 @@ describe("Unit: ServicesController", function () {
 
     it('filterService: empty searchText, should find service', function () {
         createController();
+        controller.services = [serviceSample];
 
-        controller.searchText = "";
-        var serviceMatches = controller.filterService(serviceSample);
+        scope.$emit('searchChanged', "");
 
-        expect(serviceMatches).to.be.true;
+        expect(controller.filtered).not.to.be.empty;
     });
 
     it('filterService: name contains case insensitive string, should find service', function () {
         createController();
+        controller.services = [serviceSample];
 
-        controller.searchText = "service1";
-        var serviceMatches = controller.filterService(serviceSample);
+        scope.$emit('searchChanged', "service1");
 
-        expect(serviceMatches).to.be.true;
+        expect(controller.filtered).not.to.be.empty;
     });
 
     it('filterService: description contains case insensitive string, should find service', function () {
         createController();
+        controller.services = [serviceSample];
 
-        controller.searchText = "ONE";
-        var serviceMatches = controller.filterService(serviceSample);
+        scope.$emit('searchChanged', "ONE");
 
-        expect(serviceMatches).to.be.true;
+        expect(controller.filtered).not.to.be.empty;
     });
 
     it('filterService: tags contains case insensitive string, should find service', function () {
         createController();
+        controller.services = [serviceSample];
 
-        controller.searchText = "Tag";
-        var serviceMatches = controller.filterService(serviceSample);
+        scope.$emit('searchChanged', "Tag");
 
-        expect(serviceMatches).to.be.true;
+        expect(controller.filtered).not.to.be.empty;
     });
 
     it('filterService: tags contains case insensitive string, should find service', function () {
         createController();
+        controller.services = [serviceSample];
 
-        controller.searchText = "Tag";
-        var serviceMatches = controller.filterService(serviceSample);
+        scope.$emit('searchChanged', "Tag");
 
-        expect(serviceMatches).to.be.true;
+        expect(controller.filtered).not.to.be.empty;
     });
 
     it('filterService: no property contains string, should not find service', function () {
         createController();
+        controller.services = [serviceSample];
 
-        scope.searchText = "asdasd";
-        var serviceMatches = controller.filterService(serviceSample);
+        scope.$emit('searchChanged', "asdasd");
 
-        expect(serviceMatches).to.be.false;
+        expect(controller.filtered).to.be.empty;
     });
 
     it('filterService: should not find in image', function () {
         createController();
+        controller.services = [serviceSample];
 
-        scope.searchText = "c29";
-        var serviceMatches = controller.filterService(serviceSample);
+        scope.$emit('searchChanged', "c29");
 
-        expect(serviceMatches).to.be.false;
+        expect(controller.filtered).to.be.empty;
     });
 });

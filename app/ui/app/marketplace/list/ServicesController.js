@@ -63,9 +63,7 @@
 
         searchHandler = $scope.$on('searchChanged', function (eventName, searchText) {
             $scope.searchText = searchText;
-            self.filtered = _.filter(self.services, function (service) {
-                return self.filterService(service);
-            });
+            self.filtered = _.filter(self.services, _.partial(isServiceMatching, $scope.searchText));
 
             calculatePagination($scope.currentPage, $scope.itemsPerPage);
         });
@@ -76,10 +74,6 @@
             }
         });
 
-        self.filterService = function (service) {
-            return isServiceMatching(service, $scope.searchText);
-        };
-
         function calculatePagination(currentPage, itemsPerPage) {
             $scope.begin = ((currentPage - 1) * itemsPerPage);
             $scope.end = $scope.begin + itemsPerPage;
@@ -89,19 +83,24 @@
         }
     });
 
-    function contains(str, searchText) {
-        return str.toLowerCase().indexOf(searchText) > -1;
+
+    function fieldMatches(searchText, value) {
+        if(_.isString(value)) {
+            return value.toLowerCase().indexOf(searchText) > -1;
+        }
+        if(_.isArray(value)) {
+            return _.some(value, _.partial(fieldMatches, searchText));
+        }
+        return false;
     }
 
-    function isServiceMatching(service, searchText) {
+    function isServiceMatching(searchText, service) {
         if (!searchText) {
             return true;
         }
-        searchText = searchText.toLowerCase();
-        return contains(service.name, searchText) ||
-            contains(service.description, searchText) ||
-            service.tags.filter(function (tag) {
-                return contains(tag, searchText);
-            }).length > 0;
+        return _.chain(service)
+            .pick(['name', 'description', 'tags'])
+            .some(_.partial(fieldMatches, searchText.toLowerCase()))
+            .value();
     }
 }());
