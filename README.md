@@ -36,51 +36,23 @@ Console is only a reverse-proxy - it doesn't have application logic. To run and 
 
 Although, there is one project always required - [user-management](https://github.com/trustedanalytics/user-management) which is responsible for downloading user details, organizations list, etc. A whole list of dependencies is stored in [service-mapping.json](app/server/config/service-mapping.json).
 
-To run the service locally or in Cloud Foundry, the VCAP_SERVICES environment variables with proper values inside needs to be defined:
+To run the service locally or in TAP, a few environment variables with proper values inside needs to be defined:
 ```
-export VCAP_SERVICES='{
-  "user-provided": [
-   {
-    "credentials": {
-     "apiEndpoint": "<Cloud Foundry API endpoint>",
-     "authorizationUri": "<OAuth authorization endpoint>",
-     "checkTokenUri": "<UAA endpoint for authorization token validation>",
-     "clientId": "<client ID used for OAuth authorization>",
-     "clientSecret": "<client secret used for OAuth authorization>",
-     "logoutUri": "<URI to logout.do in UAA server>",
-     "tokenKey": "<UAA endpoint for verifying token signatures>",
-     "tokenUri": "<OAuth token authorization endpoint>"
-    },
-    "name": "sso"
-   }
-  ]
-}'
+export SSO_AUTHORIZATION_URI=https://uaa.<platform_domain>/oauth/authorize
+export SSO_TOKEN_URI=https://uaa.<platform_domain>/oauth/token
+export SSO_LOGOUT_URI=https://uaa.<platform_domain>/logout.do
+export SSO_CLIENT_ID=console
+export SSO_CLIENT_SECRET=<console_client_secret>
 ```
 
 #### Binding to external microservices
-It's the easiest way of setting up a local environment. The idea is to spin up the console only and connect it to microservices already running in an external environment. It can be done be using ``vcap.**`` property. For example if we want to connect to user-management service
-deployed on CF we need to add an value to VCAP_SERVICES environment:
-
+It's the easiest way of setting up a local environment. The idea is to spin up locally only console and connect it to microservices already running on an external environment. It can be done be using proper ``<SERVICE_NAME>_HOST`` environment variables. For example if we want to connect to user-management service deployed on TAP externally we need to add an value to:
 ```
-export VCAP_SERVICES='{
-  "user-provided": [
-   {
-    "credentials": {
-     /** SSO configuration **/
-    },
-    "name": "sso"
-   },
-   {
-    "credentials": {
-     "host": "http://user-management.<CF instance base url>"
-    },
-    "name": "user-management"
-   }
-  ]
-}'
+export USER_MANAGEMENT_HOST=https://user-management.<platform_domain>
 ```
-
 All the properties used for external services binding can be found in [local-services.json](app/server/config/local-services.json) file. 
+
+*Note that not all services are available externally. To connect to some of them, an ssh port forwarding might be needed*
 
 #### Binding to local microservices
 An alternative to binding to external services is setting up dependent microservices on a local machine. Having them running locally there is no need to configure anything if they are running on proper ports. Such mappings of port - microservice can be found in [local-services.json](app/server/config/local-services.json).
