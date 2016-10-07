@@ -35,6 +35,10 @@
             return this.one(modelId).patch(body);
         };
 
+        resource.deleteModelArtifact = function (modelId, artifactId) {
+            return this.one(modelId).one('artifacts', artifactId).remove();
+        };
+
         return resource;
     });
 }());

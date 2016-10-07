@@ -69,6 +69,6 @@ h3
                   td(data-title="'Added Date'" sortable="'addedOn'")
                      | {{ getModelCreationTimestamp(model) | date : dd-MM-yyyy }}
                   td(data-title="'Method'" sortable="'algorithm'") {{ model.algorithm }}
-                  td(data-title="'Type'" sortable="'type'") {{ model.creationTool }}
+                  td(data-title="'Type'" sortable="'creationTool'") {{ model.creationTool }}
                   td
                      a(ui-sref='app.modelcatalog.model({modelId: model.id})') See details &raquo;

@@ -27,10 +27,12 @@
         .actions
             //button.btn.btn-primary.fa-pencil-square-o(ng-click="goToEditMode()") Edit Metadata
             button.btn.btn-primary.fa-times(ng-click='tryDeleteModel()') Delete
-            //button.btn.btn-primary.fa-download Download
+            a(ng-href='/rest/models/{{model.id}}/artifacts/{{mainArtifact.id}}/file')
+               button.btn.btn-primary.fa-download(ng-click='downloadModelArtifactFile(mainArtifact)'
+               ng-if="mainArtifact") Download
 
         h4 Metadata
-        table.table
+        table.table-metadata
             tr
                 td Type
                 td {{model.creationTool}}
@@ -50,6 +52,25 @@
                 td Creator
                 td {{model.addedBy}}
 
+        .artifacts
+           h4(ng-if='extraArtifacts.length') Additional Artifacts
+           div(ng-if='!extraArtifacts.length') No Additional Artifacts
+
+           spinner(ng-show='deleteArtifactState.isPending()')
+           table.table.table-striped(ng-table="tableParams"
+               ng-show='extraArtifacts.length && deleteArtifactState.isDefault()')
+              tr(ng-repeat="artifact in $data")
+                 td(data-title="'Artifact Name'" sortable="'filename'")
+                    | {{ artifact.filename }}
+                 td(data-title="'File Path'" sortable="'location'")
+                    | {{ artifact.location }}
+                 td(data-title="'Actions'").pull-right 
+                    .action-icon
+                       span.fa.fa-trash-o(ng-click='tryDeleteArtifact(artifact)')
+                    .action-icon
+                       a(ng-href='/rest/models/{{model.id}}/artifacts/{{artifact.id}}/file')
+                        span.fa.fa-download
+
     .panel.panel-warning(ng-show='state.isError()')
         .panel-heading Error loading content
         .panel-body Model details page is unavailable
@@ -60,7 +81,7 @@ script(type="text/ng-template", id="confirm-delete")
         p
             | Are you sure you want to delete
             = ' '
-            b {{ data.model }}
+            b {{ data.model || data.artifact }}
             | ?
         .pull-right
             button.btn.btn-primary(type='button', ng-click='confirm()') Delete

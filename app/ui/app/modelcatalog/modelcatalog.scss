@@ -226,7 +226,7 @@ $bootstrap-input-text-color: #555;
     }
   }
 
-  .table {
+  .table-metadata {
     width: 100%;
     tr {
       border: 1px none $table-border-light-grey;
@@ -242,6 +242,43 @@ $bootstrap-input-text-color: #555;
         font-weight: bold;
         width: 160px;
       }
+    }
+  }
+
+  .artifacts {
+    margin-top: 25px;
+    padding: 30px 25px;
+    border: 1px solid $table-border-light-grey;
+
+    .table {
+      margin-bottom: 0;
+
+      td {
+        vertical-align: middle;
+        text-align: center;
+      }
+
+      .action-icon {
+        background-color: $btn-primary-color;
+        display: inline-block;
+        margin-right: 10px;
+        max-width: 38px;
+        cursor: pointer;
+
+        span.fa {
+          color: $icon-color;
+          font-size: 14px;
+          padding: 12px;
+
+          &.fa-trash-o {
+            padding: 12px 13px;
+          }
+        }
+      }
+    }
+
+    div[ng-table-pagination] {
+      display: none;
     }
   }
 }
@@ -314,11 +351,6 @@ $bootstrap-input-text-color: #555;
     &.actions-heading {
       display: inline-block;
       padding-right: 15px;
-    }
-
-    &:first-child {
-      margin-top: 0;
-      margin-bottom: 20px;
     }
   }
 

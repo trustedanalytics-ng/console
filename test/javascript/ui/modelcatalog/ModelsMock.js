@@ -20,23 +20,27 @@
     App.value('ModelsMock', [
             {
                 name: 'name',
-                type: 'H2O',
+                creationTool: 'H2O',
                 algorithm: 'alg',
-                addedOn: Date.now() + 48 * 3600 * 1000
+                addedOn: Date.now() + 48 * 3600 * 1000,
+                artifacts: [{id: '1234-1234', actions: []}, {id: '4321-1234', actions: ['publish_whatever']}]
             }, {
                 name: 'test',
-                type: 'H2O',
-                addedOn: Date.now() + 24 * 3600 * 1000
+                creationTool: 'H2O',
+                addedOn: Date.now() + 24 * 3600 * 1000,
+                artifacts: [{id: '1234-1234', actions: ['publish_whatever']}]
             }, {
                 name: 'sample-model',
-                type: 'Other',
+                creationTool: 'Other',
                 algorithm: 'algorithm-name',
-                addedOn: Date.now() - 24 * 3600 * 1000
+                addedOn: Date.now() - 24 * 3600 * 1000,
+                artifacts: [{id: '1234-1234', actions: []}, {id: '4321-1234', actions: ['some-action']}]
             }, {
                 name: 'mock-model',
-                type: 'SparkTK',
+                creationTool: 'SparkTK',
                 algorithm: 'mock-spark',
-                addedOn: Date.now() - 48 * 3600 * 1000
+                addedOn: Date.now() - 48 * 3600 * 1000,
+                artifacts: [{id: '1234-1234', actions: []}, {id: '4321-1234', actions: ['some-action']}]
             }
         ]
     )

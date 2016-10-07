@@ -18,31 +18,23 @@
     'use strict';
 
     App.controller('ModelsDetailsController', function ($scope, State, ModelResource, NotificationService,
-                                                        $stateParams, $state) {
+                                                        $stateParams, $state, CommonTableParams) {
         var modelId = $stateParams.modelId;
         var MODEL_NOT_FOUND_ERROR = 404;
+        var MAIN_ARTIFACT_PREFIX = 'publish_';
         var state = new State().setPending();
+
+        $scope.mainArtifact = null;
+        $scope.extraArtifacts = [];
         $scope.state = state;
         $scope.deleteState = new State().setDefault();
-
-        ModelResource.getModelMetadata(modelId)
-            .then(function (model) {
-                $scope.model = model;
-                $scope.state.setLoaded();
-            })
-            .catch(function onError(error) {
-                if (error.status === MODEL_NOT_FOUND_ERROR) {
-                    $state.go('app.modelcatalog.models');
-                    NotificationService.error(error.data.message  || 'Model not found');
-                } else {
-                    $scope.state.setError();
-                    NotificationService.error(error.data.message || 'An error occurred while loading model details page');
-                }
-            });
+        $scope.deleteArtifactState = new State().setDefault();
 
         //$scope.goToEditMode = function () {
         //    $state.go('app.modelcatalog.edit', {modelId: modelId, model: $scope.model});
         //};
+
+        getModelMetadata();
 
         $scope.updateModelName = function (currentText) {
             if (currentText === $scope.model.name) {
@@ -82,5 +74,54 @@
                     $scope.deleteState.setDefault();
                 });
         };
+
+        $scope.tryDeleteArtifact = function (artifact) {
+            NotificationService.confirm('confirm-delete', {artifact: artifact.filename})
+                .then(function () {
+                    $scope.deleteArtifact(artifact.id);
+                });
+        };
+
+        $scope.deleteArtifact = function (artifactId) {
+            $scope.deleteArtifactState.setPending();
+            ModelResource
+                .withErrorMessage('Error occurred while deleting model artifact.')
+                .deleteModelArtifact(modelId, artifactId)
+                .then(function () {
+                    NotificationService.success('Model Artifact has been deleted');
+                    getModelMetadata();
+                })
+                .finally(function () {
+                    $scope.deleteArtifactState.setDefault();
+                });
+        };
+
+        function getModelMetadata () {
+            ModelResource.getModelMetadata(modelId)
+                .then(function (model) {
+                    $scope.model = model;
+                    $scope.mainArtifact = _.find($scope.model.artifacts, isArtifactPublishable);
+                    $scope.extraArtifacts = _.reject($scope.model.artifacts, isArtifactPublishable);
+                    $scope.tableParams = CommonTableParams.getTableParams($scope, function () {
+                        return $scope.extraArtifacts || [];
+                    });
+                    $scope.state.setLoaded();
+                })
+                .catch(function onError(error) {
+                    if (error.status === MODEL_NOT_FOUND_ERROR) {
+                        $state.go('app.modelcatalog.models');
+                        NotificationService.error(error.data.message  || 'Model not found');
+                    } else {
+                        $scope.state.setError();
+                        NotificationService.error(error.data.message || 'An error occurred while loading model details page');
+                    }
+                });
+        }
+
+        function isArtifactPublishable (artifact) {
+            return _.some(artifact.actions, function (action) {
+                return action.toLowerCase().indexOf(MAIN_ARTIFACT_PREFIX) === 0;
+            });
+        }
     });
 }());
