@@ -16,17 +16,29 @@
 (function () {
     "use strict";
 
-    App.factory('ConfigResource', function (Restangular) {
+    App.factory('ConfigResource', function (Restangular, $q) {
         var resource = Restangular.service("config");
+        var sessionInfo = null;
 
         resource.getUploadEnvs = function () {
             return this.one("uploader").get();
         };
 
-        resource.getIdleConfig = function () {
-            return this.one("session").get();
+        resource.getSessionConfig = function (data) {
+            if(sessionInfo){
+                return getResolvedPromise(sessionInfo[data]);
+            }
+            return this.one().get().then(function(response){
+                sessionInfo = response;
+                return sessionInfo[data];
+            });
         };
 
+        function getResolvedPromise(data) {
+            var deferred = $q.defer();
+            deferred.resolve(data);
+            return deferred.promise;
+        }
         return resource;
     });
 }());

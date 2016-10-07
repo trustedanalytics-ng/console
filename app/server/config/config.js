@@ -48,6 +48,19 @@ function getVariable(name) {
     return process.env[name.toUpperCase()] || defaults[name.toLowerCase()];
 }
 
+function getFewVariable(name) {
+    var response = {};
+    name.forEach(function(entry){
+        if(!entry || !_.isString(entry)) {
+            return null;
+        }
+        var key = entry.toLowerCase();
+        response[key] = process.env[entry.toUpperCase()] || defaults[entry.toLowerCase()];
+    });
+    return response;
+}
+
+
 function getSso() {
     var sso = getUserProvidedSerice('sso') || {};
     ssoEnvList.forEach(function(env){
@@ -75,5 +88,6 @@ module.exports = {
     getUserProvidedSerice: getUserProvidedSerice,
     getDomain: getDomain,
     getSso: getSso,
+    getFew: getFewVariable,
     get: getVariable
 };

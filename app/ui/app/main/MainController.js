@@ -33,10 +33,11 @@
             limit: 3
         };
 
-        ConfigResource.getIdleConfig().then(function onSuccess(configData) {
-            Idle.setIdle(configData.idle_time);
-            Keepalive.setInterval(configData.keepalive_time);
-            Idle.watch();
+        ConfigResource.getSessionConfig('session_config')
+            .then(function onSuccess(configData) {
+                Idle.setIdle(configData.idle_time);
+                Keepalive.setInterval(configData.keepalive_time);
+                Idle.watch();
         });
 
         $scope.$on('IdleStart', function() {

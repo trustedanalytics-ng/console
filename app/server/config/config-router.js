@@ -19,15 +19,17 @@ var express = require('express'),
 
 var configRouter = function() {
     var router = express.Router();
-    router.get('/session', function(req, res) {
-            res.send(config.get("SESSION_CONFIG"));
-        }
-    );
 
     router.get('/uploader', function(req, res) {
             res.send(config.get("UPLOADER_CONFIG"));
         }
     );
+    
+    router.get('', function(req, res) {
+            res.send(config.getFew(["METRICS_GRAFANA_HOST", "SESSION_CONFIG"]));
+        }
+    );
+
     return router;
 };
 

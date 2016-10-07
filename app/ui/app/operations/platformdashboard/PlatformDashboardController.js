@@ -16,18 +16,33 @@
 (function () {
     "use strict";
 
-    App.controller('PlatformDashboardController', function ($scope, State, PlatformResource, NotificationService,
-        $state) {
+    App.controller('PlatformDashboardController', function ($scope, State, NotificationService,
+        $state, $location, ConfigResource) {
 
         var state = new State().setPending();
         $scope.state = state;
 
-        PlatformResource.getSummary()
-            .then(function (response) {
+        var DEFAULT_GRAFANA_PREFIX = '/dashboard-solo/db';
+        var DEFAULT_SINCE = '1h';
+        var DEFAULT_DASHBOARD_PARAMS = {
+            from: 'now-' + DEFAULT_SINCE,
+            to: 'now',
+            theme: 'light'
+        };
+     
+        ConfigResource.getSessionConfig('metrics_grafana_host')
+            .then(function onSuccess(response) {
                 $scope.response = response;
-                $scope.controllerSummary = response.controllerSummary;
-                $scope.componentSummary = response.componentSummary;
-                $scope.state = state.setLoaded();
+                $scope.getIframeSrc = function(number, dashboardName) {
+                    var params = _.chain({panelId: number})
+                        .extend(DEFAULT_DASHBOARD_PARAMS)
+                        .mapObject(function(v, k){return k + '=' + v;})
+                        .values()
+                        .value()
+                        .join('&');
+
+                    return "//" + response + DEFAULT_GRAFANA_PREFIX + '/' + dashboardName + '?' + params;
+                };
             }).catch(function onError() {
             state.setError();
         });
@@ -36,17 +51,5 @@
         self.isTabActive = function (sref) {
             return $state.is(sref) || $state.includes(sref);
         };
-
-        $scope.onRefresh = function () {
-            $scope.state = state.setPending();
-            PlatformResource.refreshCache()
-                .then(function () {
-                    $scope.state = state.setLoaded();
-                    NotificationService.success('Please wait a few minutes for refresh state');
-                }).catch(function onError() {
-                state.setError();
-            });
-        };
-
     });
 }());

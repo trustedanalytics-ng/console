@@ -13,12 +13,14 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 //-
-spinner(ng-show='state.isPending()')
-.platfromdashboard(ng-show='state.isLoaded()')
+
+.platfromdashboard()
    ul.nav.nav-tabs
       li(role='presentation', ng-class='{active: ctrl.isTabActive("app.platformdashboard.summary")}')
          a(ui-sref='app.platformdashboard.summary') Summary
       li(role='presentation', ng-class='{active: ctrl.isTabActive("app.platformdashboard.dea")}')
          a(ui-sref='app.platformdashboard.dea') DEA
+      li(role='presentation', ng-class='{active: ctrl.isTabActive("app.platformdashboard.kubernetes")}')
+         a(ui-sref='app.platformdashboard.kubernetes') Kubernetes
    .tabcontent
       ui-view

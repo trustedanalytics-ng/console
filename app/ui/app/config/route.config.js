@@ -110,6 +110,12 @@ App.config(function ($stateProvider, $urlRouterProvider, LazyLoadProvider, AppCo
             targetHeader: {org: false, space: false},
             templateUrl: getViewPath('operations/platformdashboard/dea.html')
         })
+        .state('app.platformdashboard.kubernetes', {
+            url: '/kubernetes',
+            title: 'Kubernetes',
+            targetHeader: {org: false, space: false},
+            templateUrl: getViewPath('operations/platformdashboard/platform-kubernetes.html')
+        })
         .state('app.versiontracking', {
             url: '/versiontracking',
             title: 'Version tracking',
