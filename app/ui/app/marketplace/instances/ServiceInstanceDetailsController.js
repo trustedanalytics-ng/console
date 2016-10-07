@@ -18,7 +18,7 @@
     'use strict';
 
     App.controller('ServiceInstanceDetailsController', function ($scope, State, ServiceInstancesResource,
-            NotificationService, $stateParams, $state, ToolsInstanceResource) {
+            NotificationService, $stateParams, $state) {
         var instanceId = $stateParams.instanceId;
         var GATEWAY_TIMEOUT_ERROR = 504;
         var INSTANCE_NOT_FOUND_ERROR = 404;
@@ -43,14 +43,14 @@
                 }
             });
 
-        ToolsInstanceResource.getServiceInstance(instanceId)
+        /*ToolsInstanceResource.getServiceInstance(instanceId)
                 .then(function (credentials) {
                     $scope.credentials = credentials;
                     $scope.toolsState.setLoaded();
                 })
                 .catch(function () {
                     $scope.toolsState.setError();
-                });
+                });*/
 
         $scope.tryDeleteInstance = function () {
             NotificationService.confirm('confirm-delete', {instance: $scope.serviceInstance.name})

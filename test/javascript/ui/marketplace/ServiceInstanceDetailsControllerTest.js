@@ -130,7 +130,7 @@ describe("Unit: ServiceInstanceDetailsControllerTest", function () {
         expect(errorSpied.called).to.be.true;
     });
 
-    it('init, getServiceInstance called', function () {
+    /*it('init, getServiceInstance called', function () {
         expect(toolsInstanceResource.getServiceInstance).to.be.called;
     });
 
@@ -144,7 +144,7 @@ describe("Unit: ServiceInstanceDetailsControllerTest", function () {
         toolsInstanceDeferred.reject();
         scope.$digest();
         expect(scope.toolsState.value).to.be.equals(toolsState.values.ERROR);
-    });
+    });*/
 
     it('deleteInstance, invoke, set deleteState on pending', function () {
         scope.deleteServiceInstance();

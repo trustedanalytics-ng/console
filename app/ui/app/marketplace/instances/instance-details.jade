@@ -15,10 +15,10 @@
 //-
 .instance-details
    h3 Instances: {{serviceInstance.name}}
-   spinner(ng-show='state.isPending() || deleteState.isPending() || toolsState.isPending()')
-   .panel(ng-show='state.isLoaded() && deleteState.isDefault() && !toolsState.isPending()')
+   spinner(ng-show='state.isPending() || deleteState.isPending()')
+   .panel(ng-show='state.isLoaded() && deleteState.isDefault()')
 
-      div(ng-show="toolsState.isError()", class="alert alert-danger", role="alert")
+      //div(ng-show="toolsState.isError()", class="alert alert-danger", role="alert")
           span(class="glyphicon glyphicon-exclamation-sign")
           Error An error occurred while loading service instance credentials
 
@@ -26,7 +26,7 @@
 
       .actions
          button.btn.btn-primary.fa-times(ng-click='tryDeleteInstance()') Delete
-         button.btn.btn-primary(ui-sref='app.service({serviceId: serviceInstance.service})') Create new instance
+         button.btn.btn-primary(ui-sref='app.service({serviceId: serviceInstance.classId})') Create new instance
 
       h4 Metadata
       table.table
@@ -45,10 +45,10 @@
          tr
             td Created on
             td {{serviceInstance.auditTrail.createdOn * 1000 | date:'medium'}} by {{serviceInstance.auditTrail.createdBy}}
-         tr(ng-show="credentials.login")
+         //tr(ng-show="credentials.login")
             td Login
             td {{ credentials.login }}
-         tr(ng-show="credentials.password")
+         //tr(ng-show="credentials.password")
              td Password
              td
                  input.passwordView(type="text", ng-disabled="!showPass", readonly="readonly", ng-value="showPass ? credentials.password : '****************'", disabled="disabled")
