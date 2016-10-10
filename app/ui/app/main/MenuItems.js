@@ -78,7 +78,7 @@
         }, {
             "text": "App Development",
             "icon": "fa-building",
-            "sref": "app.appcli"
+            "sref": "app.development"
         },{
             "text": "Data Science",
             "id": "datascience",

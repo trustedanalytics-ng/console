@@ -16,7 +16,9 @@
 (function () {
     "use strict";
 
-    App.controller('ToolsController', function ($scope, userAgent, CliConfiguration, PlatformInfoProvider, State) {
+    App.controller('AppDevelopmentController', function ($scope, userAgent, CliConfiguration, PlatformInfoProvider, State,
+            UserProvider) {
+
         var baseUrl = '',
             cliVersion = 'latest',
             architectureSymbol = getArchitectureSymbol(userAgent),
@@ -25,6 +27,10 @@
         $scope.state = state;
         $scope.clis = _.values(CliConfiguration);
         $scope.currentPackage = getCurrentPackage();
+        UserProvider.getUser()
+            .then(function(user) {
+                $scope.username = user.username;
+            });
 
         PlatformInfoProvider
             .getPlatformInfo()
@@ -35,7 +41,7 @@
                 $scope.apiEndpoint = platformContext.api_endpoint.replace(/\/$/, '');
             })
             .then(function() {
-                $scope.currentPackageUrl = $scope.getCliUrl($scope.currentPackage);
+                //$scope.currentPackageUrl = $scope.getCliUrl($scope.currentPackage);
                 state.setLoaded();
             });
 

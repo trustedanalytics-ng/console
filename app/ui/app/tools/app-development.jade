@@ -17,13 +17,12 @@ h3 Tools
 spinner(ng-hide="state.isLoaded()")
 .tools(ng-show="state.isLoaded()")
     .panel
-        h3 What the CLI is?
-        | Cloud Foundry CLI is the official command line client for Cloud Foundry. For more
-        | information visit the
+        h3 What the TAP CLI is?
+        | TAP CLI is a command line client for TAP. For more information visit
         = ' '
-        a(href='http://docs.cloudfoundry.org/devguide/#cf', target="_blank") cf documentation
+        a(href='https://github.com/trustedanalytics/tap-cli', target="_blank") tap-cli documentation
 
-    .panel(ng-init="listVisible = false")
+    //.panel(ng-init="listVisible = false")
         h3 Download and install
 
         .download-button(ng-show='currentPackage')
@@ -40,4 +39,4 @@ spinner(ng-hide="state.isLoaded()")
 
     .panel
         h3 Getting started   
-        ng-include(src='"/app/tools/cf.html"')
+        ng-include(src='"/app/tools/tap-cli.html"')

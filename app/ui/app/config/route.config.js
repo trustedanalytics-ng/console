@@ -246,14 +246,13 @@ App.config(function ($stateProvider, $urlRouterProvider, LazyLoadProvider, AppCo
             controller: 'ApplicationRegisterController',
             templateUrl: getViewPath('applications/application/register/register.html')
         })
-        .state('app.appcli', {
-            url: '/tools',
-            title: 'Tools',
+        .state('app.development', {
+            url: '/development',
+            title: 'App Development',
             targetHeader: {org: false, space: false},
-            controller: 'ToolsController',
+            controller: 'AppDevelopmentController',
             controllerAs: 'ctrl',
-            templateUrl: getViewPath('tools/tools.html'),
-            resolve: LazyLoadProvider.load(['highlightjs'])
+            templateUrl: getViewPath('tools/app-development.html')
         })
         .state('app.ipython', {
             url: '/ipython',
@@ -262,7 +261,7 @@ App.config(function ($stateProvider, $urlRouterProvider, LazyLoadProvider, AppCo
             entityDisplayName: 'IPython',
             controller: 'ToolsInstancesListController',
             templateUrl: getViewPath('tools/toolsInstancesList.html'),
-            resolve: LazyLoadProvider.load(['highlightjs', 'ngMessages'])
+            resolve: LazyLoadProvider.load(['ngMessages'])
         })
         .state('app.rstudio', {
             url: '/rstudio',
