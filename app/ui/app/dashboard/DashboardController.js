@@ -16,61 +16,33 @@
 (function () {
     "use strict";
 
-    App.controller('DashboardController', function ($scope, targetProvider, State, OrgMetricsResource, $timeout,
-         UserProvider) {
+    App.controller('DashboardController', function ($scope, State, ConfigResource) {
 
-        var state = new State().setPending(),
-            metricsTimeoutHandler,
-            loadTimeoutHandler,
-            TIMEOUT = 15 * 1000; // 15s
-
+        var state = new State().setPending();
         $scope.state = state;
 
-
-        $scope.organizations = targetProvider.getOrganizations();
-
-        $scope.$on('targetChanged', function () {
-            state.setPending();
-            getMetrics();
-        });
-
-        $scope.$on('$destroy', function () {
-            $timeout.cancel(metricsTimeoutHandler);
-            $timeout.cancel(loadTimeoutHandler);
-        });
-
-        $scope.canManageUsers = function() {
-            return $scope.anyOrgManager || $scope.admin;
+        var DEFAULT_GRAFANA_PREFIX = '/dashboard-solo/db';
+        var DEFAULT_DASHBOARD_PARAMS = {
+            from: 'now',
+            to: 'now',
+            theme: 'light'
         };
 
-        UserProvider.isAdmin(function (isAdmin) {
-            $scope.admin = isAdmin;
-        });
+        ConfigResource.getSessionConfig('metrics_grafana_host')
+            .then(function onSuccess(response) {
+                $scope.response = response;
+                $scope.getIframeSrc = function(number, dashboardName) {
+                    var params = _.chain({panelId: number})
+                        .extend(DEFAULT_DASHBOARD_PARAMS)
+                        .mapObject(function(v, k){return k + '=' + v;})
+                        .values()
+                        .value()
+                        .join('&');
 
-
-        getMetrics();
-
-        $scope.$watchCollection('organizations', function(orgs) {
-            $scope.anyOrgManager = UserProvider.isAnyOrgManager(orgs);
-        });
-
-        function getMetrics() {
-            $timeout.cancel(metricsTimeoutHandler);
-
-            var orgId = targetProvider.getOrganization().guid;
-            if (orgId) {
-                OrgMetricsResource.getMetrics(orgId)
-                    .then(function onSuccess(data) {
-                        $scope.data = data;
-                        state.setLoaded();
-                    })
-                    .catch(function onError() {
-                        state.setError();
-                    })
-                    .finally(function () {
-                        metricsTimeoutHandler = $timeout(getMetrics, TIMEOUT);
-                    });
-            }
-        }
+                    return "//" + response + DEFAULT_GRAFANA_PREFIX + '/' + dashboardName + '?' + params;
+                };
+            }).catch(function onError() {
+                state.setError();
+            });
     });
 }());

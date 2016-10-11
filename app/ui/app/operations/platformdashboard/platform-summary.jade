@@ -16,33 +16,11 @@
 .summarypanel
    .row
       .col-lg-12.time
-         button.btn.btn-primary.fa-refresh.app-refresher(ng-click='onRefresh()') Trigger fetching data
-         p {{ response.timestamp | date: 'yyyy-MM-dd h:mm:ss a' }}
-      tile-blue-numeric(number="controllerSummary.appCount", text="'Applications'",
-         link="#/app/applications").col-lg-4.col-sm-12.tile-height-large
-      tile-blue-numeric(number="controllerSummary.serviceCount", text="'Services'",
-         link="#/app/marketplace/services").col-lg-4.col-sm-12.tile-height-large
-      tile-blue-numeric(number="controllerSummary.serviceInstancesCount", text="'Service Instances'",
-         link="#/app/marketplace/instances").col-lg-4.col-sm-12.tile-height-large
-      tile-blue-numeric(number="controllerSummary.orgCount", text="'Organizations'",
-         link="#/app/manage/organizations/manageorganizations/").col-lg-4.col-sm-12.tile-height-large
-      tile-blue-numeric(number="controllerSummary.spaceCount", text="'Spaces'",
-         link="#/app/manage/organizations/manageorganizations/").col-lg-4.col-sm-12.tile-height-large
-      tile-blue-numeric(number="controllerSummary.userCount", text="'Users'",
-         link="#/app/manage/orgusers").col-lg-4.col-sm-12.tile-height-large
-      tile-blue-numeric(number="controllerSummary.buildpackCount", text="'Buildpacks'").col-lg-4.col-sm-12.tile-height-large
-      tile-blue-numeric(number="componentSummary.componentMetrics.length", text="'Droplet Executions Agents'").col-lg-4.col-sm-12.tile-height-large
-      tile-blue-numeric(number="componentSummary.reservableStagers", text="'Reservable stagers'").col-lg-4.col-sm-12.tile-height-large
-      .col-lg-4.col-sm-12
-         tile-blue-numeric(float="componentSummary.memUsedInMb/1024", text="'Memory'", unit="'GB'").tile-height-large
-      .col-lg-8.col-sm-12
-         table.table.table-striped
-            thead
-               th Name
-               th Version
-               th Enabled
-            tbody
-               tr(ng-repeat="buildpack in controllerSummary.buildpacks")
-                  td {{ buildpack.entity.name }}
-                  td {{ buildpack.entity.filename }}
-                  td(ng-class="{'fa-check': buildpack.entity.enabled, 'fa-cross': !buildpack.entity.enabled}")
+      iframe(ng-src="{{ getIframeSrc(1, 'platform-dashboard') }}", src="", width="100%", height="150" frameborder="0").col-lg-4
+      iframe(ng-src="{{ getIframeSrc(2, 'platform-dashboard') }}", src="", width="100%", height="150" frameborder="0").col-lg-4
+      iframe(ng-src="{{ getIframeSrc(3, 'platform-dashboard') }}", src="", width="100%", height="150" frameborder="0").col-lg-4
+      iframe(ng-src="{{ getIframeSrc(4, 'platform-dashboard') }}", src="", width="100%", height="150" frameborder="0").col-lg-4
+      iframe(ng-src="{{ getIframeSrc(5, 'platform-dashboard') }}", src="", width="100%", height="150" frameborder="0").col-lg-4
+      iframe(ng-src="{{ getIframeSrc(6, 'platform-dashboard') }}", src="", width="100%", height="150" frameborder="0").col-lg-4
+      iframe(ng-src="{{ getIframeSrc(7, 'platform-dashboard') }}", src="", width="100%", height="150" frameborder="0").col-lg-4
+      iframe(ng-src="{{ getIframeSrc(8, 'platform-dashboard') }}", src="", width="100%", height="150" frameborder="0").col-lg-4

@@ -13,36 +13,23 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 //-
-spinner(ng-show='state.isPending()')
-
 .dashboard.error-state(ng-show='state.isError()')
     .error Error loading metrics
 
-.dashboard.row(d-visible="state.isLoaded()")
+.dashboard.row()
     .category-title.clearfix
         | Health & metrics
+    iframe(ng-src="{{ getIframeSrc(1, 'organization-dashboard') }}", src="", width="100%", height="150" frameborder="0").col-lg-4
+    iframe(ng-src="{{ getIframeSrc(2, 'organization-dashboard') }}", src="", width="100%", height="150" frameborder="0").col-lg-4
+    iframe(ng-src="{{ getIframeSrc(3, 'organization-dashboard') }}", src="", width="100%", height="150" frameborder="0").col-lg-4
+    
+    .category-title.clearfix 
+        | Quotas
+    iframe(ng-src="{{ getIframeSrc(4, 'organization-dashboard') }}", src="", width="100%", height="150" frameborder="0").col-lg-4
+    iframe(ng-src="{{ getIframeSrc(5, 'organization-dashboard') }}", src="", width="100%", height="150" frameborder="0").col-lg-4
+    iframe(ng-src="{{ getIframeSrc(6, 'organization-dashboard') }}", src="", width="100%", height="150" frameborder="0").col-lg-4
 
-    tile-small-white-numeric(number="data.applications_running_count", text="'Applications running'", link="#/app/applications").col-lg-4.col-md-6.col-sm-6
-    tile-small-white-numeric(number="data.applications_failed_count", text="'Applications down'",
-      link="#/app/applications").col-lg-4.col-md-6.col-sm-6
-    tile-small-white-numeric(number="data.users_count", text="'Users count'",
-      link="#/app/manage/orgusers", link-enabled="canManageUsers()").col-lg-4.col-md-6.col-sm-6
-
-
-    .category-title.clearfix Quotas
-    tile-blue-numeric(number="data.services_count", text="'Service usage'",
-      link="#/app/marketplace/instances").col-lg-4.col-md-6.col-sm-6.tile-height-small
-    tile-blue-numeric-percentages(number="data.memory_usage_percentage", text="'Memory usage'",
-      link="#/app/marketplace/instances").col-lg-4.col-md-6.col-sm-6.tile-height-small
-    tile-blue-numeric-percentages(number="data.cpu_usage_percentage", text="'CPU usage'",
-      link="#/app/marketplace/instances").col-lg-4.col-md-6.col-sm-6.tile-height-small
-
-
-    .category-title.clearfix Data
-    tile-blue-numeric(number="data.private_datasets_count", text="'Private datasets'",
-      link="#/app/datacatalog/datasets").col-lg-4.col-md-6.col-sm-6.tile-height-small
-    tile-blue-numeric(number="data.public_datasets_count", text="'Public datasets'",
-      link="#/app/datacatalog/datasets").col-lg-4.col-md-6.col-sm-6.tile-height-small
-
-
-
+    .category-title.clearfix 
+        | Data
+    iframe(ng-src="{{ getIframeSrc(7, 'organization-dashboard') }}", src="", width="100%", height="150" frameborder="0").col-lg-4
+    iframe(ng-src="{{ getIframeSrc(8, 'organization-dashboard') }}", src="", width="100%", height="150" frameborder="0").col-lg-4

@@ -104,12 +104,6 @@ App.config(function ($stateProvider, $urlRouterProvider, LazyLoadProvider, AppCo
             targetHeader: {org: false, space: false},
             templateUrl: getViewPath('operations/platformdashboard/platform-summary.html')
         })
-        .state('app.platformdashboard.dea', {
-            url: '/dea',
-            title: 'DEA',
-            targetHeader: {org: false, space: false},
-            templateUrl: getViewPath('operations/platformdashboard/dea.html')
-        })
         .state('app.platformdashboard.kubernetes', {
             url: '/kubernetes',
             title: 'Kubernetes',
