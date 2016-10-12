@@ -59,14 +59,14 @@ describe("Unit: UsersRoleMapperService", function () {
         expect(resultCheckboxes).to.be.deep.equal(expectedCheckboxes);
     });
 
-    it('should convert single role to one element array', function() {
+    it('should convert empty role to USER', function() {
         var user = {
             username: "bozydar",
-            role: "admin"
+            role: null
         };
         var expectedUser = {
             username: "bozydar",
-            roles: ["admin"]
+            role: "USER"
         };
         var resultUser = UserRoleMapperService.mapSingleRoleToArray(user);
         expect(resultUser).to.be.deep.equal(expectedUser);

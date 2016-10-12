@@ -24,11 +24,10 @@
             .clearfix
                 label.col-sm-2.control-label(for='add-role') Role: 
                 .col-sm-4
-                    select#add-role.form-control(name='role_select', ng-model='userToAdd.role', ng-options='role as name for (role, name) in availableRoles', ng-required='viewTypes.SPACES === viewType')
-                        option(value='') {{(viewTypes.ORGANIZATIONS === viewType) ? 'None' : '-- Choose role --'}}
+                    select#add-role.form-control(name='role_select', ng-model='userToAdd.role', ng-options='role as name for (role, name) in availableRoles')
+                        option(value='') {{'-- Choose role --'}}
 
         .form-group
             .col-sm-offset-2.col-sm-10
                 input.btn.btn-primary(type='submit', value='Add user',
-                ng-disabled="!state.isLoaded() || !add_user_form.user_email.$valid")
-
+                ng-disabled="!state.isLoaded() || !add_user_form.user_email.$valid || !userToAdd.role")

@@ -35,7 +35,7 @@
             mapSingleRoleToArray: function(userModel) {
                 return {
                     username: userModel.username,
-                    roles: (userModel.role) ? [userModel.role] : []
+                    role: (userModel.role || 'USER').toUpperCase()
                 };
             }
         };
