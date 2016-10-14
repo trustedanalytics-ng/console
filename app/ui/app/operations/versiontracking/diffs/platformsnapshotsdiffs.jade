@@ -58,7 +58,7 @@ div(ng-show='state.isLoaded()')
                         td(data-title="'Date & Time'" sortable="'created_at'") {{ snapshot.created_at | date: 'yyyy-MM-dd h:mm:ss a' }}
                         td(data-title="'Platform Version'" sortable="'platform_version'") {{ snapshot.platform_version }}
                         td(data-title="'CDH Version'" sortable="'cdh_version'") {{ snapshot.cdh_version }}
-                        td(data-title="'CF API Version'" sortable="'cf_version'") {{ snapshot.cf_version }}
+                        td(data-title="'Kubernetes version'" sortable="'k8s_version'") {{ snapshot.k8s_version }}
 
         div.comparison
             button.btn.btn-primary(type='button', ng-click='getDiff()', ng-disabled="countSelected() !== 2") Compare snapshots
@@ -80,15 +80,15 @@ div(ng-show='state.isLoaded()')
             label.radio.radio-inline
                 input(type='radio', name='componentsCategory', ng-checked="'true'", ng-model="visible" value="apps", ng-init="visible='apps'")
                 span.fa.fa-circle
-                | Platform Applications
+                | Applications
             label.radio.radio-inline
                 input(type='radio', name='componentsCategory', ng-model="visible" value="cdh_services")
                 span.fa.fa-circle
                 | Cloudera (CDH) services
             label.radio.radio-inline
-                input(type='radio', name='componentsCategory', ng-model="visible" value="cf_services")
+                input(type='radio', name='componentsCategory', ng-model="visible" value="tap_services")
                 span.fa.fa-circle
-                | Cloud Foundry Services
+                | TAP Services
 
         spinner(ng-if='state.isPending()')
         div(ng-if='state.isLoaded()')
@@ -98,5 +98,5 @@ div(ng-show='state.isLoaded()')
             div(ng-show="visible==='cdh_services'")
                 snapshot-diffs-table(items="cdhServicesList", message="No CDH services changes")
 
-            div(ng-show="visible==='cf_services'")
-                snapshot-diffs-table(items="cfServicesList", message="No CF services changes")
+            div(ng-show="visible==='tap_services'")
+                snapshot-diffs-table(items="tapServicesList", message="No TAP services changes")

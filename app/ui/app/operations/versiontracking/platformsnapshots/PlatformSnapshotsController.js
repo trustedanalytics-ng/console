@@ -54,8 +54,8 @@
             return $scope.chosenSnapshot.cdh_services;
         });
 
-        $scope.cfServicesTableParams = CommonTableParams.getTableParams($scope, function () {
-            return $scope.chosenSnapshot.cf_services;
+        $scope.tapServicesTableParams = CommonTableParams.getTableParams($scope, function () {
+            return $scope.chosenSnapshot.tap_services;
         });
 
         $scope.getSnapshotsByRange = function (days) {

@@ -19,13 +19,8 @@ div(ng-show='state.isLoaded()')
         | {{app.name}} {{app.version}}
     .versiontracking.content
         spinner(ng-if='state.isPending()')
-        h4.state State
-            span.fa-check(ng-if='app.state.toLowerCase() === "started"')
-                | OK
-            span.fa-refresh(ng-if='app.state.toLowerCase() === "starting"')
-                | Starting
-            span.fa-stop(ng-if='app.state.toLowerCase() === "stopped"')
-                | Stopped
+        h4.state State: 
+            span {{ app.state.toLowerCase() }}
         .metrics
             h4 Metrics
             table.table.app
@@ -44,14 +39,6 @@ div(ng-show='state.isLoaded()')
                 td
                     | {{ app.guid }}
             tr
-                td Organization guid:
-                td
-                    | {{ app.organization }}
-            tr
-                td Space guid:
-                td
-                    | {{ app.space }}
-            tr
                 td Created at:
                 td
                     | {{ app.created_at | date: 'yyyy-MM-dd h:mm:ss a'}}
@@ -60,32 +47,22 @@ div(ng-show='state.isLoaded()')
                 td
                     | {{ app.updated_at | date: 'yyyy-MM-dd h:mm:ss a'}}
             tr
-                td Health check timeout:
+                td Created by:
                 td
-                    | {{ app.health_check_timeout }} s
+                    | {{ app.created_by }}
             tr
-                td Health check type:
+                td Updated by:
                 td
-                    | {{ app.health_check_type }}
+                    | {{ app.updated_by }}
             tr
-                td Buildpack:
+                td Url:
                 td
-                    | {{ app.buildpack || "-"}}
+                    | {{ app.urls }}
             tr
-                td Detected buildpack:
+                td Image address:
                 td
-                    | {{ app.detected_buildpack || "-"}}
+                    | {{ app.image_address }}
             tr
-                td Command:
-                td(ng-if="!app.command") {{ "-" }}
-                td(ng-if="app.command")
-                    figure.highlight
-                        pre
-                            code  {{ app.command }}
-            tr
-                td Detected start command:
-                td(ng-if="!app.detected_start_command") {{ "-" }}
-                td(ng-if="app.detected_start_command")
-                    figure.highlight
-                        pre
-                            code  {{ app.detected_start_command }}
+                td Image type:
+                td
+                    | {{ app.image_type || "-" }}

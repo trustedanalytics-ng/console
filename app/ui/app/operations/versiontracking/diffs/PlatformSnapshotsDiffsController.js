@@ -55,7 +55,7 @@
                     $scope.diff = response.plain();
                     $scope.appsList = filterMetrics($scope.diff.applications, "createdAt");
                     $scope.cdhServicesList = filterMetrics($scope.diff.cdh_services, "serviceState");
-                    $scope.cfServicesList = filterMetrics($scope.diff.cf_services, "createdAt");
+                    $scope.tapServicesList = filterMetrics($scope.diff.tap_services, "createdAt");
                     state.setLoaded();
                 }).catch(function onError() {
                     state.setError();
