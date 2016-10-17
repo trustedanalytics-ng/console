@@ -88,11 +88,11 @@
                 });
             },
 
-            progress: function progress(templateId, data) {
+            progress: function progress(data) {
                 var deferred = $q.defer();
                 ngDialog.open(
                     {
-                        template: templateId,
+                        template: 'app/common/upload-progress.html',
                         showClose: false,
                         closeByEscape: false,
                         closeByDocument: false,

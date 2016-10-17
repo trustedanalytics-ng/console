@@ -18,9 +18,10 @@
     'use strict';
 
     App.controller('ModelsDetailsController', function ($scope, State, ModelResource, NotificationService,
-                                                        $stateParams, $state, CommonTableParams) {
+                                                        $stateParams, $state, CommonTableParams, FileUploaderService) {
         var modelId = $stateParams.modelId;
         var MODEL_NOT_FOUND_ERROR = 404;
+        var file = null;
         var MAIN_ARTIFACT_PREFIX = 'publish_';
         var state = new State().setPending();
 
@@ -29,6 +30,7 @@
         $scope.state = state;
         $scope.deleteState = new State().setDefault();
         $scope.deleteArtifactState = new State().setDefault();
+        $scope.addArtifactState = new State().setDefault();
 
         //$scope.goToEditMode = function () {
         //    $state.go('app.modelcatalog.edit', {modelId: modelId, model: $scope.model});
@@ -93,6 +95,39 @@
                 })
                 .finally(function () {
                     $scope.deleteArtifactState.setDefault();
+                });
+        };
+
+        $scope.tryUploadArtifact = function () {
+            NotificationService.confirm('confirm-add-artifact', {scope: $scope})
+                .then(function () {
+                    $scope.uploadArtifact();
+                });
+        };
+
+        $scope.setChosenFile = function (_file) {
+            file = _file;
+        };
+
+        $scope.uploadArtifact = function () {
+            $scope.addArtifactState.setPending();
+            var url = '/rest/models/' + modelId + '/artifacts';
+            var files = {artifactFile: file};
+            var uploader = FileUploaderService
+                .uploadFiles(url, {}, files, function (response) {
+                    var message = response.status + ': ' + (response.data ? response.data.message : '');
+
+                    NotificationService.error(message);
+                    return {
+                        message: message,
+                        close: true
+                    };
+                });
+
+            NotificationService.progress(uploader)
+                .then(function() {
+                    getModelMetadata();
+                    $scope.addArtifactState.setDefault();
                 });
         };
 

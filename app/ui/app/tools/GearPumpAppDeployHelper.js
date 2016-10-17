@@ -94,7 +94,7 @@
                         };
                     });
 
-                    return NotificationService.progress('progress-upload', uploader);
+                    return NotificationService.progress(uploader);
                 });
         }
 

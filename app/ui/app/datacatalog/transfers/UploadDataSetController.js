@@ -76,7 +76,7 @@
                     };
                 });
 
-                NotificationService.progress('progress-upload', uploader)
+                NotificationService.progress(uploader)
                     .then(function() {
                         self.clearInput();
                         $scope.state.setLoaded();

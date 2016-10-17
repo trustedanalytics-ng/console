@@ -30,6 +30,7 @@
             a(ng-href='/rest/models/{{model.id}}/artifacts/{{mainArtifact.id}}/file')
                button.btn.btn-primary.fa-download(ng-click='downloadModelArtifactFile(mainArtifact)'
                ng-if="mainArtifact") Download
+            button.btn.btn-primary.fa-plus(ng-click='tryUploadArtifact()' ng-hide='true') Add Artifact
 
         h4 Metadata
         table.table-metadata
@@ -56,9 +57,9 @@
            h4(ng-if='extraArtifacts.length') Additional Artifacts
            div(ng-if='!extraArtifacts.length') No Additional Artifacts
 
-           spinner(ng-show='deleteArtifactState.isPending()')
+           spinner(ng-show='deleteArtifactState.isPending() || addArtifactState.isPending()')
            table.table.table-striped(ng-table="tableParams"
-               ng-show='extraArtifacts.length && deleteArtifactState.isDefault()')
+               ng-show='extraArtifacts.length && deleteArtifactState.isDefault() && addArtifactState.isDefault()')
               tr(ng-repeat="artifact in $data")
                  td(data-title="'Artifact Name'" sortable="'filename'")
                     | {{ artifact.filename }}
@@ -86,3 +87,21 @@ script(type="text/ng-template", id="confirm-delete")
         .pull-right
             button.btn.btn-primary(type='button', ng-click='confirm()') Delete
             button.btn.btn-default(type='button', ng-click="cancel()") Cancel
+
+script(type="text/ng-template", id="confirm-add-artifact")
+    .ngdialog-message.upload-dialog.clearfix
+       h4 Add New Model Artifact
+       .browse-upload
+          label Browse for Local File
+          .input-group
+            input.file-box(value='{{file.name}}')
+            .file-input
+               input(type="file", nv-file-select, ng-model='file'
+                  ngf-select='data.scope.setChosenFile(file)' autofocus='true')
+               span Choose...
+       .actions
+          button.btn.btn-primary.fa-plus(ng-click='confirm()') Add Artifact
+          button.btn.btn-primary.fa-times(type='button', ng-click="cancel()") Cancel Add
+
+
+

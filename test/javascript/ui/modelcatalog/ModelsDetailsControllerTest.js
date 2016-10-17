@@ -21,15 +21,22 @@ describe("Unit: ModelsDetailsController", function() {
         scope,
         modelResource,
         modelDetailsDeferred,
-        deleteModelDeffered,
-        deleteModelArtifactDeffered,
+        deleteModelDeferred,
+        deleteModelArtifactDeferred,
+        addModelArtifactDeferred,
         modelUpdateDeferred,
         confirmDeferred,
+        progressDeferred,
         notificationService,
         commonTableParams,
         state,
+        deleteState,
+        deleteArtifactState,
+        addArtifactState,
+        $stateParams,
         $state,
         $q,
+        fileUploaderService,
         modelsMock,
         redirect = 'app.modelcatalog.models';
 
@@ -43,30 +50,38 @@ describe("Unit: ModelsDetailsController", function() {
         state = new State();
         deleteState = new State();
         deleteArtifactState = new State();
+        addArtifactState = new State();
         $stateParams = _$stateParams_;
         modelDetailsDeferred = $q.defer();
         modelUpdateDeferred = $q.defer();
-        deleteModelDeffered = $q.defer();
-        deleteModelArtifactDeffered = $q.defer();
+        deleteModelDeferred = $q.defer();
+        addModelArtifactDeferred = $q.defer();
+        deleteModelArtifactDeferred = $q.defer();
         confirmDeferred = $q.defer();
+        progressDeferred = $q.defer();
 
         modelResource = {
             getModelMetadata: sinon.stub().returns(modelDetailsDeferred.promise),
             updateModelMetadata: sinon.stub().returns(modelUpdateDeferred.promise),
-            deleteModel: sinon.stub().returns(deleteModelDeffered.promise),
-            deleteModelArtifact: sinon.stub().returns(deleteModelArtifactDeffered.promise),
+            deleteModel: sinon.stub().returns(deleteModelDeferred.promise),
+            deleteModelArtifact: sinon.stub().returns(deleteModelArtifactDeferred.promise),
             withErrorMessage: sinon.stub().returnsThis()
         };
 
         notificationService = {
             success: function () {},
             confirm: sinon.stub().returns(confirmDeferred.promise),
+            progress: sinon.stub().returns(progressDeferred.promise),
             withErrorMessage: function () {},
             error: function () {}
         };
 
         commonTableParams = {
             getTableParams: function () {}
+        };
+
+        fileUploaderService = {
+            uploadFiles: sinon.stub().returns(addModelArtifactDeferred.promise)
         };
 
         createController = function () {
@@ -76,7 +91,8 @@ describe("Unit: ModelsDetailsController", function() {
                 NotificationService: notificationService,
                 $stateParams: $stateParams,
                 $state: $state,
-                CommonTableParams: commonTableParams
+                CommonTableParams: commonTableParams,
+                FileUploaderService: fileUploaderService
             });
         };
 
@@ -165,7 +181,7 @@ describe("Unit: ModelsDetailsController", function() {
         var successSpied = sinon.spy(notificationService, 'success');
         var redirectSpied = sinon.spy($state, 'go');
         createController();
-        deleteModelDeffered.resolve();
+        deleteModelDeferred.resolve();
         scope.deleteModel();
         scope.$digest();
         expect(successSpied.called).to.be.true;
@@ -177,7 +193,7 @@ describe("Unit: ModelsDetailsController", function() {
         var successSpied = sinon.spy(notificationService, 'success');
         var redirectSpied = sinon.spy($state, 'go');
         createController();
-        deleteModelDeffered.reject({status: 404});
+        deleteModelDeferred.reject({status: 404});
         scope.deleteModel();
         scope.$digest();
         expect(successSpied).not.to.be.called;
@@ -209,7 +225,7 @@ describe("Unit: ModelsDetailsController", function() {
     it('deleteArtifact, success, redirect to models, set deleteArtifactState to default', function () {
         var spy = sinon.spy(notificationService, 'success');
         createController();
-        deleteModelArtifactDeffered.resolve();
+        deleteModelArtifactDeferred.resolve();
         scope.deleteArtifact();
         scope.$digest();
         expect(spy.called).to.be.true;
@@ -219,7 +235,7 @@ describe("Unit: ModelsDetailsController", function() {
     it('deleteArtifactModel, delete failed , do not notify about success, set deleteArtifactState to default', function () {
         var spy = sinon.spy(notificationService, 'success');
         createController();
-        deleteModelArtifactDeffered.reject();
+        deleteModelArtifactDeferred.reject();
         scope.deleteArtifact();
         scope.$digest();
         expect(spy).not.to.be.called;
@@ -242,4 +258,52 @@ describe("Unit: ModelsDetailsController", function() {
         scope.$digest();
         expect(spy).to.be.calledWith('1234-5678');
     });
+
+    it('uploadArtifact, invoke, set addArtifactState on pending', function () {
+        createController();
+        scope.uploadArtifact();
+        scope.$digest();
+        expect(scope.addArtifactState.value).to.be.equals(addArtifactState.values.PENDING);
+    });
+
+    it('uploadArtifact, invoke, NotificationService progress method called', function () {
+        createController();
+        scope.uploadArtifact();
+        scope.$digest();
+        expect(notificationService.progress.called).to.be.true;
+    });
+
+    it('uploadArtifact, success, set addArtifactState to default', function () {
+        createController();
+        addModelArtifactDeferred.resolve();
+        progressDeferred.resolve();
+        scope.$digest();
+        expect(scope.addArtifactState.value).to.be.equals(addArtifactState.values.DEFAULT);
+    });
+
+    it('uploadArtifact, success, ModelResource getModelMetadata method called', function () {
+        createController();
+        addModelArtifactDeferred.resolve();
+        progressDeferred.resolve();
+        scope.$digest();
+        expect(modelResource.getModelMetadata.called).to.be.true;
+    });
+
+    it('tryUploadArtifact, invoke, popup window should appear', function () {
+        createController();
+        scope.tryUploadArtifact()
+        scope.$digest();
+        expect(notificationService.confirm.called).to.be.true;
+    });
+
+    it('tryUploadArtifact, success, uploadArtifact should be called', function () {
+        confirmDeferred.resolve();
+        createController();
+        scope.uploadArtifact = function () {};
+        var spy = sinon.spy(scope, 'uploadArtifact');
+        scope.tryUploadArtifact();
+        scope.$digest();
+        expect(spy).to.be.calledWith();
+    });
+
 });
