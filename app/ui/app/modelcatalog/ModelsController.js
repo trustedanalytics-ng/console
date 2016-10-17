@@ -16,7 +16,7 @@
 (function () {
     "use strict";
 
-    App.controller('ModelsController', function ($scope, State, ModelResource, CommonTableParams, targetProvider) {
+    App.controller('ModelsController', function ($scope, State, $state, ModelResource, CommonTableParams, targetProvider) {
         var state = new State().setPending();
         var searchFields = [ "name", "algorithm", "creationTool" ];
         var searchText = '';

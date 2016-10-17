@@ -1,0 +1,73 @@
+//
+   Copyright (c) 2015 Intel Corporation
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+//-
+.model-upload
+    h3
+        | Add New Model
+    .panel
+        form(name="uploadForm" ng-submit='addModel()')
+            .option.form-group
+                .col-md-8
+                    label.label-title(for='modelType') Specify model type
+                    .form-field
+                        label.radio-inline.model-types(ng-repeat="option in uploadModel.modelTypes")
+                            input#modelType(type='radio', name='modelType', ng-value='option.type', ng-change="typeChanged()",
+                                ng-model="uploadModel.modelType" ng-selected="option === uploadModel.modelType", required)
+                            span {{ option.text }}
+            .option.form-group
+                .col-md-6
+                    label.label-title(for='name') Model name
+                    span
+                        .form-field
+                            input#name.form-control(type='text', name='name', ng-model='uploadModel.name', pattern-validator="{{ validationPattern }}", required)
+                            span
+                                div(ng-hide="uploadForm.name.$valid")
+                                    span.validationMessage(ng-message="regexValidator")
+                                        | {{ validationMessage }}
+                .col-md-6
+                    label.label-title(for='method') Method
+                    label.additional-info-opt (optional)
+                    label.additional-info-eg (KMeans, Decision Tree etc.)
+                    span
+                        .form-field
+                            input#method.form-control(type='text', ng-model='uploadModel.method')
+            .option.form-group
+                .col-md-12
+                    .description-field
+                        label.label-title(for='description') Description
+                        label.additional-info-opt (optional)
+                        .large-description-field
+                            textarea#description.form-control(type='text', name='description', ng-model='uploadModel.description')
+            .option.form-group
+                .col-md-12
+                    .large-field
+                        .browse-field
+                            label.label-title Browse for Local File
+                            .input-group
+                                .form-control(type='text') {{ uploadModel.filename.name}}
+                                label.input-group-btn
+                                    input(type='file', style='display: none', nv-file-select, ngf-select, name='file', required,
+                                        ng-model='uploadModel.filename', accept='{{ supportedExtension }}'
+                                            file-extension-validator="{{ supportedExtension }}")
+                                    span.btn Browse&hellip;
+                                div.validationMessage(ng-if="!uploadForm.file.$pristine")
+                                    span(ng-if="uploadForm.file.$error.extension")
+                                        | Incorrect file extension. Required: {{ supportedExtension }}
+                                    span(ng-if="uploadForm.file.$error.required")
+                                        | Artifact cannot be empty
+            .option.form-group
+                .buttons-field
+                    input.btn.btn-primary.fa-plus(type='submit', value='Add Model', ng-disabled="uploadForm.$invalid")
+                    button.btn-cancel.fa-times(ui-sref='app.modelcatalog.models') Cancel Add

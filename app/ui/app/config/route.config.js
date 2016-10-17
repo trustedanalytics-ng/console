@@ -378,6 +378,14 @@ App.config(function ($stateProvider, $urlRouterProvider, LazyLoadProvider, AppCo
             templateUrl: getViewPath('modelcatalog/model-details.html'),
             resolve: LazyLoadProvider.load(['xeditable', 'ng-file-upload'])
         })
+        .state('app.modelcatalog.upload', {
+            url: '/upload',
+            targetHeader: {org: true, space: false},
+            controller: 'ModelUploadController',
+            controllerAs: 'ctrl',
+            templateUrl: getViewPath('modelcatalog/model-upload.html'),
+            resolve: LazyLoadProvider.load(['ng-file-upload'])
+        })
         //.state('app.modelcatalog.edit', {
         //    url: '/edit/model/:modelId',
         //    params: {

@@ -39,6 +39,10 @@
             return this.one(modelId).one('artifacts', artifactId).remove();
         };
 
+        resource.addModelMetadata = function (orgId, body) {
+            return this.one().customPOST(body,"", {'orgId': orgId});
+        };
+
         return resource;
     });
 }());

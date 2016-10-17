@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2016 Intel Corporation
+ * Copyright (c) 2015 Intel Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-App.constant('ValidationPatterns', {
-   INSTANCE_NAME: {
-       pattern: "^[a-z0-9]([-a-z0-9]*[a-z0-9])?$",
-       validationMessage: "Allowed characters: [letters, numbers, -]. Instance name should begin and end with letter or number."
-   },
-    MODEL_UPLOAD: {
-        pattern: "[^]",
-        validationMessage: "Field must contain at least 1 character"
-    }
-});
+
+(function() {
+    "use strict";
+
+    App.value('supportedExtensions', {
+        spark: ".mar",
+        h2o: ".jar",
+        other: "*"
+    });
+}());

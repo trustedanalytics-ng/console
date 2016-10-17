@@ -13,8 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+$text-color-black: #000000;
 $text-color-gray-darker: #53565b;
 $text-color-gray: #595959;
+$text-color-light-gray: #808080;
 
 $btn-primary-color: #1C72C5;
 $btn-yellow-color: #FBDE2A;
@@ -25,6 +27,7 @@ $color-green: #A6CC43;
 $color-red: #DD1031;
 $color-orange: #F4B92F;
 
+$validation-message-color: #FF4136;
 $color-divider: #ccc;
 $color-border-input-bootstrap: #ccc;
 
@@ -40,3 +43,5 @@ $header-org-space-height: 60px;
 $footer-border-thickness: 1px;
 
 $datetimpicker-intersection-borderline: #eee;
+
+$background-white-color: #FFFFFF;

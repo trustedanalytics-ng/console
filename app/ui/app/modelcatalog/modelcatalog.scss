@@ -24,10 +24,11 @@ $bootstrap-input-text-color: #555;
     .models {
       section {
         width: 100%;
+        padding: 0 10px;
 
         search-bar {
-          display: block;
-          max-width: 400px;
+          display: inline-block;
+          width: 60%;
           position: relative;
 
           input {
@@ -40,6 +41,15 @@ $bootstrap-input-text-color: #555;
             top: 25%;
             font-size: 14px;
           }
+        }
+        .button-add-model {
+          display: inline-block;
+          position: absolute;
+          right: 100px;
+          height: 40px;
+          text-align: center;
+          border: none;
+          padding: 1px 20px;
         }
 
         .divider {
@@ -404,3 +414,145 @@ $bootstrap-input-text-color: #555;
     }
   }
 }
+
+/********************************* MODEL Upload VIEW ****************************/
+
+.model-upload {
+
+  .panel {
+    padding: 40px 30px;
+
+    form {
+
+      .validationMessage {
+        color: $validation-message-color;
+        font-size: 11px;
+        margin-bottom: 5px;
+      }
+
+      .option {
+        padding: 20px 15px;
+
+        .description-field {
+
+          label.label-title {
+           margin-bottom: 15px;
+          }
+
+          label.additional-info-opt {
+            color: $color-blue-label;
+            font-style: italic;
+            font-size: 11px;
+            margin-left: 5px;
+            margin-right: 5px;
+          }
+
+          .large-description-field {
+            margin-left: 10px;
+            padding-right: 0px;
+
+            textarea#description {
+              min-height: 150px;
+              resize: vertical;
+              text-align: left;
+            }
+          }
+
+        }
+        .buttons-field {
+          margin: 20px 25px;
+
+          button.btn-cancel {
+            display: inline-block;
+            margin-left: 20px;
+            background-color: $background-white-color;
+            color: $text-color-gray-darker;
+            font-size: 12px;
+            border: none;
+          }
+        }
+
+        .col-md-6 {
+          font-size: 11px;
+
+          label.additional-info-opt {
+            color: $color-blue-label;
+            font-style: italic;
+            margin-left: 5px;
+            margin-right: 5px;
+          }
+
+          label.additional-info-eg {
+            font-color: $text-color-light-gray;
+          }
+        }
+
+        .form-field {
+          display: block;
+          position: relative;
+          margin: 0px 10px;
+
+          label.radio-inline.model-types {
+            margin-right: 20px;
+          }
+        }
+
+        .label-title {
+          color: $color-blue-label;
+          font-size: 16px;
+          margin-left: 10px;
+          margin-bottom: 15px;
+          margin-top: 25px;
+        }
+
+        .large-field {
+          margin: 20px 5px;
+          min-height: 150px;
+
+          label.label-title {
+            margin-top: 30px;
+            margin-left: 50px;
+          }
+
+          .browse-field {
+            border: 1px solid $color-border-input-bootstrap;
+            margin-left: 5px;
+
+            .input-group {
+              display: block;
+              margin-top: 10px;
+              margin-bottom: 25px;
+              max-height: 50px;
+
+              .form-control {
+                width: 40%;
+                display: inline-block;
+                margin-left: 50px;
+              }
+
+              label.input-group-btn {
+
+                display: inline-block;
+                margin-left: 50px;
+                width: 20%;
+
+                span.btn {
+                  background-color: $table-border-light-grey;
+                  border-radius: 4px;
+                  font-size: 14px;
+                  text-align: center;
+                  padding-top: 8px;
+                  color: $text-color-black;
+                  height: 34px;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+}
+
+

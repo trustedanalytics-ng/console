@@ -21,13 +21,13 @@ h3
       spinner(ng-show='state.isPending()')
       div(ng-if='state.isLoaded()')
          .models
-            div(ng-if='!models.length')
-               h4 No available models
-            div(ng-if='models.length')
+            div
                section.search
-                  search-bar
-                  .divider
-               section.filter
+                  .searching
+                     search-bar(ng-if='models.length')
+                     button.btn-primary.button-add-model.fa-plus(ui-sref='app.modelcatalog.upload')   Add New Model
+                  .divider(ng-if='models.length')
+               section.filter(ng-if='models.length')
                   h3 Filter
                   .filters
                      .model-type
@@ -61,7 +61,8 @@ h3
                      .button-filter
                         button.btn-primary.fa-close(ng-click="clearFilters()") Clear Filters
                   .divider
-
+            div
+               h4(ng-if='!models.length') No available models
             table.table-striped.list(ng-show='models.length', ng-table="tableParams", class="table")
                tr(ng-repeat="model in $data")
                   td(data-title="'Model Name'" sortable="'name'")
