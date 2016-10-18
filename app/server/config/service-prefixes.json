@@ -1,5 +1,9 @@
 [
   {
+    "name": "servicecatalog",
+    "value": "/api/v2"
+  },
+  {
     "name":"user-management",
     "value":"/rest"
   },
@@ -16,23 +20,7 @@
     "value":"/rest"
   },
   {
-    "name":"service-exposer",
-    "value":"/rest"
-  },
-  {
     "name":"router-metrics-provider",
-    "value":"/rest"
-  },
-  {
-    "name":"app-launcher-helper",
-    "value":"/rest"
-  },
-  {
-    "name":"platformcontext",
-    "value":"/rest"
-  },
-  {
-    "name":"latest-events-service",
     "value":"/rest"
   },
   {
@@ -61,10 +49,6 @@
   },
   {
     "name":"platform-snapshot",
-    "value":"/rest"
-  },
-  {
-    "name":"kubernetes-broker",
     "value":"/rest"
   }
 ]

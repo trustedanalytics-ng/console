@@ -17,7 +17,7 @@
     "use strict";
 
 
-    App.controller('ServiceController', function (ServiceResource, serviceExtractor, NotificationService, $stateParams,
+    App.controller('ServiceController', function (OfferingsResource, serviceExtractor, NotificationService, $stateParams,
         targetProvider, $scope, ServiceInstancesResource, State, ApplicationRegisterResource, $location) {
 
         var GATEWAY_TIMEOUT_ERROR = 504;
@@ -43,7 +43,7 @@
         };
 
         self.getService = function () {
-            getServiceData(self, id, ServiceResource, serviceExtractor);
+            getServiceData(self, id, OfferingsResource, serviceExtractor);
         };
 
         self.createServiceInstance = function (plan) {
@@ -79,7 +79,7 @@
             NotificationService.confirm('confirm-delete-offering', { service: self.service })
                 .then(function () {
                     self.state.setPending();
-                    ServiceResource
+                    OfferingsResource
                         .withErrorMessage('Failed to delete service offering from marketplace')
                         .deleteService(self.serviceId)
                         .then(function () {

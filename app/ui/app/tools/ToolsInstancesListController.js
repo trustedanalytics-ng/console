@@ -17,7 +17,7 @@
     "use strict";
 
     App.controller('ToolsInstancesListController', function ($scope, $location, targetProvider, State,
-        NotificationService, ServiceResource, ServiceInstancesResource, $state) {
+        NotificationService, OfferingsResource, ServiceInstancesResource, $state) {
 
         var GATEWAY_TIMEOUT_ERROR = 504;
 
@@ -33,7 +33,7 @@
         $scope.$on('targetChanged', refreshInstances);
 
         refreshInstances();
-        getOffering($scope, ServiceResource, SERVICE_LABEL);
+        getOffering($scope, OfferingsResource, SERVICE_LABEL);
 
         function refreshInstances() {
             state.setPending();
@@ -112,8 +112,8 @@
             });
     }
 
-    function getOffering($scope, ServiceResource, offeringName) {
-        return ServiceResource
+    function getOffering($scope, OfferingsResource, offeringName) {
+        return OfferingsResource
             .withErrorMessage('Failed to load offering')
             .getAll()
             .then(function(offerings) {

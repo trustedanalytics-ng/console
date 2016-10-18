@@ -17,7 +17,7 @@
     "use strict";
 
     App.controller('ServicesController', function ($http, serviceExtractor, targetUrlBuilder, $scope, State,
-        ServiceResource) {
+        OfferingsResource) {
 
         var self = this,
             searchHandler = null,
@@ -32,7 +32,7 @@
 
             self.state.setPending();
 
-            ServiceResource
+            OfferingsResource
                 .withErrorMessage('Failed to retrieve services list')
                 .getAll()
                 .then(function (data) {

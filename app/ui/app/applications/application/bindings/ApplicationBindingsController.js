@@ -16,8 +16,8 @@
 (function () {
     "use strict";
 
-    App.controller('ApplicationBindingsController', function ($scope, ApplicationResource, ServiceBindingResource,
-    BindingsResource, ServiceUnbindingResource, applicationBindingExtractor, State, $stateParams, NotificationService) {
+    App.controller('ApplicationBindingsController', function ($scope, ApplicationResource,
+            State, $stateParams, NotificationService) {
 
             var appId = $stateParams.appId;
 
@@ -26,7 +26,7 @@
             $scope.appId = appId;
 
             $scope.loadBindings = function () {
-                loadBindings($scope, BindingsResource, applicationBindingExtractor);
+                loadBindings($scope, ApplicationResource);
             };
 
             $scope.setApplication = function (application) {
@@ -52,9 +52,9 @@
                     return;
                 }
                 state.value = state.values.PENDING;
-                ServiceBindingResource
+                ApplicationResource
                     .withErrorMessage('Failed to bind the service')
-                    .createBinding($scope.appId, service.id)
+                    .bindService($scope.appId, service.id)
                     .then(function () {
                         NotificationService.success('Service has been bound');
                     })
@@ -67,19 +67,16 @@
                 if (!$scope.application) {
                     return;
                 }
-                state.value = state.values.PENDING;
-                var binding = _.findWhere($scope.bindings, {service_instance_guid: service.id});
-                if (binding) {
-                    ServiceUnbindingResource.deleteBinding($scope.appId, service.id)
-                        .then(function () {
-                            NotificationService.success('Service has been unbound');
-                            $scope.loadBindings();
-                        })
-                        .catch(function () {
-                            NotificationService.error('Failed to bind the service');
-                            $scope.loadBindings();
-                        });
-                }
+                state.setPending();
+                ApplicationResource
+                    .withErrorMessage('Failed to unbind service')
+                    .unbindService($scope.appId, service.id)
+                    .then(function () {
+                        NotificationService.success('Service has been unbound');
+                    })
+                    .finally(function () {
+                        $scope.loadBindings();
+                    });
             };
 
             $scope.loadBindings();
@@ -91,8 +88,9 @@
             return;
         }
 
-        var bounderServiceIds = _.pluck($scope.bindings, 'service_instance_guid');
-
+        var bounderServiceIds = _.map($scope.bindings, function(binding) {
+            return binding.entity.service_instance_guid;
+        });
         $scope.servicesBound = $scope.services.filter(function (s) {
             return _.contains(bounderServiceIds, s.id);
         });
@@ -101,10 +99,10 @@
         $scope.state.value = $scope.state.values.LOADED;
     }
 
-    function loadBindings($scope, BindingsResource, applicationBindingExtractor) {
-        return BindingsResource.getAllBindings($scope.appId)
+    function loadBindings($scope, ApplicationResource) {
+        return ApplicationResource.getBindings($scope.appId)
             .then(function onSuccess(bindings) {
-                $scope.bindings = applicationBindingExtractor.extract(bindings);
+                $scope.bindings = bindings;
                 updateInstances($scope);
             })
             .catch(function onError() {

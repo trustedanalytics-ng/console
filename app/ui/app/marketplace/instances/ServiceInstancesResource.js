@@ -20,7 +20,8 @@
         var service = Restangular.service("services");
 
         service.createInstance = function(offeringId, name, planGuid) {
-            return service.one().post(offeringId, {
+            return service.post({
+                classId: offeringId,
                 name: name,
                 type: 'SERVICE',
                 metadata: [{

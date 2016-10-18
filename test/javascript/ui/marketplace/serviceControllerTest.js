@@ -19,7 +19,7 @@ describe("Unit: ServiceController", function () {
         createController,
         _serviceExtractor,
         _targetProvider,
-        serviceMock,
+        offeringsMock,
         serviceInstanceMock,
         SERVICE_ID = 'qweqwe',
         getServiceDefer,
@@ -49,7 +49,7 @@ describe("Unit: ServiceController", function () {
 
         getServiceDefer = $q.defer();
 
-        serviceMock = {
+        offeringsMock = {
             getService: sinon.stub().returns(getServiceDefer.promise),
             withErrorMessage: sinon.stub().returnsThis()
         };
@@ -88,7 +88,7 @@ describe("Unit: ServiceController", function () {
             controller = $controller('ServiceController', {
                 serviceExtractor: serviceExtractor,
                 NotificationService: notificationService,
-                ServiceResource: serviceMock,
+                OfferingsResource: offeringsMock,
                 ServiceInstancesResource: serviceInstanceMock,
                 $scope: scope,
                 targetProvider: _targetProvider,
@@ -106,7 +106,7 @@ describe("Unit: ServiceController", function () {
     it('init, get service and set state pending', function () {
         createController();
 
-        expect(serviceMock.getService).to.be.called;
+        expect(offeringsMock.getService).to.be.called;
         expect(controller.state.value).to.be.equals(state.values.PENDING);
     });
 
@@ -179,32 +179,32 @@ describe("Unit: ServiceController", function () {
     it('tryDeleteOffering, confirm, delete service', function () {
         createController();
         notificationService.confirm = sinon.stub().returns(successPromise());
-        serviceMock.deleteService = sinon.stub().returns($q.defer().promise);
+        offeringsMock.deleteService = sinon.stub().returns($q.defer().promise);
         controller.serviceId = 'service-id';
 
         controller.tryDeleteOffering();
         $rootScope.$digest();
 
         expect(controller.state.isPending(), 'pending').to.be.true;
-        expect(serviceMock.deleteService).to.be.called;
-        expect(serviceMock.deleteService).to.be.calledWith('service-id');
+        expect(offeringsMock.deleteService).to.be.called;
+        expect(offeringsMock.deleteService).to.be.calledWith('service-id');
     });
 
     it('tryDeleteOffering, cancel, do not delete service', function () {
         createController();
         notificationService.confirm = sinon.stub().returns(rejectPromise());
-        serviceMock.deleteService = sinon.stub().returns($q.defer().promise);
+        offeringsMock.deleteService = sinon.stub().returns($q.defer().promise);
 
         controller.tryDeleteOffering();
         $rootScope.$digest();
 
-        expect(serviceMock.deleteService).not.to.be.called;
+        expect(offeringsMock.deleteService).not.to.be.called;
     });
 
     it('tryDeleteOffering, deleted, show success and relocate page', function () {
         createController();
         notificationService.confirm = sinon.stub().returns(successPromise());
-        serviceMock.deleteService = sinon.stub().returns(successPromise());
+        offeringsMock.deleteService = sinon.stub().returns(successPromise());
         controller.serviceId = 'service-id';
 
         controller.tryDeleteOffering();
@@ -217,7 +217,7 @@ describe("Unit: ServiceController", function () {
     it('tryDeleteOffering, delete failed, set state loaded', function () {
         createController();
         notificationService.confirm = sinon.stub().returns(successPromise());
-        serviceMock.deleteService = sinon.stub().returns(rejectPromise());
+        offeringsMock.deleteService = sinon.stub().returns(rejectPromise());
 
         controller.tryDeleteOffering();
         $rootScope.$digest();

@@ -16,8 +16,8 @@
 (function () {
     "use strict";
 
-    App.factory('ServiceResource', function (Restangular, targetProvider) {
-        var service = Restangular.service("catalog");
+    App.factory('OfferingsResource', function (Restangular, targetProvider) {
+        var service = Restangular.service("offerings");
         service.getService = function (id) {
             return this.one(id).get();
         };
@@ -26,7 +26,7 @@
             return this.one().customGET("", {org: targetProvider.getOrganization().guid});
         };
 
-        service.deleteService = function(id) {
+        service.deleteService = function (id) {
             return this.one(id).remove();
         };
 

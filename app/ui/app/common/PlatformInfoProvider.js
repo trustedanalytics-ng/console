@@ -16,7 +16,7 @@
 (function () {
     "use strict";
 
-    App.factory('PlatformInfoProvider', function (PlatformInfoResource, ServiceResource, $q) {
+    App.factory('PlatformInfoProvider', function (PlatformInfoResource, OfferingsResource, $q) {
         var platformInfo = null;
         var externalTools = {};
         return {
@@ -34,7 +34,7 @@
                     });
             },
             getExternalTools: function (org) {
-                return ServiceResource
+                return OfferingsResource
                     .withErrorMessage("Error while fetching catalog")
                     .getAll()
                     .then(function success(data) {

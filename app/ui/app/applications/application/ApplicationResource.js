@@ -55,6 +55,23 @@
             return this.one(appId).all("orphan_services").customGET("");
         };
 
+        service.getBindings = function (appId) {
+            return this.one(appId).all("bindings").customGET("")
+                .then(function(bindingsResponse) {
+                    return (bindingsResponse || {}).resources || [];
+                });
+        };
+
+        service.bindService = function (appId, serviceId) {
+            return this.one(appId).all("bindings").post({
+                service_id: serviceId
+            });
+        };
+
+        service.unbindService = function (appId, serviceId) {
+            return this.one(appId).all("bindings").one(serviceId).remove();
+        };
+
         return service;
     });
 }());

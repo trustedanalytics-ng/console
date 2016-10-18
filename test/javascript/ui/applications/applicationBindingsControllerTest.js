@@ -19,9 +19,6 @@ describe("Unit: ApplicationBindingsController", function () {
     var controller,
         createController,
         serviceInstancesResource,
-        serviceBindingResource,
-        serviceUnbindingResource,
-        bindingsResource,
         applicationResource,
         _state,
         notificationService,
@@ -30,45 +27,41 @@ describe("Unit: ApplicationBindingsController", function () {
         $q,
         SAMPLE_APPLICATION = Object.freeze({ guid: 'a1', space_guid: 's1' }),
         SAMPLE_BINDINGS = [
-            {guid:'b1', app_guid:'a1', service_instance_guid: 'i2'},
-            {guid:'b2', app_guid:'a1', service_instance_guid: 'i3'},
-            {guid:'b3', app_guid:'a1', service_instance_guid: 'i4'}
+            {entity: {app_guid:'a1', service_instance_guid: 'i2'}},
+            {entity: {app_guid:'a1', service_instance_guid: 'i3'}},
+            {entity: {app_guid:'a1', service_instance_guid: 'i4'}}
         ],
         SAMPLE_INSTANCES = [{id:'i1'},{id:'i2'},{id:'i3'}];
 
     beforeEach(module('app'));
 
-    beforeEach(inject(function ($controller, _$rootScope_, ServiceInstancesResource,
-                                ServiceBindingResource, ServiceUnbindingResource, BindingsResource, applicationBindingExtractor, State, $stateParams, ApplicationResource, _$q_) {
-        serviceInstancesResource = ServiceInstancesResource;
-        serviceBindingResource = ServiceBindingResource;
-        serviceUnbindingResource = ServiceUnbindingResource;
-        bindingsResource = BindingsResource;
-        applicationResource = ApplicationResource;
-        _state = new State();
-        notificationService = {
-            success: function(){},
-            error: function(){}
-        };
+    beforeEach(inject(function ($controller, _$rootScope_, State, $stateParams, _$q_) {
         $rootScope = _$rootScope_;
         $scope = $rootScope.$new();
         $q =_$q_;
 
+        serviceInstancesResource = {
+            getAll: sinon.stub()
+        };
+        applicationResource = {
+            withErrorMessage: sinon.stub().returnsThis(),
+            getBindings: sinon.stub().returns($q.defer().promise),
+            bindService: sinon.stub().returns($q.defer().promise),
+            unbindService: sinon.stub().returns($q.defer().promise)
+        };
+        _state = new State();
+        notificationService = {
+            success: sinon.stub(),
+            error: sinon.stub()
+        };
         $stateParams.appId = SAMPLE_APPLICATION.guid;
-
-        serviceInstancesResource.getAll = function () {
-        };
-        serviceBindingResource.createBinding = sinon.stub();
-        serviceUnbindingResource.deleteBinding = function () {
-        };
-        applicationBindingExtractor.extract = function (v) {
-            return v;
-        };
 
         createController = function () {
             controller = $controller('ApplicationBindingsController', {
                 $scope: $scope,
-                NotificationService: notificationService
+                NotificationService: notificationService,
+                ApplicationResource: applicationResource,
+                ServiceInstancesResource: serviceInstancesResource
             });
         };
 
@@ -79,33 +72,29 @@ describe("Unit: ApplicationBindingsController", function () {
     });
 
     it('init, set state pending and request for bindings', function () {
-        var deferred = $q.defer();
-        bindingsResource.getAllBindings = sinon.stub().returns(deferred.promise);
         createController();
 
         expect($scope.state.value, 'state').to.be.equal(_state.values.PENDING);
-        expect(bindingsResource.getAllBindings.calledWith(SAMPLE_APPLICATION.guid)).to.be.true;
+        expect(applicationResource.getBindings.calledWith(SAMPLE_APPLICATION.guid)).to.be.true;
     });
 
     it('get bindings success, set bindings', function () {
-        var deferred = $q.defer();
-        bindingsResource.getAllBindings = sinon.stub().returns(deferred.promise);
-        deferred.resolve(SAMPLE_BINDINGS);
+        applicationResource.getBindings = sinon.stub().returns(successfulPromise(SAMPLE_BINDINGS));
 
         createController();
-        expect($scope.state.value, 'state').to.be.equal(_state.values.PENDING);
         $rootScope.$digest();
+        
+        expect($scope.state.value, 'state').to.be.equal(_state.values.PENDING);
         expect($scope.bindings).to.be.deep.equal(SAMPLE_BINDINGS);
 
     });
 
     it('get bindings error, set error', function () {
-        var deferred = $q.defer();
-        bindingsResource.getAllBindings = sinon.stub().returns(deferred.promise);
-        deferred.reject();
+        applicationResource.getBindings = sinon.stub().returns(rejectedPromise());
 
         createController();
         $rootScope.$digest();
+        
         expect($scope.state.value, 'state').to.be.equal(_state.values.ERROR);
     });
 
@@ -126,9 +115,7 @@ describe("Unit: ApplicationBindingsController", function () {
     });
 
     it('setApplication, got application, bindings and services, set status loaded', function () {
-        var deferred = $q.defer();
-        bindingsResource.getAllBindings = sinon.stub().returns(deferred.promise);
-        deferred.resolve(SAMPLE_BINDINGS);
+        applicationResource.getBindings = sinon.stub().returns(successfulPromise(SAMPLE_BINDINGS));
 
         createController();
         $scope.setApplication(SAMPLE_APPLICATION);
@@ -143,69 +130,51 @@ describe("Unit: ApplicationBindingsController", function () {
 
     it('bindService, no application set do not create binding', function () {
         createController();
-        $scope.bindService({ guid: 's1' });
+        $scope.bindService({ id: 's1' });
 
-        expect(serviceBindingResource.createBinding.called).to.be.false;
+        expect(applicationResource.bindService).not.to.be.called;
     });
 
     it('bindService, create binding and set status pending', function () {
         var service = { id: 's1' };
 
-        var deferredAll = $q.defer();
-        bindingsResource.getAllBindings = sinon.stub().returns(deferredAll.promise);
-        deferredAll.resolve(SAMPLE_BINDINGS);
-
-        var deferred = $q.defer();
-        serviceBindingResource.createBinding = sinon.stub().returns(deferred.promise);
-        deferred.resolve();
+        applicationResource.getBindings = sinon.stub().returns(successfulPromise(SAMPLE_BINDINGS));
+        applicationResource.bindService = sinon.stub().returns(successfulPromise());
 
         createController();
         $scope.setApplication(SAMPLE_APPLICATION);
 
         $scope.bindService(service);
         $rootScope.$digest();
+
         expect($scope.state.value, 'state').to.be.equal(_state.values.PENDING);
-        expect(serviceBindingResource.createBinding.calledWith(SAMPLE_APPLICATION.guid, service.id), 'called with args').to.be.true;
+        expect(applicationResource.bindService).to.be.calledWith(SAMPLE_APPLICATION.guid, service.id)
     });
 
     it('bindService success, request bindings', function () {
-        var deferredAll = $q.defer();
-        bindingsResource.getAllBindings = sinon.stub().returns(deferredAll.promise);
-        deferredAll.resolve(SAMPLE_BINDINGS);
-
-        var deferred = $q.defer();
-        serviceBindingResource.createBinding = sinon.stub().returns(deferred.promise);
-        deferred.resolve();
+        applicationResource.getBindings = sinon.stub().returns(successfulPromise(SAMPLE_BINDINGS));
+        applicationResource.bindService = sinon.stub().returns(successfulPromise());
 
         createController();
 
         $scope.setApplication(SAMPLE_APPLICATION);
-        $scope.bindService({ guid: 's1' });
+        $scope.bindService({ id: 's1' });
         $rootScope.$digest();
 
-        expect(bindingsResource.getAllBindings.called).to.be.true;
+        expect(applicationResource.getBindings.called).to.be.true;
     });
 
     it('unbindService, no application set do not delete binding', function () {
-        var deleteBindingSpied = sinon.spy(serviceUnbindingResource, 'deleteBinding');
-
+        applicationResource.getBindings = sinon.stub().returns(successfulPromise(SAMPLE_BINDINGS));
         createController();
-        $scope.bindings = getSampleBindings();
 
-        $scope.unbindService({ guid: 'i1' });
+        $scope.unbindService({ id: 'i1' });
 
-        expect(deleteBindingSpied.called).to.be.false;
+        expect(applicationResource.unbindService).not.to.be.called;
     });
 
     it('unbindService, delete binding set status pending', function () {
-        $scope.bindings = getSampleBindings();
-        var deferredAll = $q.defer();
-        bindingsResource.getAllBindings = sinon.stub().returns(deferredAll.promise);
-        deferredAll.resolve(SAMPLE_BINDINGS);
-
-        var deferred = $q.defer();
-        serviceUnbindingResource.deleteBinding = sinon.stub().returns(deferred.promise);
-        deferred.resolve();
+        applicationResource.getBindings = sinon.stub().returns(successfulPromise(SAMPLE_BINDINGS));
 
         createController();
 
@@ -213,73 +182,52 @@ describe("Unit: ApplicationBindingsController", function () {
         $scope.setInstances(SAMPLE_INSTANCES);
         $scope.state.value = _state.values.LOADED;
 
-        $scope.unbindService({ guid: 's1' });
+        $scope.unbindService({ id: 's1' });
 
         expect($scope.state.value, 'state').to.be.equal(_state.values.PENDING);
     });
 
     it('unbindService success, get bindings', function () {
-        var deferredAll = $q.defer();
-        bindingsResource.getAllBindings = sinon.stub().returns(deferredAll.promise);
-        deferredAll.resolve(SAMPLE_BINDINGS);
-
-        var deferred = $q.defer();
-        serviceUnbindingResource.deleteBinding = sinon.stub().returns(deferred.promise);
-        deferred.resolve();
+        applicationResource.getBindings = sinon.stub().returns(successfulPromise(SAMPLE_BINDINGS));
+        applicationResource.unbindService = sinon.stub().returns(successfulPromise());
 
         createController();
 
-        $scope.bindings = getSampleBindings();
-
         $scope.setApplication(SAMPLE_APPLICATION);
-        $scope.setInstances(SAMPLE_INSTANCES);
-
 
         $scope.unbindService({id : 's1'});
-        expect($scope.state.value, 'state').to.be.equal(_state.values.PENDING);
         $rootScope.$digest();
-        expect(serviceUnbindingResource.deleteBinding.called).to.be.true;
+
+        expect(applicationResource.unbindService).to.be.called;
+        expect(applicationResource.getBindings).to.be.calledTwice;
     });
 
     it('unbindService error, set status error', function () {
-
-        var deferredAll = $q.defer();
-        bindingsResource.getAllBindings = sinon.stub().returns(deferredAll.promise);
-        deferredAll.resolve(SAMPLE_BINDINGS);
-
-        var deferred = $q.defer();
-        serviceUnbindingResource.deleteBinding = sinon.stub().returns(deferred.promise);
-        deferred.reject();
+        applicationResource.getBindings = sinon.stub().returns(successfulPromise(SAMPLE_BINDINGS));
+        applicationResource.unbindService = sinon.stub().returns(rejectedPromise());
 
         createController();
 
-        $scope.bindings = getSampleBindings();
         $scope.setApplication(SAMPLE_APPLICATION);
         $scope.setInstances(SAMPLE_INSTANCES);
-
-        var errorSpied = sinon.spy(notificationService, 'error');
 
         $scope.unbindService({ id: 's1' });
 
         $rootScope.$digest();
 
-        expect(errorSpied.called, 'called').to.be.true;
+        expect(notificationService.success).not.to.be.called;
     });
 
-    function getSampleBindings() {
-        return [
-            {
-                guid: 'b0',
-                service_instance_guid: 's0'
-            },
-            {
-                guid: 'b1',
-                service_instance_guid: 's1'
-            },
-            {
-                guid: 'b2',
-                service_instance_guid: 's2'
-            }
-        ];
+    function successfulPromise(data) {
+        var deferred = $q.defer();
+        deferred.resolve(data);
+        return deferred.promise;
     }
+
+    function rejectedPromise(data) {
+        var deferred = $q.defer();
+        deferred.reject(data);
+        return deferred.promise;
+    }
+
 });

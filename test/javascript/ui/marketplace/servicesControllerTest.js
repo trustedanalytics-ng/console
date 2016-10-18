@@ -20,7 +20,7 @@ describe("Unit: ServicesController", function () {
         rootScope,
         _serviceExtractor,
         createController,
-        ServiceResource,
+        OfferingsResource,
         serviceListDeferred,
         _targetUrlBuilder,
         SERVICES_URL = '/mocked/services/url',
@@ -42,10 +42,10 @@ describe("Unit: ServicesController", function () {
     }));
 
     beforeEach(inject(function ($controller, $location, $httpBackend, $rootScope, serviceExtractor,
-                                targetUrlBuilder, TestHelpers, _ServiceResource_, $q) {
+                                targetUrlBuilder, TestHelpers, _OfferingsResource_, $q) {
         httpBackend = $httpBackend;
         rootScope = $rootScope;
-        ServiceResource = _ServiceResource_;
+        OfferingsResource = _OfferingsResource_;
         _serviceExtractor = serviceExtractor;
         _targetUrlBuilder = targetUrlBuilder;
         _targetUrlBuilder.get = function() {
@@ -54,7 +54,7 @@ describe("Unit: ServicesController", function () {
         new TestHelpers().stubTargetProvider(targetProvider);
 
         serviceListDeferred = $q.defer();
-        ServiceResource.getAll = sinon.stub().returns(serviceListDeferred.promise);
+        OfferingsResource.getAll = sinon.stub().returns(serviceListDeferred.promise);
         scope = rootScope.$new();
 
         createController = function () {
@@ -108,7 +108,7 @@ describe("Unit: ServicesController", function () {
 
         rootScope.$broadcast('targetChanged');
 
-        expect(ServiceResource.getAll.calledTwice).to.be.true;
+        expect(OfferingsResource.getAll.calledTwice).to.be.true;
     });
 
     it('filterService: empty searchText, should find service', function () {
