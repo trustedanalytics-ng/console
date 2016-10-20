@@ -16,10 +16,9 @@
 //-
 .summarypanel
    .row
-      iframe(ng-src="{{ getIframeSrc(1, 'kubernetes-pods') }}", src="", width="100%", height="250" frameborder="0").col-lg-4
-      iframe(ng-src="{{ getIframeSrc(2, 'kubernetes-pods') }}", src="", width="100%", height="250" frameborder="0").col-lg-4
-      iframe(ng-src="{{ getIframeSrc(3, 'kubernetes-pods') }}", src="", width="100%", height="250" frameborder="0").col-lg-4
-   iframe(ng-src="{{ getIframeSrc(4, 'kubernetes-pods') }}", src="", width="100%", height="400" frameborder="0")
-   iframe(ng-src="{{ getIframeSrc(5, 'kubernetes-pods') }}", src="", width="100%", height="400" frameborder="0")
-   iframe(ng-src="{{ getIframeSrc(6, 'kubernetes-pods') }}", src="", width="100%", height="400" frameborder="0")
-
+      iframe(ng-src="{{ getIframeSrc(1, 'kubernetes-pods', 'now') }}", src="", width="100%", height="250" frameborder="0").col-lg-4
+      iframe(ng-src="{{ getIframeSrc(2, 'kubernetes-pods', 'now') }}", src="", width="100%", height="250" frameborder="0").col-lg-4
+      iframe(ng-src="{{ getIframeSrc(3, 'kubernetes-pods', 'now') }}", src="", width="100%", height="250" frameborder="0").col-lg-4
+   iframe(ng-src="{{ getIframeSrc(4, 'kubernetes-pods', 'now-1h') }}", src="", width="100%", height="400" frameborder="0")
+   iframe(ng-src="{{ getIframeSrc(5, 'kubernetes-pods', 'now-1h') }}", src="", width="100%", height="400" frameborder="0")
+   iframe(ng-src="{{ getIframeSrc(6, 'kubernetes-pods', 'now-1h') }}", src="", width="100%", height="400" frameborder="0")
