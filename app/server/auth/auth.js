@@ -20,6 +20,7 @@ var config = require('../config/config');
 var passport = oauth2.passport;
 
 var sso = config.getSso();
+var sessionTimeout = config.get("session_config").idle_time * 1000;
 
 module.exports = {
     init: init,
@@ -32,11 +33,14 @@ function init(app) {
         name: 'JSESSIONID',
         secret: crypto.randomBytes(16).toString('hex'),
         resave: false,
+        rolling: true,
+        cookie: {
+            maxAge: sessionTimeout // 30 minutes
+        },
         saveUninitialized: false
     }));
     app.use(passport.initialize());
     app.use(passport.session());
-
 
     app.get('/oauth',
         passport.authenticate('oauth2'));
