@@ -19,17 +19,31 @@
 .dashboard.row()
     .category-title.clearfix
         | Health & metrics
-    iframe(ng-src="{{ getIframeSrc(1, 'organization-dashboard') }}", src="", width="100%", height="150" frameborder="0").col-lg-4
-    iframe(ng-src="{{ getIframeSrc(2, 'organization-dashboard') }}", src="", width="100%", height="150" frameborder="0").col-lg-4
-    iframe(ng-src="{{ getIframeSrc(3, 'organization-dashboard') }}", src="", width="100%", height="150" frameborder="0").col-lg-4
-    
+    .row.row-wrapper
+      div.col-lg-12
+        div.col-lg-4
+          iframe(ng-src="{{ getIframeSrc(1, 'organization-dashboard', 'now-5m') }}", src="", width="100%", height="200px" frameborder="0").iframe-wrapper
+        div.col-lg-4
+          iframe(ng-src="{{ getIframeSrc(2, 'organization-dashboard', 'now-5m') }}", src="", width="100%", height="200px" frameborder="0").iframe-wrapper
+        div.col-lg-4
+          iframe(ng-src="{{ getIframeSrc(3, 'organization-dashboard', 'now') }}", src="", width="100%", height="200px" frameborder="0" allowtransparency="true").iframe-wrapper
+
     .category-title.clearfix 
         | Quotas
-    iframe(ng-src="{{ getIframeSrc(4, 'organization-dashboard') }}", src="", width="100%", height="150" frameborder="0").col-lg-4
-    iframe(ng-src="{{ getIframeSrc(5, 'organization-dashboard') }}", src="", width="100%", height="150" frameborder="0").col-lg-4
-    iframe(ng-src="{{ getIframeSrc(6, 'organization-dashboard') }}", src="", width="100%", height="150" frameborder="0").col-lg-4
+    .row.row-wrapper
+      div.col-lg-12 
+        div.col-lg-4
+          iframe(ng-src="{{ getIframeSrc(4, 'organization-dashboard', 'now') }}", src="", width="100%", height="200px" frameborder="0").iframe-wrapper
+        div.col-lg-4
+          iframe(ng-src="{{ getIframeSrc(5, 'organization-dashboard', 'now-15m') }}", src="", width="100%", height="200px" frameborder="0").iframe-wrapper
+        div.col-lg-4
+          iframe(ng-src="{{ getIframeSrc(6, 'organization-dashboard', 'now-15m') }}", src="", width="100%", height="200px" frameborder="0").iframe-wrapper
 
     .category-title.clearfix 
         | Data
-    iframe(ng-src="{{ getIframeSrc(7, 'organization-dashboard') }}", src="", width="100%", height="150" frameborder="0").col-lg-4
-    iframe(ng-src="{{ getIframeSrc(8, 'organization-dashboard') }}", src="", width="100%", height="150" frameborder="0").col-lg-4
+    .row.row-wrapper
+      div.col-lg-12
+        div.col-lg-6
+          iframe(ng-src="{{ getIframeSrc(7, 'organization-dashboard', 'now') }}", src="", width="100%", height="200px" frameborder="0").iframe-wrapper
+        div.col-lg-6
+          iframe(ng-src="{{ getIframeSrc(8, 'organization-dashboard', 'now') }}", src="", width="100%", height="200px" frameborder="0").iframe-wrapper

@@ -18,6 +18,22 @@ $dashboard-tile-height-small: 96px;
 $dashboard-tile-height-large: 147px;
 $dashboard-tile-margin: 20px;
 
+.row-wrapper {
+  background-color: $row-wrapper-background-color;
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-bottom: 20px;
+}
+
+.iframe-wrapper {
+  background-color: $iframe-wrapper-background-color;
+  border-style: solid;
+  border-width: 2px;
+  border-color: $iframe-wrapper-border-color;
+  margin-bottom: 5px;
+  margin-top: 10px;
+}
+
 .dashboard {
 
   &.visibility-hidden {
