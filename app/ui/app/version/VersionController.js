@@ -23,7 +23,7 @@
 
         $scope.componentsMapping = {
             "TAP Platform":"tap",
-            "Cloud Foundry":"cf",
+            "Kubernetes":"k8s",
             "CDH":"cdh"
         };
 
