@@ -53,7 +53,7 @@
                 td Creator
                 td {{model.addedBy}}
 
-        .artifacts
+        .artifacts(ng-hide='true')
            h4(ng-if='extraArtifacts.length') Additional Artifacts
            div(ng-if='!extraArtifacts.length') No Additional Artifacts
 
