@@ -141,6 +141,9 @@
         }
 
         function contains(str, searchText) {
+            if(!str){
+                return false;
+            }
             return str.toLowerCase().indexOf(searchText) > -1;
         }
         
