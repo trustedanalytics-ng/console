@@ -81,7 +81,7 @@
         }
 
         $scope.isDeleteButtonAvailable = function (user) {
-            return user.username !== $scope.currentUser.email;
+            return user.username !== $scope.currentUser.username;
         };
 
         function loadUsers() {
