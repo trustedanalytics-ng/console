@@ -144,7 +144,7 @@
             if(!str){
                 return false;
             }
-            return str.toLowerCase().indexOf(searchText) > -1;
+            return str.toLowerCase().indexOf(searchText.toLowerCase()) > -1;
         }
         
         function filterModels () {
