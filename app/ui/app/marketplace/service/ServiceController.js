@@ -18,9 +18,12 @@
 
 
     App.controller('ServiceController', function (OfferingsResource, serviceExtractor, NotificationService, $stateParams,
-        targetProvider, $scope, ServiceInstancesResource, State, ApplicationRegisterResource, $location) {
+        targetProvider, $scope, ServiceInstancesResource, State, ApplicationRegisterResource, $location, ValidationPatterns) {
 
         var GATEWAY_TIMEOUT_ERROR = 504;
+        
+        $scope.validationPattern = ValidationPatterns.INSTANCE_NAME.pattern;
+        $scope.validationMessage = ValidationPatterns.INSTANCE_NAME.validationMessage;
 
         var self = this,
             id = $stateParams.serviceId;

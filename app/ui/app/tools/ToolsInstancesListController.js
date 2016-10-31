@@ -17,9 +17,12 @@
     "use strict";
 
     App.controller('ToolsInstancesListController', function ($scope, $location, targetProvider, State,
-        NotificationService, OfferingsResource, ServiceInstancesResource, $state) {
+        NotificationService, OfferingsResource, ServiceInstancesResource, $state, ValidationPatterns) {
 
         var GATEWAY_TIMEOUT_ERROR = 504;
+
+        $scope.validationPattern = ValidationPatterns.INSTANCE_NAME.pattern;
+        $scope.validationMessage = ValidationPatterns.INSTANCE_NAME.validationMessage;
 
         $scope.servicePlanGuid = "";
         var state = new State().setPending();

@@ -17,7 +17,7 @@
     "use strict";
 
     App.controller('GearPumpAppDeployController', function ($scope, $window, $location, State,
-        ServiceInstancesResource, GearPumpAppDeployHelper) {
+        ServiceInstancesResource, GearPumpAppDeployHelper, ValidationPatterns) {
 
         var appArguments = {};
 
@@ -27,6 +27,8 @@
         $scope.state = new State().setPending();
         $scope.instancesState = new State().setPending();
         $scope.gpInstanceName = $location.path().split('/').pop();
+        $scope.validationPattern = ValidationPatterns.INSTANCE_NAME.pattern;
+        $scope.validationMessage = ValidationPatterns.INSTANCE_NAME.validationMessage;
 
         GearPumpAppDeployHelper.getGPInstanceCredentialsPromise($scope.gpInstanceName)
             .then(function(creds) {

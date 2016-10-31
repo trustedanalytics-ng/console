@@ -59,13 +59,13 @@
 
                         .new-instance
                             form(name='marketplaceNewInstance', ng-submit='ctrl.createServiceInstance(plan)', ng-if='!ctrl.newInstanceState.isPending()')
-                                input.form-control(name="instanceName" type='text', pattern-validator="^[a-zA-Z][a-zA-Z0-9-_.]*$", required='',
+                                input.form-control(name="instanceName" type='text', pattern-validator="{{ validationPattern }}", required='',
                                 placeholder='Instance name', ng-model='ctrl.newInstance.name')
                                 button.btn.btn-primary(type='submit', ng-disabled='!marketplaceNewInstance.instanceName.$valid')
                                     | Create new instance
                                 div(ng-messages="marketplaceNewInstance.instanceName.$error")
                                     span.validationMessage(ng-message="regexValidator")
-                                        | Allowed characters: [letters, numbers, _, -, .]. Instance name should begin with letter.
+                                        | {{ validationMessage }}
                                 .extra-params
                                     .header(ng-if="ctrl.newInstance.params.length") Extra service parameters:
                                     .param(ng-repeat="param in ctrl.newInstance.params")
