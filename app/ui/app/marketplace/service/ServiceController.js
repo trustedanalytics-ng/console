@@ -49,7 +49,6 @@
         self.createServiceInstance = function (plan) {
             self.newInstanceState.setPending();
             ServiceInstancesResource
-                .supressGenericError()
                 .createInstance(
                     id,
                     self.newInstance.name,
@@ -70,7 +69,6 @@
                     }
                     else {
                         self.newInstanceState.setError();
-                        NotificationService.genericError(error.data, 'Error creating new service instance');
                     }
                 });
         };

@@ -57,8 +57,7 @@ describe("Unit: ServiceController", function () {
 
         saveInstanceDefer = $q.defer();
         serviceInstanceMock = {
-            createInstance: sinon.stub().returns(saveInstanceDefer.promise),
-            supressGenericError: sinon.stub().returnsThis()
+            createInstance: sinon.stub().returns(saveInstanceDefer.promise)
         };
 
         extractedService = {
@@ -172,7 +171,6 @@ describe("Unit: ServiceController", function () {
 
         saveInstanceDefer.reject({status: 500});
         $rootScope.$digest();
-        expect(notificationService.genericError).to.be.called;
         expect(controller.newInstanceState.value).to.be.equals(state.values.ERROR);
     });
 
