@@ -19,7 +19,7 @@
     App.factory('ServiceInstancesResource', function (Restangular) {
         var service = Restangular.service("services");
 
-        service.createInstance = function(offeringId, name, planGuid) {
+        service.createInstance = function(offeringId, name, planGuid, envs) {
             return service.post({
                 classId: offeringId,
                 name: name,
@@ -27,7 +27,7 @@
                 metadata: [{
                     key: 'PLAN_ID',
                     value: planGuid
-                }]
+                }].concat(envs)
             });
         };
 

@@ -56,7 +56,6 @@
                     id,
                     self.newInstance.name,
                     plan.guid,
-                    targetProvider.getOrganization().guid,
                     transformParams(self.newInstance.params)
                 )
                 .then(function () {
@@ -125,11 +124,9 @@
 
     function transformParams(list) {
         // omit params with empty keys or empty values
-        var filtered = _.filter(list, function (param) {
+        return _.filter(list, function (param) {
             return param.key && param.value;
         });
-        // transform list of params to object structure
-        return _.object(_.pluck(filtered, 'key'), _.pluck(filtered, 'value'));
     }
 
 }());
