@@ -23,13 +23,7 @@
             small {{ ctrl.service.provider }}
 
         .description.panel.clearfix
-            .icon(ng-if='ctrl.service.image')
-                img(ng-src='{{ ctrl.service.image }}', alt='{{ ctrl.service.name }}')
-
-            .placeholder(ng-if='!ctrl.service.image')
-                span.fa.fa-cogs
-
-            | {{ ctrl.service.description }}
+            span {{ ctrl.service.description }}
 
             .pull-right(ng-if='ctrl.deletable')
                 button.btn.btn-danger(ng-click='ctrl.tryDeleteOffering()')
