@@ -32,9 +32,8 @@
 
                     getData: function ($defer, params) {
                         var data = dataCallback();
-                        var orderedData = _.some(_.values(params.filter())) ?
-                            $filter('filter')(data, params.filter()) :
-                            $filter('orderBy')(data, params.orderBy());
+                        var filteredData = $filter('filter')(data, params.filter());
+                        var orderedData =  $filter('orderBy')(filteredData, params.orderBy());
                         params.total(orderedData.length);
                         $defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
                     }
