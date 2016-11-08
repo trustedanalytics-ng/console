@@ -17,7 +17,11 @@ div
     h4.state State:
         span.fa-exclamation-triangle(ng-if='$ctrl.checkStatusProblem()')
             | No running instances
-        span.fa-check(ng-if='!$ctrl.checkStatusProblem()')
+        span.fa-check(ng-if='!$ctrl.checkStatusProblem() && !$ctrl.isAppStateSetTo("FAILURE") && !$ctrl.isAppStateSetTo("STOPPED")')
+            | {{ $ctrl.application.state }}
+        span.red-state(ng-if='!$ctrl.checkStatusProblem() && $ctrl.isAppStateSetTo("FAILURE")')
+            | {{ $ctrl.application.state }}
+        span.fa-stop.red-state(ng-if='!$ctrl.checkStatusProblem() && $ctrl.isAppStateSetTo("STOPPED")')
             | {{ $ctrl.application.state }}
         button.btn.btn-primary.fa-refresh.app-refresher(ng-click='$ctrl.onRefresh()') Refresh page
 

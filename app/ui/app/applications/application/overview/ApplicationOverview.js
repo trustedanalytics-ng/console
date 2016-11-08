@@ -30,8 +30,13 @@
             this.ApplicationStates = ApplicationStates;
 
             this.checkStatusProblem = function () {
-                var app = $scope.application;
+                var app = this.application;
                 return app && app.running_instances === 0 && app.state === ApplicationStates.RUNNING;
+            };
+
+            this.isAppStateSetTo = function (state) {
+                var app = this.application;
+                return app.state === state;
             };
         }
     });
