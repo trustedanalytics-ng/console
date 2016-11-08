@@ -31,8 +31,7 @@
 
                     li.item.list-group-item(ng-repeat="service in servicesBound | filter: boundSearchText | orderBy: 'name'")
                         .instance-name
-                           a(ng-if='service.service', ui-sref='app.service({ serviceId: service.service })') {{ service.name }}
-                           span(ng-if='!service.service') {{ service.name }}
+                           a(ui-sref='app.marketplace.instance({ instanceId: service.id })') {{ service.name }}
                         .btn-wrapper
                            a.btn.btn-primary.btn-xs.pull-right.bind-btn(ng-click='unbindService(service)') Unbind
 
@@ -49,8 +48,7 @@
 
                     li.item.list-group-item(ng-repeat="service in servicesAvailable | filter: availableSearchText | orderBy: 'name'")
                         .instance-name
-                           a(ng-if='service.service', ui-sref='app.service({ serviceId: service.service })') {{ service.name }}
-                           span(ng-if='!service.service') {{ service.name }}
+                           a(ui-sref='app.marketplace.instance({ instanceId: service.id })') {{ service.name }}
                         .btn-wrapper
                            a.btn.btn-primary.btn-xs.pull-right.bind-btn(ng-click='bindService(service)') Bind
 
