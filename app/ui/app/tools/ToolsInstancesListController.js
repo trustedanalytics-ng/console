@@ -92,17 +92,12 @@
         };
 
         $scope.hasLogin = function (instances) {
-            return _.some(instances, function (instance) {
-                return instance.login;
-            });
+            return _.some(instances, $scope.getLogin);
         };
 
-        $scope.hasPassword = function (instances) {
-            return _.some(instances, function (instance) {
-                return instance.password;
-            });
-        };
-
+        $scope.getLogin = getLogin;
+        $scope.getPassword = getPassword;
+        $scope.getUrl = getUrl;
     });
 
 
@@ -112,6 +107,8 @@
             .getAll()
             .then(function (response) {
                 $scope.instances = _.filter(response, {serviceName: offeringName});
+                $scope.loginAvailable = loginAvailable($scope.instances);
+                $scope.passwordAvailable = passwordAvailable($scope.instances);
             });
     }
 
@@ -124,6 +121,34 @@
                     return offering.entity.label === offeringName;
                 });
             });
+    }
+
+    function getLogin(instance) {
+        return getMetadataValue(instance, ["username", "login"]);
+    }
+
+    function getPassword(instance) {
+        return getMetadataValue(instance, ["password"]);
+    }
+
+    function getUrl(instance) {
+        var urls = getMetadataValue(instance, ["urls"]);
+        return _.isArray(urls) ? urls[0] : urls;
+    }
+
+    function loginAvailable(instances) {
+        return _.some(instances, getLogin);
+    }
+
+    function passwordAvailable(instances) {
+        return _.some(instances, getPassword);
+    }
+
+    function getMetadataValue(instance, listOfPossibleKeys) {
+        var metaObject = _.find(instance.metadata, function(meta) {
+            return _.isString(meta.key) && _.contains(listOfPossibleKeys, meta.key.toLowerCase());
+        }) || {};
+        return metaObject.value;
     }
 
 }());

@@ -24,29 +24,29 @@ h3
              table.table.list-group(ng-show="instances.length")
                 thead
                    th Instance Name
-                   th(ng-if="hasLogin(instances)") App Login
-                   th.passCol(ng-if="hasPassword(instances)") App Password
+                   th(ng-if="loginAvailable") App Login
+                   th.passCol(ng-if="passwordAvailable") App Password
                    th Url
                    th State
                    th(ng-if="hasDeployer(brokerName)") Deploy App
                    th Delete
                 tbody
-                   tr(ng-repeat="(name, instance) in instances" ng-init="showPass = false")
+                   tr(ng-repeat="instance in instances | orderBy:'name'" ng-init="showPass = false")
                       td {{ instance.name || name }}
-                      td(ng-if="instance.login")
+                      td(ng-if="loginAvailable")
                          span
-                            | {{instance.login}}
-                         span(ng-if='!instance.login') -
-                      td(ng-if="instance.password")
-                         input(type="text", class="form-control",
-                            ng-disabled="!showPass", readonly=true, ng-value="showPass ? instance.password : '****************'")
-                         button(type="button", class="btn btn-sm", ng-class="!showPass ? 'btn-success' : 'btn-warning'"
+                            | {{ getLogin(instance) }}
+                         span(ng-if='!getLogin(instance)') -
+                      td(ng-show="passwordAvailable")
+                         input(ng-show="getPassword(instance)", type="text", class="form-control",
+                            ng-disabled="!showPass", readonly=true, ng-value="showPass ? getPassword(instance) : '****************'")
+                         button(ng-show="getPassword(instance)", type="button", class="btn btn-sm", ng-class="!showPass ? 'btn-success' : 'btn-warning'"
                             ng-click="showPass = !showPass") {{ !showPass ? 'Show' : 'Hide' }}
-                         span(ng-if='!instance.password') -
+                         span(ng-if="!getPassword(instance)") -
                       td
-                         a(ng-if='instance.hostname || instance.dashboard_url', href='{{ (instance.hostname || instance.dashboard_url) | ensureHttps }}', target="_blank")
-                            | {{ instance.hostname || 'Go to dashboard' }}
-                         span(ng-if='!instance.hostname && !instance.dashboard_url') -
+                         a(ng-if='getUrl(instance)', href='{{ getUrl(instance) | ensureHttps }}', target="_blank")
+                            | {{ getUrl(instance) }}
+                         span(ng-if='!getUrl(instance)') -
                       td {{ instance.state }}
                       td
                          a.delete(ng-click='deleteInstance(instance.id)')
