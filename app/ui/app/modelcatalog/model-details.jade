@@ -21,16 +21,18 @@
 
 
         h4.actions-heading Actions
-        span.not-supported(ng-if="model.creationTool === 'Other'")
+        span.not-supported(ng-if="model.creationTool.toLowerCase() === 'other'")
          | *This model is not a supported model type, some actions may not be available.
 
         .actions
             //button.btn.btn-primary.fa-pencil-square-o(ng-click="goToEditMode()") Edit Metadata
-            button.btn.btn-primary.fa-times(ng-click='tryDeleteModel()') Delete
-            a(ng-href='/rest/models/{{model.id}}/artifacts/{{mainArtifact.id}}/file')
-               button.btn.btn-primary.fa-download(ng-click='downloadModelArtifactFile(mainArtifact)'
+            a.btn.btn-primary.fa-times(ng-click='tryDeleteModel()') Delete
+            a.btn.btn-primary.fa-download(ng-href='/rest/models/{{model.id}}/artifacts/{{mainArtifact.id}}/file'
                ng-if="mainArtifact") Download
-            button.btn.btn-primary.fa-plus(ng-click='tryUploadArtifact()' ng-hide='true') Add Artifact
+            // should be deleted when UI will support additional artifact section
+            a.btn.btn-primary.fa-download(ng-href='/rest/models/{{model.id}}/artifacts/{{extraArtifacts[0].id}}/file'
+               ng-if="extraArtifacts && !mainArtifact") Download
+            a.btn.btn-primary.fa-plus(ng-click='tryUploadArtifact()' ng-hide='true') Add Artifact
 
         h4 Metadata
         table.table-metadata

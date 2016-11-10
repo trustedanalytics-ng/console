@@ -22,7 +22,7 @@
 
    .panel
       h4.actions-heading Actions
-      span.not-supported(ng-if="model.creationTool === 'Other'")
+      span.not-supported(ng-if="model.creationTool.toLowerCase() === 'other'")
          | *This model is not a supported model type, some actions may not be available.
 
       .actions
@@ -40,13 +40,13 @@
             td {{model.revision}}
          tr
             td Method
-            td(ng-if="model.creationTool === 'Other'")
+            td(ng-if="model.creationTool.toLowerCase() === 'other'")
                input.form-control(ng-model="editable.algorithm")
          tr
             td Description
-            td(ng-if="model.creationTool === 'Other'")
+            td(ng-if="model.creationTool.toLowerCase() === 'other'")
                textarea.form-control(ng-model="editable.description")
-            td(ng-if="model.creationTool !== 'Other'") {{model.description}}
+            td(ng-if="model.creationTool.toLowerCase() !== 'other'") {{model.description}}
 
          tr
             td Added Date
