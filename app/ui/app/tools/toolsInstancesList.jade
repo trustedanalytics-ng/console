@@ -32,7 +32,8 @@ h3
                    th Delete
                 tbody
                    tr(ng-repeat="instance in instances | orderBy:'name'" ng-init="showPass = false")
-                      td {{ instance.name || name }}
+                      td
+                        a(ui-sref='app.marketplace.instance({ instanceId: instance.id })') {{ instance.name }}
                       td(ng-if="loginAvailable")
                          span
                             | {{ getLogin(instance) }}
