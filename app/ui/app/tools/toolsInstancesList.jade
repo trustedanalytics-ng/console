@@ -45,7 +45,7 @@ h3
                             ng-click="showPass = !showPass") {{ !showPass ? 'Show' : 'Hide' }}
                          span(ng-if="!getPassword(instance)") -
                       td
-                         a(ng-if='getUrl(instance)', href='{{ getUrl(instance) | ensureHttps }}', target="_blank")
+                         a(ng-if='getUrl(instance)', href='{{ getUrl(instance) | ensureProtocol }}', target="_blank")
                             | {{ getUrl(instance) }}
                          span(ng-if='!getUrl(instance)') -
                       td {{ instance.state }}
