@@ -1,5 +1,5 @@
 //
-   Copyright (c) 2015 Intel Corporation
+   Copyright (c) 2016 Intel Corporation
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -26,18 +26,15 @@ h3
                   th Instance Name
                   th State
                   th Dashboard link
-                  //th Deploy App
                   th Delete
                tbody
                   tr(ng-repeat="(name, instance) in instances" ng-init="showPass = false")
                      td {{ instance.name || name }}
                      td {{ instance.state }}
                      td
-                        a(ng-if='instance.hostname || instance.dashboard_url', href='{{ (instance.hostname || instance.dashboard_url) | ensureHttps }}', target="_blank")
-                           | 'Go to dashboard'
-                     //td
-                     //   a(ui-sref=" app.gearpumpappdeploy({ instanceId: instance.name || name })")
-                     //      | Deploy application
+                        a(ng-if='instance.uiUrl', href='{{ ( instance.uiUrl | ensureProtocol ) + gearpumpLinkSuffix }}', target="_blank")
+                           | Go to dashboard
+                        span(ng-if='!instance.uiUrl') -
                      td
                         a.delete(ng-click='deleteInstance(instance.id)')
             .no-instances(ng-hide="instances.length")
@@ -53,7 +50,7 @@ h3
                   span(class="validationMessage", ng-message="regexValidator")
                      | {{ validationMessage }}
 
-    script(type="text/ng-template", id="confirm-delete")
+   script(type="text/ng-template", id="confirm-delete")
       .ngdialog-message.clearfix
          p
             | Are you sure you want to delete

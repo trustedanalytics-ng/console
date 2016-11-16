@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015 Intel Corporation
+ * Copyright (c) 2016 Intel Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,13 +16,19 @@
 (function () {
     "use strict";
 
+    var INSTANCE_OK_STATE = 'RUNNING';
+    var METADATA_SETTINGS_KEY = 'VCAP';
+
     App.controller('ToolsInstancesListController', function ($scope, $location, targetProvider, State,
         NotificationService, OfferingsResource, ServiceInstancesResource, $state, ValidationPatterns) {
 
         var GATEWAY_TIMEOUT_ERROR = 504;
+        var GEARPUMP_LINK_SUFFIX = '/login/oauth2/cloudfoundryuaa/authorize';
 
         $scope.validationPattern = ValidationPatterns.INSTANCE_NAME.pattern;
         $scope.validationMessage = ValidationPatterns.INSTANCE_NAME.validationMessage;
+
+        $scope.gearpumpLinkSuffix = GEARPUMP_LINK_SUFFIX;
 
         $scope.servicePlanGuid = "";
         var state = new State().setPending();
@@ -109,7 +115,22 @@
                 $scope.instances = _.filter(response, {serviceName: offeringName});
                 $scope.loginAvailable = loginAvailable($scope.instances);
                 $scope.passwordAvailable = passwordAvailable($scope.instances);
+
+                _.each($scope.instances, function (instance) {
+                    if(instance.state === INSTANCE_OK_STATE) {
+                        instance.uiUrl = extractUiUrlFromMetadata(instance.metadata);
+                    }
+                });
             });
+    }
+
+    function extractUiUrlFromMetadata(metadata) {
+        var vcap = angular.fromJson(_.findWhere(metadata, {key: METADATA_SETTINGS_KEY}));
+        if(vcap && vcap.value) {
+            var credentials = angular.fromJson(vcap.value).credentials;
+            return credentials ? credentials.dashboardUrl : null;
+        }
+        return null;
     }
 
     function getOffering($scope, OfferingsResource, offeringName) {
