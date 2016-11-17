@@ -420,7 +420,7 @@ $bootstrap-input-text-color: #555;
 .model-upload {
 
   .panel {
-    padding: 40px 30px;
+    padding: 40px 50px;
 
     form {
 
@@ -430,122 +430,115 @@ $bootstrap-input-text-color: #555;
         margin-bottom: 5px;
       }
 
-      .option {
-        padding: 20px 15px;
+      .description-field {
 
-        .description-field {
-
-          label.label-title {
-           margin-bottom: 15px;
-          }
-
-          label.additional-info-opt {
-            color: $color-blue-label;
-            font-style: italic;
-            font-size: 11px;
-            margin-left: 5px;
-            margin-right: 5px;
-          }
-
-          .large-description-field {
-            margin-left: 10px;
-            padding-right: 0px;
-
-            textarea#description {
-              min-height: 150px;
-              resize: vertical;
-              text-align: left;
-            }
-          }
-
-        }
-        .buttons-field {
-          margin: 20px 25px;
-
-          button.btn-cancel {
-            display: inline-block;
-            margin-left: 20px;
-            background-color: $background-white-color;
-            color: $text-color-gray-darker;
-            font-size: 12px;
-            border: none;
-          }
+        label.label-title {
+         margin-bottom: 15px;
         }
 
-        .col-md-6 {
+        label.additional-info-opt {
+          color: $color-blue-label;
+          font-style: italic;
           font-size: 11px;
+          margin-left: 5px;
+          margin-right: 5px;
+        }
 
-          label.additional-info-opt {
-            color: $color-blue-label;
-            font-style: italic;
-            margin-left: 5px;
+        textarea#description {
+          min-height: 150px;
+          resize: vertical;
+          text-align: left;
+        }
+      }
+
+      .buttons-field {
+        margin: 20px 25px;
+
+        input.btn-primary {
+          padding: 10px 50px;
+        }
+
+        button.btn-cancel {
+          display: inline-block;
+          margin-left: 20px;
+          background-color: $background-white-color;
+          color: $text-color-gray-darker;
+          font-size: 13px;
+          font-weight: bold;
+          border: none;
+
+          &::before {
             margin-right: 5px;
           }
+        }
+      }
 
-          label.additional-info-eg {
-            font-color: $text-color-light-gray;
-          }
+      .col-md-6 {
+
+        &:first-child {
+          padding-left: 0;
         }
 
-        .form-field {
-          display: block;
-          position: relative;
-          margin: 0px 10px;
-
-          label.radio-inline.model-types {
-            margin-right: 20px;
-          }
+        &:last-child {
+          padding-right: 0;
         }
+
+        label.additional-info-opt {
+          color: $color-blue-label;
+          font-size: 11px;
+          font-style: italic;
+          margin-left: 5px;
+          margin-right: 5px;
+        }
+
+        label.additional-info-eg {
+          font-size: 11px;
+          font-color: $text-color-light-gray;
+        }
+      }
+
+      .form-field {
+        display: block;
+        position: relative;
+
+        label.radio-inline.model-types {
+          margin-right: 20px;
+        }
+      }
+
+      .label-title {
+        color: $color-blue-label;
+        font-size: 16px;
+        margin-bottom: 15px;
+        margin-top: 25px;
+      }
+
+      .browse-field {
+        border: 1px solid $color-border-input-bootstrap;
+        margin: 20px 0;
+        min-height: 150px;
+        padding: 40px;
 
         .label-title {
-          color: $color-blue-label;
-          font-size: 16px;
-          margin-left: 10px;
-          margin-bottom: 15px;
-          margin-top: 25px;
+          margin-top: 0;
         }
 
-        .large-field {
-          margin: 20px 5px;
-          min-height: 150px;
+        .input-group {
+          display: block;
 
-          label.label-title {
-            margin-top: 30px;
-            margin-left: 50px;
+          input.form-control {
+            width: 400px;
+            display: inline-block;
           }
 
-          .browse-field {
-            border: 1px solid $color-border-input-bootstrap;
-            margin-left: 5px;
+          label.input-group-btn {
 
-            .input-group {
-              display: block;
-              margin-top: 10px;
-              margin-bottom: 25px;
-              max-height: 50px;
+            display: inline-block;
+            margin: 0 0 0 5px;
 
-              .form-control {
-                width: 40%;
-                display: inline-block;
-                margin-left: 50px;
-              }
-
-              label.input-group-btn {
-
-                display: inline-block;
-                margin-left: 50px;
-                width: 20%;
-
-                span.btn {
-                  background-color: $table-border-light-grey;
-                  border-radius: 4px;
-                  font-size: 14px;
-                  text-align: center;
-                  padding-top: 8px;
-                  color: $text-color-black;
-                  height: 34px;
-                }
-              }
+            span.btn {
+              background-color: $table-border-light-grey;
+              line-height: 22px;
             }
           }
         }
