@@ -34,7 +34,7 @@
                 .addModelMetadata($scope.uploadModel)
                 .then(function onSuccess(model) {
                     NotificationService.success('Model metadata has been uploaded');
-                    ModelUploadService.addModelArtifact($scope, $scope.uploadModel, model.id)
+                    ModelUploadService.addModelArtifact($scope.uploadModel, model.id)
                         .then(function onSuccess() {
                             NotificationService.success('Model artifact has been uploaded');
                             $scope.state.setLoaded();

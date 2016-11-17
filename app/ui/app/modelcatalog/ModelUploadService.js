@@ -32,7 +32,7 @@
                         });
 
             },
-            addModelArtifact: function ($scope, model, modelId) {
+            addModelArtifact: function (model, modelId) {
 
                 var files = {
                     artifactFile: model.filename,
