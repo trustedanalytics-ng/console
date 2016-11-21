@@ -3,7 +3,7 @@
   "datacatalog": "http://localhost:5000",
   "datacatalogexport": "http://localhost:9990",
   "dataaquisitionservice": "http://localhost:9997",
-  "servicecatalog": "http://localhost:9999",
+  "api": "http://localhost:9999",
   "metrics-provider": "http://localhost:9997",
   "service-exposer": "http://localhost:9991",
   "router-metrics-provider": "http://localhost:9996",

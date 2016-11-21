@@ -313,7 +313,7 @@ App.config(function ($stateProvider, $urlRouterProvider, LazyLoadProvider, AppCo
             title: 'Apache Gearpump App Deploy',
             targetHeader: {org: false, space: false},
             controller: 'GearPumpAppDeployController',
-            templateUrl: getViewPath('tools/gearpumpappdeploy.html'),
+            templateUrl: getViewPath('tools/gearpumpAppDeploy.html'),
             resolve: LazyLoadProvider.load(['ng-file-upload'])
         })
         .state('app.datacatalog', {

@@ -23,55 +23,29 @@
 
         $scope.uploadFormData = {};
         $scope.uploadData = {};
+        $scope.services = {};
         $scope.usersParameters = [];
         $scope.state = new State().setPending();
-        $scope.instancesState = new State().setPending();
         $scope.gpInstanceName = $location.path().split('/').pop();
         $scope.validationPattern = ValidationPatterns.INSTANCE_NAME.pattern;
         $scope.validationMessage = ValidationPatterns.INSTANCE_NAME.validationMessage;
 
-        GearPumpAppDeployHelper.getGPInstanceCredentialsPromise($scope.gpInstanceName)
-            .then(function(creds) {
-                if(creds) {
-                    $scope.gpUiData = creds;
-                    $scope.uiInstanceName = creds.hostname.split(".").slice(0, 1)[0];
-                    $scope.state.setLoaded();
-                } else {
-                    $scope.state.setError();
-                }
-            });
-
         GearPumpAppDeployHelper.getServicesInstancesPromise(ServiceInstancesResource)
             .then(function success(data) {
                 $scope.services = GearPumpAppDeployHelper.filterServices(data);
-                $scope.instancesState.setLoaded();
+                $scope.gpUiData = GearPumpAppDeployHelper.getUiInstanceCredentials($scope.gpInstanceName, data);
+                $scope.state.setLoaded();
             });
 
         $scope.$watchCollection('usersParameters', function () {
             $scope.usersArgumentsChange();
         });
 
-        $scope.instanceCheckboxChange = function (instanceGuid, serviceLabel, instanceName) {
+        $scope.instanceCheckboxChange = function (instanceGuid, instanceName, serviceName, instanceMetadata) {
             if($scope.uploadFormData.instances[instanceGuid]) {
-                $scope.instancesState.setPending();
-                $scope.setAppArguments(instanceGuid, serviceLabel)
-                    .then(function success() {
-                        $scope.uploadFormData.appResultantArguments = 'tap=' + angular.toJson(appArguments);
-                    })
-                    .catch(function() {
-                        $scope.uploadFormData.instances[instanceGuid] = false;
-                    })
-                    .finally(function() {
-                        $scope.instancesState.setLoaded();
-                    });
+                addAppParameter(instanceName, serviceName, instanceMetadata);
             } else {
-                appArguments[serviceLabel] = _.filter(appArguments[serviceLabel], function(value) {
-                    return value.name !== instanceName;
-                });
-                if(_.isEmpty(appArguments[serviceLabel])) {
-                    delete appArguments[serviceLabel];
-                }
-                $scope.uploadFormData.appResultantArguments = 'tap=' + angular.toJson(appArguments);
+                removeAppParameter(instanceName, serviceName);
             }
         };
 
@@ -94,7 +68,8 @@
 
         $scope.deployGPApp = function() {
             $scope.state.setPending();
-            GearPumpAppDeployHelper.deployGPApp($scope.uiInstanceName, $scope.gpUiData, $scope.uploadFormData)
+            GearPumpAppDeployHelper.deployGPApp($scope.gpUiData.dashboardName,
+                    $scope.gpUiData.username, $scope.gpUiData.password, $scope.uploadFormData)
                 .finally(function() {
                     $scope.clearForm();
                     $scope.state.setLoaded();
@@ -111,5 +86,25 @@
             $scope.usersParameters = [];
             appArguments = {};
         };
+
+        function addAppParameter(instanceName, serviceName, instanceMetadata) {
+            if(!appArguments[serviceName]) {
+                appArguments[serviceName] = {};
+            }
+
+            appArguments[serviceName][instanceName] = GearPumpAppDeployHelper.parseMetadata(instanceMetadata);
+            $scope.uploadFormData.appResultantArguments = 'tap=' + angular.toJson(appArguments);
+        }
+
+        function removeAppParameter(instanceName, serviceName) {
+            if(appArguments[serviceName] && appArguments[serviceName][instanceName]) {
+                delete appArguments[serviceName][instanceName];
+
+                if(_.isEmpty(appArguments[serviceName])) {
+                    delete appArguments[serviceName];
+                }
+                $scope.uploadFormData.appResultantArguments = 'tap=' + angular.toJson(appArguments);
+            }
+        }
     });
 }());

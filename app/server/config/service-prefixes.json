@@ -1,6 +1,6 @@
 [
   {
-    "name": "servicecatalog",
+    "name": "api",
     "value": "/api/v2"
   },
   {

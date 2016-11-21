@@ -26,6 +26,7 @@ h3
                   th Instance Name
                   th State
                   th Dashboard link
+                  th Deploy App
                   th Delete
                tbody
                   tr(ng-repeat="(name, instance) in instances" ng-init="showPass = false")
@@ -34,6 +35,10 @@ h3
                      td
                         a(ng-if='instance.uiUrl', href='{{ ( instance.uiUrl | ensureProtocol ) + gearpumpLinkSuffix }}', target="_blank")
                            | Go to dashboard
+                        span(ng-if='!instance.uiUrl') -
+                     td
+                        a( ng-if='instance.uiUrl', ui-sref="app.gearpumpappdeploy({ instanceId: instance.name || name })")
+                           | Deploy
                         span(ng-if='!instance.uiUrl') -
                      td
                         a.delete(ng-click='deleteInstance(instance.id)')

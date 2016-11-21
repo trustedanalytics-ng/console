@@ -28,7 +28,6 @@ describe("Unit: GearPumpAppDeployController", function () {
         notificationService,
         gearPumpAppDeployResource,
         toolsInstanceResourceMock,
-        serviceKeysResourceMock,
         serviceInstancesResourceMock,
         $q,
         organization = { guid: 111, name: "org" },
@@ -37,66 +36,30 @@ describe("Unit: GearPumpAppDeployController", function () {
         INSTANCE_ID = 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
         SOME_GUID =   'cccccccc-cccc-cccc-cccc-cccccccccccc',
         SERVICE_LABEL = 'kafka',
-        SERVICE_INSTANCES_SUMMARY = [{
-            "guid": INSTANCE_ID,
-            "label": SERVICE_LABEL,
-            "instances": [{
-                "guid": INSTANCE_ID,
-                "name": 'someName',
-                "service": SOME_GUID,
-                "service_plan": {
-                    "name": "Simple",
-                    "service": {
-                        "guid": SOME_GUID,
-                        "label": "label"
-                    }
-                },
-                "service_keys": [{
-                    "guid": SOME_GUID,
-                    "name": "gp-app-creds--100",
-                    "service_instance_guid": INSTANCE_ID,
-                    "credentials": {
-                        "uri": "someData"
-                    }
-                }]
-            }]
-        },
-        {
-            "guid": '11',
-            "label": 'otherLabel',
-            "instances": [{
-                "guid": '23',
-                "name": 'someName',
-                "service": '44',
-                "service_plan": {
-                    "name": "Simple",
-                    "service": {
-                        "guid": '66',
-                        "label": "someLabel"
-                    }
-                },
-                "service_keys": [{
-                    "guid": '66',
-                    "name": "gp-app-creds-sdadsadsa-22",
-                    "service_instance_guid": '99',
-                    "credentials": {
-                        "uri": "someData"
-                    }
-                }]
-            }]
-        }],
-        GEARPUMP_INSTANCE_DATA = {
-            plain: function () {
-                return {
-                    "test-3": {
-                        "guid": "bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb",
-                        "hostname": "gearpump-ui-aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa-aaaaaaaa.domain.com",
-                        "login": "login",
-                        "password": "password"
-                    }
-                };
+        INSTANCE_METADATA = [
+            {
+                "key": "USERNAME",
+                "value": "username"
+            },
+            {
+                "key": "PASSWORD",
+                "value": "password"
+            },
+            {
+                "key": "urls",
+                "value": "gp-ui-00000000-0000-0000-0000-000000000000.domain.com"
             }
-        },
+        ],
+        GEARPUMP_INSTANCE_DATA = [{
+            "id": INSTANCE_ID,
+            "name": INSTANCE_NAME,
+            "type": "SERVICE",
+            "classId": SOME_GUID,
+            "metadata": INSTANCE_METADATA,
+            "state": "RUNNING",
+            "serviceName": "gearpump",
+            "planName": "free"
+        }],
         EXAMPLE_FORM = {
             jarFile: 'someName',
             configFile: 'someConfName',
@@ -105,7 +68,8 @@ describe("Unit: GearPumpAppDeployController", function () {
             instances: {
                 someInstance: 'someName'
             }
-        };
+        },
+        EXAMPLE_INSTANCE_GENERATED_STRUCTURE = '{"kafka":{"someInstance":{"USERNAME":"username","PASSWORD":"password","urls":"gp-ui-00000000-0000-0000-0000-000000000000.domain.com"}}}';
 
     beforeEach(module('app', function($provide) {
         _targetProvider = {
@@ -123,17 +87,15 @@ describe("Unit: GearPumpAppDeployController", function () {
             }
         };
 
-        serviceKeysResourceMock = {};
         fileUploaderServiceMock = {};
         $provide.value('FileUploaderService', fileUploaderServiceMock);
         $provide.value('ServiceInstancesResource', serviceInstancesResourceMock);
-        $provide.value('ServiceKeysResource', serviceKeysResourceMock);
         $provide.value('ToolsInstanceResource', toolsInstanceResourceMock);
         $provide.value('targetProvider', _targetProvider);
     }));
 
     beforeEach(inject(function ($controller, $location, $rootScope, _$q_, Restangular,
-                                ServiceInstancesResource, ServiceInstancesMapper, ServiceKeysResource, State,
+                                ServiceInstancesResource, ServiceInstancesMapper, State,
                                 _$httpBackend_, NotificationService, GearPumpAppDeployResource) {
 
         state = new State();
@@ -141,15 +103,13 @@ describe("Unit: GearPumpAppDeployController", function () {
         httpBackend = _$httpBackend_;
         rootScope = $rootScope;
         scope = $rootScope.$new();
-        scope.instancesState = new State();
 
-        serviceInstancesResourceMock = Restangular.service("service_instances");
-        serviceInstancesResourceMock.getSummary = function() {
-            return resolvedPromise( SERVICE_INSTANCES_SUMMARY );
+        serviceInstancesResourceMock = Restangular.service("services");
+        serviceInstancesResourceMock.getAll = function() {
+            return resolvedPromise( GEARPUMP_INSTANCE_DATA );
         };
 
         serviceInstancesMapperMock = ServiceInstancesMapper;
-        serviceKeysResourceMock = ServiceKeysResource;
         notificationService = NotificationService;
         gearPumpAppDeployResource = GearPumpAppDeployResource;
         locationMock = $location;
@@ -163,7 +123,6 @@ describe("Unit: GearPumpAppDeployController", function () {
                 FileUploaderService: fileUploaderServiceMock,
                 NotificationService: notificationService,
                 ServiceInstancesMapper: serviceInstancesMapperMock,
-                ServiceKeysResource: serviceKeysResourceMock,
                 ServiceInstancesResource: serviceInstancesResourceMock,
                 GearPumpAppDeployResource: gearPumpAppDeployResource,
                 $state: state
@@ -173,78 +132,56 @@ describe("Unit: GearPumpAppDeployController", function () {
         createController();
     }));
 
-    it('should not be null', function () {
+    it('controller should not be null', function () {
         expect(controller).not.to.be.null;
     });
 
     it('instanceCheckboxChange, checked success, get service\'s data and set in scope', function () {
 
+        scope.gpInstanceName = INSTANCE_NAME;
         scope.uploadFormData = { instances: {} };
         scope.uploadFormData.instances[INSTANCE_ID] = 'someData';
 
         scope.setAppArguments = sinon.stub().returns(resolvedPromise());
 
-        scope.instanceCheckboxChange(INSTANCE_ID, SERVICE_LABEL, INSTANCE_NAME);
+        scope.instanceCheckboxChange(INSTANCE_ID, INSTANCE_NAME, SERVICE_LABEL, INSTANCE_METADATA);
         rootScope.$digest();
 
-        expect(scope.setAppArguments).to.be.called;
-        expect(scope.instancesState.value).to.be.equal(state.values.LOADED);
-        expect(scope.uploadFormData.appResultantArguments).to.be.equal('tap={}');
+        expect(scope.uploadFormData.appResultantArguments).to.be.equal('tap=' + EXAMPLE_INSTANCE_GENERATED_STRUCTURE);
 
     });
 
     it('instanceCheckboxChange, unchecked, unset instance\'s data in scope', function () {
 
+        scope.gpInstanceName = INSTANCE_NAME;
         scope.uploadFormData = { instances: {} };
-
         scope.setAppArguments = sinon.stub().returns(resolvedPromise());
 
-        scope.instanceCheckboxChange(INSTANCE_ID, SERVICE_LABEL, INSTANCE_NAME);
+        scope.instanceCheckboxChange(INSTANCE_ID, INSTANCE_NAME, SERVICE_LABEL, INSTANCE_METADATA);
         rootScope.$digest();
 
-        expect(scope.setAppArguments.called).to.be.false;
         expect(scope.uploadFormData.appResultantArguments).to.be.equal('tap={}');
 
     });
 
     it('instanceCheckboxChange, checked error, error while getting data', function () {
 
+        scope.gpInstanceName = INSTANCE_NAME;
         scope.uploadFormData = { instances: {} };
-        scope.uploadFormData.instances[INSTANCE_ID] = 'someData';
 
         scope.setAppArguments = sinon.stub().returns(rejectedPromise());
 
         scope.instanceCheckboxChange(INSTANCE_ID, SERVICE_LABEL, INSTANCE_NAME);
         rootScope.$digest();
 
-        expect(scope.setAppArguments).to.be.called;
-        expect(scope.instancesState.value).to.be.equal(state.values.LOADED);
-        expect(scope.uploadFormData.instances[INSTANCE_ID]).to.be.false;
-
-    });
-
-    it('setAppArguments, success, create service key get data and delete key', function () {
-
-        sinon.stub(Math, "random", function(){
-            return 1;
-        });
-
-        serviceKeysResourceMock.addKey = sinon.stub().returns(resolvedPromise());
-        serviceKeysResourceMock.withErrorMessage = sinon.stub().returns(serviceKeysResourceMock);
-        serviceKeysResourceMock.deleteKey = sinon.stub().returns(resolvedPromise());
-        serviceInstancesResourceMock.getSummary = sinon.stub().returns(resolvedPromise(SERVICE_INSTANCES_SUMMARY));
-
-        scope.setAppArguments(INSTANCE_ID, SERVICE_LABEL);
-        rootScope.$digest();
-
-        expect(serviceKeysResourceMock.addKey).to.be.called;
-        expect(serviceInstancesResourceMock.getSummary).to.be.called;
-        expect(scope.services).to.be.deep.equal([ SERVICE_INSTANCES_SUMMARY[0] ]);
+        expect(scope.uploadFormData.instances[INSTANCE_ID]).to.be.undefined;
+        expect(scope.uploadFormData.appResultantArguments).to.be.equal('tap={}');
 
     });
 
     it('usersArgumentsChange, add first element, create app resultant arguments', function () {
 
+        scope.gpInstanceName = INSTANCE_NAME;
         scope.uploadFormData = { appResultantArguments: {} };
 
         scope.usersParameters = [{ key: 'someKey', value: 'someValue' }];
@@ -257,6 +194,7 @@ describe("Unit: GearPumpAppDeployController", function () {
 
     it('usersArgumentsChange, add twice, create app resultant arguments', function () {
 
+        scope.gpInstanceName = INSTANCE_NAME;
         scope.uploadFormData = { appResultantArguments: {} };
 
         scope.usersParameters = [{ key: 'someKey', value: 'someValue' }];
@@ -273,6 +211,7 @@ describe("Unit: GearPumpAppDeployController", function () {
 
     it('usersArgumentsChange, add and remove, create app resultant arguments', function () {
 
+        scope.gpInstanceName = INSTANCE_NAME;
         scope.uploadFormData = { appResultantArguments: {} };
 
         scope.usersParameters = [{ key: 'someKey', value: 'someValue' }];
@@ -289,6 +228,7 @@ describe("Unit: GearPumpAppDeployController", function () {
 
     it('deployGPApp, success, deploy application on Apache Gearpump', function () {
 
+        scope.gpInstanceName = INSTANCE_NAME;
         httpBackend.whenPOST('/rest/gearpump/instanceName/login').respond();
 
         scope.uiInstanceName = 'instanceName';
@@ -316,6 +256,7 @@ describe("Unit: GearPumpAppDeployController", function () {
 
     it('deployGPApp, upload error, deploy application on Apache Gearpump', function () {
 
+        scope.gpInstanceName = INSTANCE_NAME;
         scope.uiInstanceName = 'instanceName';
         scope.gpUiData = {
             login: 'login',
@@ -339,6 +280,7 @@ describe("Unit: GearPumpAppDeployController", function () {
 
     it('clearForm, clear form, clear form input fields', function () {
 
+        scope.gpInstanceName = INSTANCE_NAME;
         scope.uploadFormData = EXAMPLE_FORM;
         scope.usersParameters = [ { key: null, value: null } ];
 

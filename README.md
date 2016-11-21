@@ -43,6 +43,8 @@ export SSO_TOKEN_URI=https://uaa.<platform_domain>/oauth/token
 export SSO_LOGOUT_URI=https://uaa.<platform_domain>/logout.do
 export SSO_CLIENT_ID=console
 export SSO_CLIENT_SECRET=<console_client_secret>
+export PLATFORM_DOMAIN=<platform_domain>
+export API_HOST=http://api.<platform_domain>
 ```
 
 #### Binding to external microservices

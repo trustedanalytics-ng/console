@@ -21,13 +21,13 @@
   "name": "service-exposer"
 }, {
   "path": "/offerings",
-  "name": "servicecatalog"
+  "name": "api"
 }, {
   "path": "/services",
-  "name": "servicecatalog"
+  "name": "api"
 }, {
   "path": "/applications",
-  "name": "servicecatalog"
+  "name": "api"
 }, {
   "path": "/orgs/[^/]+/name",
   "name": "user-management"
@@ -42,7 +42,7 @@
   "name": "user-management"
 }, {
   "path": "/platform_info",
-  "name": "servicecatalog"
+  "name": "api"
 }, {
   "path": "/external_tools",
   "name": "platformcontext"

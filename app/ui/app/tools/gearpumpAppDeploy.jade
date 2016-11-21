@@ -34,17 +34,16 @@
                         input.btn.btn-primary(type='file', nv-file-select, ngf-select, name='upfile',
                         data-ng-model='uploadFormData.configFile', file-valid, accept=".conf")
 
-                h4 Send instances' credentials to application
-                spinner(ng-show='instancesState.isPending()')
-                .form-group(ng-show='instancesState.isLoaded()', ng-repeat="service in services | orderBy: 'displayName || label'")
-                    label.col-sm-2.control-label {{ service.displayName || service.label }}
+                h4(ng-show='services') Send instances' credentials to application
+                .form-group(ng-show='services', ng-repeat="(serviceName, instances) in services")
+                    label.col-sm-2.control-label {{ serviceName }}
                     .col-sm-10
-                        .checkbox.c-checkbox(ng-repeat="instance in service.instances | orderBy: 'name'")
+                        .checkbox.c-checkbox(ng-repeat="instance in instances")
                             label
                                 input#public(type="checkbox",
-                                ng-model="uploadFormData.instances[instance.guid]",
-                                ng-change="instanceCheckboxChange(instance.guid, service.label, instance.name)",
-                                value="{{ instance.guid }}")
+                                ng-model="uploadFormData.instances[instance.id]",
+                                ng-change="instanceCheckboxChange(instance.id, instance.name, serviceName, instance.metadata)",
+                                value="{{ instance.id }}")
                                 span.fa.fa-check
                                 | {{ instance.name }}
                 h4 Parameters

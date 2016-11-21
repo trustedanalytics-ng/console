@@ -17,7 +17,6 @@ var _ = require('underscore'),
     defaults = require('./defaults.json');
 
 var vcapServices = JSON.parse(process.env.VCAP_SERVICES || '{}');
-var vcapApplication = JSON.parse(process.env.VCAP_APPLICATION || '{}');
 var userProvided = vcapServices['user-provided'] || [];
 var ssoEnvList = _.keys(process.env).filter(function(vcapServiceName) {
     return vcapServiceName.indexOf('SSO_') === 0;
@@ -29,16 +28,7 @@ function getUserProvidedSerice(name) {
 }
 
 function getDomain() {
-    var domain = getVariable('domain');
-    if(domain) {
-        return domain;
-    }
-
-    if (vcapApplication.uris) {
-        return vcapApplication.uris[0].split(".").slice(1).join(".");
-    }
-
-    throw new Error('Cannot fetch domain configuration');
+    return getVariable('PLATFORM_DOMAIN');
 }
 
 function getVariable(name) {
