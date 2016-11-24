@@ -401,4 +401,9 @@
       color: $btn-yellow-color;
     }
   }
+
+  td {
+    word-wrap: break-word;
+    word-break: break-all;
+  }
 }
