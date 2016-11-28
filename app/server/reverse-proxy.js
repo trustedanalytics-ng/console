@@ -51,13 +51,14 @@ function forwardRequest(req, res) {
     setHeaders(req);
     req.clearTimeout();
 
-    req.pipe(request({
+    req.pipe(
+        request({
             url: targetUrl,
             method: req.method,
             timeout: servicesConfig.getServiceTimeout(service)
-        },
-        handleProxyError(res, service.name, path)
-    )).pipe(res);
+        })
+        .on('error', handleProxyError(res, service.name, path))
+    ).pipe(res);
 }
 
 function setHeaders(req) {
