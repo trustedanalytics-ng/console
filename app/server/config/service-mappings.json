@@ -12,7 +12,7 @@
   "name": "datacatalog"
 }, {
   "path": "/tables",
-  "name": "datacatalogexport"
+  "name": "dataset-publisher"
 }, {
   "path": "/das",
   "name": "dataaquisitionservice"

@@ -15,7 +15,7 @@ applications:
       - platformcontext
       - app-launcher-helper
       - sso
-      - datacatalogexport
+      - dataset-publisher
       - latest-events-service
       - hdfs-uploader
       - service-exposer

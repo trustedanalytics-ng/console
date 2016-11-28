@@ -1,7 +1,7 @@
 {
   "user-management": "http://localhost:9998",
   "datacatalog": "http://localhost:5000",
-  "datacatalogexport": "http://localhost:9990",
+  "dataset-publisher": "http://localhost:9990",
   "dataaquisitionservice": "http://localhost:9997",
   "api": "http://localhost:9999",
   "metrics-provider": "http://localhost:9997",
