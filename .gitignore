@@ -25,3 +25,6 @@ bower_components
 
 # Docker package
 docker-package
+
+# Sonar
+.sonar

@@ -81,23 +81,18 @@
   .state {
     > span {
       margin-left: 10px;
+      color: $color-orange;
+      font-weight: bolder;
 
       &::before {
         margin-right: 5px;
       }
 
-      &.fa-check {
+      &.state-running {
         color: $color-green;
       }
 
-      &.fa-refresh, &.fa-exclamation-triangle {
-        color: $color-orange;
-      }
-
-      &.fa-stop {
-        color: $color-red;
-      }
-      &.red-state {
+      &.state-stopped, &.state-failure {
         color: $color-red;
       }
     }

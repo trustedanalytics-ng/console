@@ -26,18 +26,29 @@
             onRefresh: '&'
         },
         templateUrl: 'app/applications/application/overview/overview.html',
-        controller: function($scope, ApplicationStates) {
-            this.ApplicationStates = ApplicationStates;
+        controller: function($scope, InstanceState) {
+            this.InstanceState = InstanceState;
 
-            this.checkStatusProblem = function () {
-                var app = this.application;
-                return app && app.running_instances === 0 && app.state === ApplicationStates.RUNNING;
+            this.appStateEquals = function (state) {
+                return this.application && this.application.state === state;
             };
 
-            this.isAppStateSetTo = function (state) {
-                var app = this.application;
-                return app.state === state;
+            this.appStateIn = function (states) {
+                return this.application && _.contains(states, this.application.state);
             };
+
+            this.isRunning = _.partial(this.appStateEquals, InstanceState.RUNNING);
+            this.isStopped = _.partial(this.appStateEquals, InstanceState.STOPPED);
+
+            this.canBeStarted = this.isStopped;
+            this.canBeStopped = this.isRunning;
+            this.canBeRestarted = this.isRunning;
+
+            this.canBeDeleted = _.partial(this.appStateIn, [
+                InstanceState.STOPPED,
+                InstanceState.FAILURE,
+                InstanceState.UNAVAILABLE
+            ]);
         }
     });
 

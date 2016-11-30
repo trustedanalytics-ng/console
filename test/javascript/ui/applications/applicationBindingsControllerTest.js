@@ -83,7 +83,7 @@ describe("Unit: ApplicationBindingsController", function () {
 
         createController();
         $rootScope.$digest();
-        
+
         expect($scope.state.value, 'state').to.be.equal(_state.values.PENDING);
         expect($scope.bindings).to.be.deep.equal(SAMPLE_BINDINGS);
 
@@ -94,7 +94,7 @@ describe("Unit: ApplicationBindingsController", function () {
 
         createController();
         $rootScope.$digest();
-        
+
         expect($scope.state.value, 'state').to.be.equal(_state.values.ERROR);
     });
 
@@ -148,7 +148,7 @@ describe("Unit: ApplicationBindingsController", function () {
         $rootScope.$digest();
 
         expect($scope.state.value, 'state').to.be.equal(_state.values.PENDING);
-        expect(applicationResource.bindService).to.be.calledWith(SAMPLE_APPLICATION.guid, service.id)
+        expect(applicationResource.bindService).to.be.calledWith(SAMPLE_APPLICATION.guid, service.id);
     });
 
     it('bindService success, request bindings', function () {

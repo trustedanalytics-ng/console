@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 /*jshint -W030 */
-describe("Unit: ApplicationHelper", function () {
+describe("Unit: ApplicationStateClient", function () {
 
     var sut,
         $q,
@@ -24,9 +24,7 @@ describe("Unit: ApplicationHelper", function () {
         ApplicationResource,
         ServiceInstancesResource,
         NotificationService,
-        SAMPLE_GUID = "sample-guid-123",
-        SAMPLE_APP = { id: SAMPLE_GUID },
-        SAMPLE_INSTANCES = {id: "i1"};
+        SAMPLE_GUID = "sample-guid-123";
 
     beforeEach(module('app'));
 
@@ -49,19 +47,16 @@ describe("Unit: ApplicationHelper", function () {
         $provide.value('$state', $state);
     }));
 
-    beforeEach(inject(function(ServiceInstancesResource, ApplicationHelper, _$q_, _$rootScope_, _State_) {
+    beforeEach(inject(function(ServiceInstancesResource, ApplicationStateClient, _$q_, _$rootScope_, _State_) {
         $q = _$q_;
         $rootScope = _$rootScope_;
         State = _State_;
 
-        ServiceInstancesResource.getAll = sinon.stub().returns($q.defer().promise);
-
-        ApplicationResource.getApplication = sinon.stub().returns($q.defer().promise);
         ApplicationResource.start = sinon.stub().returns($q.defer().promise);
         ApplicationResource.stop = sinon.stub().returns($q.defer().promise);
         ApplicationResource.restart = sinon.stub().returns($q.defer().promise);
 
-        sut = ApplicationHelper;
+        sut = ApplicationStateClient;
     }));
 
     it('should not be null', function () {
@@ -132,50 +127,6 @@ describe("Unit: ApplicationHelper", function () {
 
         expect(ApplicationResource.restart).to.be.calledWith(SAMPLE_GUID);
         expect(NotificationService.success).not.to.be.called;
-    });
-
-    it('getApplication, return instances and application', function() {
-        ApplicationResource.getApplication = sinon.stub().returns(successPromise(SAMPLE_APP));
-        ServiceInstancesResource.getAll = sinon.stub().returns(successPromise(SAMPLE_INSTANCES));
-
-        var instances = [];
-        var application = { guid: 'a1'};
-
-        sut.getApplication(SAMPLE_GUID)
-            .then(function(data) {
-                instances = data.instances;
-                application = data.application;
-        });
-        $rootScope.$apply();
-
-        expect(ApplicationResource.getApplication).to.be.calledWith(SAMPLE_GUID);
-        expect(instances).to.be.equal(SAMPLE_INSTANCES);
-        expect(application).to.be.equal(SAMPLE_APP);
-    });
-
-    it('deleteApplication, success, go to list and display success message', function() {
-        ApplicationResource.deleteApplication = sinon.stub().returns(successPromise());
-        var state = new State();
-
-        sut.deleteApplication(state, SAMPLE_GUID)
-        $rootScope.$apply();
-
-        expect(ApplicationResource.deleteApplication).to.be.calledWith(SAMPLE_GUID);
-        expect(NotificationService.success).to.be.called;
-        expect($state.go).to.be.calledWith('app.applications');
-    });
-
-    it('deleteApplication, failure, stay on the same page and set loaded state', function() {
-        ApplicationResource.deleteApplication = sinon.stub().returns(failedPromise());
-        var state = new State();
-
-        sut.deleteApplication(state, SAMPLE_GUID)
-        $rootScope.$apply();
-
-        expect(ApplicationResource.deleteApplication).to.be.calledWith(SAMPLE_GUID);
-        expect(NotificationService.success).not.to.be.called;
-        expect($state.go).not.to.be.called;
-        expect(state.isLoaded(), 'isLoaded').to.be.true;
     });
 
 

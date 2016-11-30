@@ -26,7 +26,7 @@ describe("Unit: ApplicationRegisterController", function () {
 
     beforeEach(module('app'));
 
-    beforeEach(inject(function($controller, TestHelpers, $rootScope, ApplicationRegisterResource, State, _$q_) {
+    beforeEach(inject(function($controller, TestHelpers, $rootScope, State, _$q_) {
         scope = $rootScope.$new();
         $q = _$q_;
         mockApplicationRegisterHelpers = {

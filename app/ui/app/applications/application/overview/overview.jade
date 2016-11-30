@@ -15,25 +15,29 @@
 //-
 div
     h4.state State:
-        span.fa-exclamation-triangle(ng-if='$ctrl.checkStatusProblem()')
-            | No running instances
-        span.fa-check(ng-if='!$ctrl.checkStatusProblem() && !$ctrl.isAppStateSetTo("FAILURE") && !$ctrl.isAppStateSetTo("STOPPED")')
-            | {{ $ctrl.application.state }}
-        span.red-state(ng-if='!$ctrl.checkStatusProblem() && $ctrl.isAppStateSetTo("FAILURE")')
-            | {{ $ctrl.application.state }}
-        span.fa-stop.red-state(ng-if='!$ctrl.checkStatusProblem() && $ctrl.isAppStateSetTo("STOPPED")')
+        span(class="state-{{ $ctrl.application.state.toLowerCase() }}"
+            ng-class="{'fa-check': $ctrl.isRunning(), 'fa-stop': $ctrl.isStopped()}")
             | {{ $ctrl.application.state }}
         button.btn.btn-primary.fa-refresh.app-refresher(ng-click='$ctrl.onRefresh()') Refresh page
 
     h4 Actions
     div.actions
-        button.btn.btn-primary.fa-times(ng-click='$ctrl.onDelete()') Delete
-        button.btn.btn-primary.fa-play(ng-click='$ctrl.onStart()'
-                ng-disabled="$ctrl.application.state === $ctrl.ApplicationStates.RUNNING") Start
-        button.btn.btn-primary.fa-stop(ng-click='$ctrl.onStop()'
-                ng-disabled="$ctrl.application.state === $ctrl.ApplicationStates.STOPPED") Stop
-        button.btn.btn-primary.fa-refresh(ng-click='$ctrl.onRestage()'
-                ng-disabled="$ctrl.application.state !== $ctrl.ApplicationStates.RUNNING") Restart
+        button.btn.btn-primary.fa-times(
+            ng-click='$ctrl.onDelete()'
+            ng-disabled="!$ctrl.canBeDeleted()")
+            | Delete
+        button.btn.btn-primary.fa-play(
+            ng-click='$ctrl.onStart()'
+            ng-disabled="!$ctrl.canBeStarted()")
+            | Start
+        button.btn.btn-primary.fa-stop(
+            ng-click='$ctrl.onStop()'
+            ng-disabled="!$ctrl.canBeStopped()")
+            | Stop
+        button.btn.btn-primary.fa-refresh(
+            ng-click='$ctrl.onRestage()'
+            ng-disabled="!$ctrl.canBeRestarted()")
+            | Restart
 
     h4 Metrics
     table.table.metrics
@@ -92,3 +96,14 @@ div
                 | {{ $ctrl.application.auditTrail.lastUpdatedOn * 1000 | date:'medium' }}
                 = ' by '
                 | {{ $ctrl.application.auditTrail.lastUpdateBy }}
+
+    script(type="text/ng-template", id="confirm-delete-app")
+        .ngdialog-message.clearfix
+            p
+                | Are you sure you want to delete application
+                = ' '
+                b {{ $ctrl.application.name }}
+                | ?
+            .pull-right
+                button.btn.btn-primary(type='button', ng-click='confirm()') Delete
+                button.btn.btn-default(type='button', ng-click="cancel()") Cancel

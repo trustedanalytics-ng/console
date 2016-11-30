@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-App.constant('ApplicationStates', {
+App.constant('InstanceState', {
     REQUESTED: 'REQUESTED',
     DEPLOYING: 'DEPLOYING',
     FAILURE: 'FAILURE',

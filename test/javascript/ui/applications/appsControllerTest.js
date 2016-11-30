@@ -24,7 +24,6 @@ describe("Unit: AppsController", function () {
         $scope,
         $q,
         _targetProvider,
-        space = { guid: 's1', name: 'space1'},
         org = { guid: 'o1', name: 'org1' };
 
     beforeEach(module('app'));

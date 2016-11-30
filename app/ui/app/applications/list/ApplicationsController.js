@@ -17,7 +17,7 @@
     "use strict";
 
     App.controller('ApplicationsController', function (ApplicationResource, targetProvider, $scope, ngTableParams,
-        $q, AtkInstanceResource, CommonTableParams, State, ApplicationStates) {
+        $q, AtkInstanceResource, CommonTableParams, State, InstanceState) {
 
         $scope.state = new State().setPending();
         $scope.details = [];
@@ -51,7 +51,7 @@
 
         $scope.appStates = function () {
             var def = $q.defer();
-            def.resolve(_.chain(ApplicationStates)
+            def.resolve(_.chain(InstanceState)
                 .values()
                 .map(function(v) {
                     return {
@@ -65,7 +65,7 @@
         };
 
         $scope.checkStatusProblem = function (app) {
-            return app && app.running_instances === 0 && app.state === ApplicationStates.RUNNING;
+            return app && app.running_instances === 0 && app.state === InstanceState.RUNNING;
         };
     });
 }());

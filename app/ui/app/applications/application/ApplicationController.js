@@ -16,7 +16,8 @@
 (function () {
     "use strict";
 
-    App.controller('ApplicationController', function ($scope, $stateParams, State, $state, ApplicationHelper) {
+    App.controller('ApplicationController', function ($scope, $q, $stateParams, State, $state, ApplicationStateClient,
+        ApplicationResource, ServiceInstancesResource, NotificationService) {
 
         var appId = $stateParams.appId;
 
@@ -44,36 +45,61 @@
 
         $scope.restage = function () {
             $scope.state.setPending();
-            ApplicationHelper.restartApplication(appId)
+            ApplicationStateClient.restartApplication(appId)
                 .then($scope.refresh);
         };
 
         $scope.start = function () {
             $scope.state.setPending();
-            ApplicationHelper.startApplication(appId)
+            ApplicationStateClient.startApplication(appId)
                 .then($scope.refresh);
         };
 
         $scope.stop = function () {
             $scope.state.setPending();
-            ApplicationHelper.stopApplication(appId)
+            ApplicationStateClient.stopApplication(appId)
                 .then($scope.refresh);
         };
 
         $scope.delete = function () {
-            ApplicationHelper.deleteApplication($scope.state, appId);
+            NotificationService.confirm('confirm-delete-app')
+                .then(function () {
+                    $scope.state.setPending();
+                    ApplicationResource
+                        .withErrorMessage('Deleting application failed')
+                        .deleteApplication(appId)
+                        .then(function onSuccess() {
+                            $state.go('app.applications');
+                            NotificationService.success('Application deletion has been scheduled');
+                        })
+                        .catch(function onError() {
+                            $scope.state.setLoaded();
+                        });
+                });
         };
 
         function loadApplication() {
-
-            ApplicationHelper.getApplication(appId)
+            return $q.all([
+                    ApplicationResource
+                        .supressGenericError()
+                        .getApplication(appId),
+                    ServiceInstancesResource
+                        .supressGenericError()
+                        .getAll()
+                ])
                 .then(function(data) {
-                    $scope.instances = data.instances;
-                    $scope.application = data.application;
+                    $scope.application = data[0];
+                    $scope.instances = data[1];
                     $scope.state.setLoaded();
                 })
                 .catch(function onError(response) {
-                    $scope.state.setError(response.status);
+                    if(response.status === 404) {
+                        NotificationService.error('Application with id ' + appId + ' not found');
+                        $state.go('app.applications');
+                    } else {
+                        NotificationService.genericError(response.data, 'Failed to load application details');
+                        $scope.state.setError(response.status);
+                    }
                 });
         }
 
