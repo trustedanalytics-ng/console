@@ -23,6 +23,7 @@
         $scope.state = state;
 
         var DEFAULT_GRAFANA_PREFIX = '/dashboard-solo/db';
+        var DEFAULT_DETAILS_PREFIX = '/dashboard/db';
         var DEFAULT_DASHBOARD_PARAMS = {
             to: 'now',
             theme: 'light'
@@ -30,7 +31,9 @@
 
         ConfigResource.getSessionConfig('metrics_grafana_host')
             .then(function onSuccess(response) {
-                $scope.response = response;
+                $scope.getGrafanaDashboardLink = function(dashboardName) {
+                   return "//" + response + DEFAULT_DETAILS_PREFIX + '/' + dashboardName;
+                };
                 $scope.getIframeSrc = function(number, dashboardName, timeBack) {
                     var params = _.chain({panelId: number, from: timeBack})
                         .extend(DEFAULT_DASHBOARD_PARAMS)
