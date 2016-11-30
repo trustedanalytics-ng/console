@@ -60,6 +60,10 @@
   "path": "/platform/summary",
   "name": "platform-operations"
 }, {
+  "path": "/models/[^/]+/artifacts",
+  "name": "model-catalog",
+  "timeout": 900000
+}, {
   "path": "/platform_tests/tests",
   "name": "platform-tests"
 }, {

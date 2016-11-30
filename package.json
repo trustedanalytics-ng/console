@@ -2,7 +2,7 @@
   "name": "console",
   "author": "Intel Corporation",
   "license": "Apache-2.0",
-  "version": "0.6.39",
+  "version": "0.6.40",
   "private": true,
   "dependencies": {
     "connect-timeout": "1.7.0",
