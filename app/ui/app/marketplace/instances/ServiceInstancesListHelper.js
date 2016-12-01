@@ -35,11 +35,6 @@
 
         function succeededInstances(data) {
             return _.groupBy(data, 'serviceName');
-            /*var result = _.each(services, function(service) {
-                service.instances = _.filter(service.instances, function(si) {
-                    return normalizeLastOperationState(si.last_operation.state) === "succeeded";
-                });
-            });*/
         }
 
     });

@@ -108,9 +108,4 @@ describe("Unit: AppDevelopmentController", function () {
         return deferred.promise;
     }
 
-    function getRejectedPromise(data) {
-        var deferred = $q.defer();
-        deferred.reject(data);
-        return deferred.promise;
-    }
 });

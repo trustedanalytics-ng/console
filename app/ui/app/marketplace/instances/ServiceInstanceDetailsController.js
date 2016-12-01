@@ -43,15 +43,6 @@
                 }
             });
 
-        /*ToolsInstanceResource.getServiceInstance(instanceId)
-                .then(function (credentials) {
-                    $scope.credentials = credentials;
-                    $scope.toolsState.setLoaded();
-                })
-                .catch(function () {
-                    $scope.toolsState.setError();
-                });*/
-
         $scope.tryDeleteInstance = function () {
             NotificationService.confirm('confirm-delete', {instance: $scope.serviceInstance.name})
                 .then(function onConfirm () {

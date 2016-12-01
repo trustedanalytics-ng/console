@@ -62,19 +62,4 @@ describe("Unit: UserService", function () {
         expect(errcallbackSpied.called).to.be.true;
     }));
 
-    //it('should send POST on adding user', inject(function () {
-    //    var user = {
-    //      username: "waclaw",
-    //      roles: ["manager"]
-    //    };
-    //
-    //    targetProviderStub.getOrganization = sinon.stub().returns({ guid: "1234" });
-    //
-    //    $httpBackend.expectPOST('/rest/orgs/1234/users').respond(201, {});
-    //
-    //    var callbackSpied = sinon.stub();
-    //    userServiceSUT.addUser(user).then(callbackSpied);
-    //    $httpBackend.flush();
-    //    expect(callbackSpied.called).to.be.true;
-    //}));
 });

@@ -15,14 +15,6 @@
  */
 describe("Unit: UsersRoleMapperService", function () {
     var UserRoleMapperService;
-    var checkboxes = {
-        "1234": {
-            admin: true
-        },
-        "2345": {
-            admin: false
-        }
-    };
     beforeEach(module('app'));
 
     beforeEach(inject(function (_UserRoleMapperService_) {

@@ -21,7 +21,6 @@ describe("Unit: ManageUsersController", function () {
     var state;
     var userServiceMock;
     var userProviderMock;
-    //var orgUserServiceMock;
     var targetProvider;
     var users;
     var currentUser;
@@ -74,9 +73,6 @@ describe("Unit: ManageUsersController", function () {
             }
         };
 
-        //userServiceMock = function () {
-        //    return orgUserServiceMock;
-        //};
     }));
 
     function getSUT() {
@@ -146,66 +142,66 @@ describe("Unit: ManageUsersController", function () {
         expect(scope.tableParams.reload.called).to.be.true;
     });
 
-    //it('should show dialog on successful user add, pass data to service and reload user list', function () {
-    //    var user = {
-    //        username: "zdzislaw",
-    //        role: "admin"
-    //    };
-    //
-    //    createAndInitSUT();
-    //
-    //    scope.tableParams = {
-    //        reload: sinon.stub(),
-    //        page: sinon.stub()
-    //    };
-    //
-    //    var deferred = $q.defer();
-    //    userServiceMock.addUser = sinon.stub().returns(deferred.promise);
-    //    deferred.resolve(user);
-    //
-    //    scope.userToAdd = user;
-    //    scope.addUser();
-    //    scope.$root.$digest();
-    //    expect(userServiceMock.addUser.withArgs({username: user.username, roles: [user.role]}).called).to.be.true;
-    //    expect(UserActionsNotificationsService.userAdded.called).to.be.true;
-    //    expect(userServiceMock.getAll.called).to.be.true;
-    //    expect(scope.tableParams.reload.called).to.be.true;
-    //});
+    it('should show dialog on successful user add, pass data to service and reload user list', function () {
+       var user = {
+           username: "zdzislaw",
+           role: "admin"
+       };
 
-    //it('should show dialog on successful user invite when user is null and reload user list', function () {
-    //
-    //    createAndInitSUT();
-    //
-    //    scope.tableParams = {
-    //        reload: sinon.stub(),
-    //        page: sinon.stub()
-    //    };
-    //
-    //    var deferred = $q.defer();
-    //    userServiceMock.addUser = sinon.stub().returns(deferred.promise);
-    //    deferred.resolve(null);
-    //
-    //    scope.addUser();
-    //    scope.$root.$digest();
-    //    expect(userServiceMock.addUser.called).to.be.true;
-    //    expect(UserActionsNotificationsService.userAdded.called).to.be.false;
-    //    expect(UserActionsNotificationsService.userInvited.called).to.be.true;
-    //    expect(userServiceMock.getAll.called).to.be.true;
-    //    expect(scope.tableParams.reload.called).to.be.true;
-    //});
+       createAndInitSUT();
 
-    //it('should show dialog on unsuccessful user add ', function () {
-    //
-    //    var deferred = $q.defer();
-    //    userServiceMock.addUser = sinon.stub().returns(deferred.promise);
-    //    var deferredAll = $q.defer();
-    //    userServiceMock.getAll = sinon.stub().returns(deferred.promise);
-    //    deferredAll.resolve([]);
-    //    getSUT();
-    //    scope.$root.$digest();
-    //    scope.addUser();
-    //    deferred.reject();
-    //    scope.$root.$digest();
-    //    expect(scope.state.isLoaded()).to.be.true;
-    //});
+       scope.tableParams = {
+           reload: sinon.stub(),
+           page: sinon.stub()
+       };
+
+       var deferred = $q.defer();
+       userServiceMock.addUser = sinon.stub().returns(deferred.promise);
+       deferred.resolve(user);
+
+       scope.userToAdd = user;
+       scope.addUser();
+       scope.$root.$digest();
+       expect(userServiceMock.addUser).to.be.calledWith({username: user.username, role: user.role.toUpperCase()});
+       expect(UserActionsNotificationsService.userAdded.called).to.be.true;
+       expect(userServiceMock.getAll.called).to.be.true;
+       expect(scope.tableParams.reload.called).to.be.true;
+    });
+
+    it('should show dialog on successful user invite when user is null and reload user list', function () {
+
+       createAndInitSUT();
+
+       scope.tableParams = {
+           reload: sinon.stub(),
+           page: sinon.stub()
+       };
+
+       var deferred = $q.defer();
+       userServiceMock.addUser = sinon.stub().returns(deferred.promise);
+       deferred.resolve(null);
+
+       scope.addUser();
+       scope.$root.$digest();
+       expect(userServiceMock.addUser.called).to.be.true;
+       expect(UserActionsNotificationsService.userAdded.called).to.be.false;
+       expect(UserActionsNotificationsService.userInvited.called).to.be.true;
+       expect(userServiceMock.getAll.called).to.be.true;
+       expect(scope.tableParams.reload.called).to.be.true;
+    });
+
+    it('should show dialog on unsuccessful user add ', function () {
+
+       var deferred = $q.defer();
+       userServiceMock.addUser = sinon.stub().returns(deferred.promise);
+       var deferredAll = $q.defer();
+       userServiceMock.getAll = sinon.stub().returns(deferred.promise);
+       deferredAll.resolve([]);
+       getSUT();
+       scope.$root.$digest();
+       scope.addUser();
+       deferred.reject();
+       scope.$root.$digest();
+       expect(scope.state.isLoaded()).to.be.true;
+    });
 });

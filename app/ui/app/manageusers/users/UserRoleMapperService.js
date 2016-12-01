@@ -22,9 +22,6 @@
                 var ids = _.pluck(users, 'guid');
                 var roles = _.map(users, function (user) {
                         var roles = {};
-                        //user.roles.forEach(function (role) {
-                        //    roles[role] = true;
-                        //});
                         roles['admin'] = (user.role || '').toLowerCase() === 'admin';
                         return roles;
                     }

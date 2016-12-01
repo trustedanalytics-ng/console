@@ -28,18 +28,6 @@
             refreshContent();
         });
 
-        /*$scope.exposeInstance = function(instance, visibility) {
-            state.setPending();
-            ServiceInstancesListHelper
-                .exposeInstance(instance.guid, visibility)
-                .then(function () {
-                    refreshContent();
-                })
-                .catch(function() {
-                    state.setLoaded();
-                });
-        };*/
-
         function refreshContent() {
             state.setPending();
             ServiceInstancesListHelper

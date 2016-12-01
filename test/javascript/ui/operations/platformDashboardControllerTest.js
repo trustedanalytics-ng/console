@@ -15,44 +15,45 @@
  */
 describe("Unit: PlatformDashboardController", function () {
 
-        var controller,
-            scope,
-            rootScope,
-            state,
-            ConfigResource;
+    var controller,
+        scope,
+        rootScope,
+        state,
+        ConfigResource;
 
-        beforeEach(module('app',function($provide){
-                $provide.value('ConfigResource', ConfigResource);
-        }));
+    beforeEach(module('app', function ($provide) {
+        $provide.value('ConfigResource', ConfigResource);
+    }));
 
-        beforeEach(inject(function($injector, $rootScope, State, _$q_, _$httpBackend_){
-                rootScope=$rootScope;
-                $q = _$q_;
-                $httpBackend=_$httpBackend_;
-                scope = $rootScope.$new();
-                
-                ConfigResource = {
-                        getSessionConfig: sinon.stub().returns($q.defer().promise)
-                }
-                
-                getSUT($injector);
-                state=scope.state;
+    beforeEach(inject(function ($injector, $rootScope, State, _$q_, _$httpBackend_) {
+        rootScope = $rootScope;
+        $q = _$q_;
+        $httpBackend = _$httpBackend_;
+        scope = $rootScope.$new();
 
-        }));
-        function getSUT($injector){
-                return controller = $injector.get('$controller')('PlatformDashboardController', {
-                        $scope: scope,
-                        ConfigResource: ConfigResource
-                });
+        ConfigResource = {
+            getSessionConfig: sinon.stub().returns($q.defer().promise)
         };
 
-        it('should not be null', function () {
-                expect(controller).not.to.be.null;
-        });
+        getSUT($injector);
+        state = scope.state;
+    }));
 
-        it('init, set pending and call metrics with load', function () {
-            expect(scope.state.isPending(), 'pending').to.be.true;
-            expect(ConfigResource.getSessionConfig).to.be.called;
+    function getSUT($injector) {
+        controller = $injector.get('$controller')('PlatformDashboardController', {
+            $scope: scope,
+            ConfigResource: ConfigResource
         });
+        return controller;
+    }
+
+    it('should not be null', function () {
+        expect(controller).not.to.be.null;
+    });
+
+    it('init, set pending and call metrics with load', function () {
+        expect(scope.state.isPending(), 'pending').to.be.true;
+        expect(ConfigResource.getSessionConfig).to.be.called;
+    });
 
 });

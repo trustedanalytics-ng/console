@@ -46,7 +46,7 @@ describe("Unit: ModelUploadController", function() {
         $provide.value('targetProvider', targetProvider);
     }));
 
-    beforeEach(inject(function ($controller, $rootScope, _$q_, _$state_, State, ModelsMock) {
+    beforeEach(inject(function ($controller, $rootScope, _$q_, _$state_, State) {
         scope = $rootScope.$new();
         $q = _$q_;
         state = new State();

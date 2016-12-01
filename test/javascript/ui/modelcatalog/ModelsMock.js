@@ -18,30 +18,29 @@
     "use strict";
 
     App.value('ModelsMock', [
-            {
-                name: 'name',
-                creationTool: 'H2O',
-                algorithm: 'alg',
-                addedOn: Date.now() + 48 * 3600 * 1000,
-                artifacts: [{id: '1234-1234', actions: []}, {id: '4321-1234', actions: ['publish_whatever']}]
-            }, {
-                name: 'test',
-                creationTool: 'H2O',
-                addedOn: Date.now() + 24 * 3600 * 1000,
-                artifacts: [{id: '1234-1234', actions: ['publish_whatever']}]
-            }, {
-                name: 'sample-model',
-                creationTool: 'Other',
-                algorithm: 'algorithm-name',
-                addedOn: Date.now() - 24 * 3600 * 1000,
-                artifacts: [{id: '1234-1234', actions: []}, {id: '4321-1234', actions: ['some-action']}]
-            }, {
-                name: 'mock-model',
-                creationTool: 'SparkTK',
-                algorithm: 'mock-spark',
-                addedOn: Date.now() - 48 * 3600 * 1000,
-                artifacts: [{id: '1234-1234', actions: []}, {id: '4321-1234', actions: ['some-action']}]
-            }
-        ]
-    )
+        {
+            name: 'name',
+            creationTool: 'H2O',
+            algorithm: 'alg',
+            addedOn: Date.now() + 48 * 3600 * 1000,
+            artifacts: [{id: '1234-1234', actions: []}, {id: '4321-1234', actions: ['publish_whatever']}]
+        }, {
+            name: 'test',
+            creationTool: 'H2O',
+            addedOn: Date.now() + 24 * 3600 * 1000,
+            artifacts: [{id: '1234-1234', actions: ['publish_whatever']}]
+        }, {
+            name: 'sample-model',
+            creationTool: 'Other',
+            algorithm: 'algorithm-name',
+            addedOn: Date.now() - 24 * 3600 * 1000,
+            artifacts: [{id: '1234-1234', actions: []}, {id: '4321-1234', actions: ['some-action']}]
+        }, {
+            name: 'mock-model',
+            creationTool: 'SparkTK',
+            algorithm: 'mock-spark',
+            addedOn: Date.now() - 48 * 3600 * 1000,
+            artifacts: [{id: '1234-1234', actions: []}, {id: '4321-1234', actions: ['some-action']}]
+        }
+    ]);
 }());

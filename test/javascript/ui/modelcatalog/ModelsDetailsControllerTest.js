@@ -252,11 +252,10 @@ describe("Unit: ModelsDetailsController", function() {
     it('tryDeleteArtifact, success, deleteArtifact should be called', function () {
         confirmDeferred.resolve();
         createController();
-        scope.deleteArtifact = function (modelId) {};
-        var spy = sinon.spy(scope, 'deleteArtifact');
+        scope.deleteArtifact = sinon.stub();
         scope.tryDeleteArtifact({filename: 'filename', id: '1234-5678'});
         scope.$digest();
-        expect(spy).to.be.calledWith('1234-5678');
+        expect(scope.deleteArtifact).to.be.calledWith('1234-5678');
     });
 
     it('uploadArtifact, invoke, set addArtifactState on pending', function () {
@@ -291,7 +290,7 @@ describe("Unit: ModelsDetailsController", function() {
 
     it('tryUploadArtifact, invoke, popup window should appear', function () {
         createController();
-        scope.tryUploadArtifact()
+        scope.tryUploadArtifact();
         scope.$digest();
         expect(notificationService.confirm.called).to.be.true;
     });

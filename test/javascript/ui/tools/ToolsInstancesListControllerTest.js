@@ -18,7 +18,6 @@ describe("Unit: ToolsInstanceListController", function () {
     var controller,
         createController,
         _targetProvider,
-        toolsInstanceMock,
         serviceInstancesMock,
         serviceResourceMock,
         SERVICE_ID = 'qweqwe',
@@ -43,7 +42,7 @@ describe("Unit: ToolsInstanceListController", function () {
 
     beforeEach(module('app'));
 
-    beforeEach(inject(function ($controller, $location, TestHelpers, _$rootScope_, _$q_, OfferingsResource) {
+    beforeEach(inject(function ($controller, $location, TestHelpers, _$rootScope_, _$q_) {
         $q = _$q_;
         $rootScope = _$rootScope_;
         scope = $rootScope.$new();
