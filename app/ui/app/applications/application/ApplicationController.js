@@ -43,7 +43,7 @@
             loadApplication();
         };
 
-        $scope.restage = function () {
+        $scope.restart = function () {
             $scope.state.setPending();
             ApplicationStateClient.restartApplication(appId)
                 .then($scope.refresh);

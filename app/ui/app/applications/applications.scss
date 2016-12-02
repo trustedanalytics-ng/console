@@ -78,25 +78,7 @@
     }
   }
 
-  .state {
-    > span {
-      margin-left: 10px;
-      color: $color-orange;
-      font-weight: bolder;
 
-      &::before {
-        margin-right: 5px;
-      }
-
-      &.state-running {
-        color: $color-green;
-      }
-
-      &.state-stopped, &.state-failure {
-        color: $color-red;
-      }
-    }
-  }
 
   h4 {
     margin-top: 30px;

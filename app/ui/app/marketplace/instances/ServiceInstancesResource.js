@@ -35,6 +35,18 @@
             return service.one(serviceId).remove();
         };
 
+        service.startInstance = function (serviceId) {
+            return service.one(serviceId).one('start').put();
+        };
+
+        service.stopInstance = function (serviceId) {
+            return service.one(serviceId).one('stop').put();
+        };
+
+        service.restartInstance = function (serviceId) {
+            return service.one(serviceId).one('restart').put();
+        };
+
         service.getAllByType = function (organizationId, serviceId) {
             return service.getList({
                 org: organizationId,

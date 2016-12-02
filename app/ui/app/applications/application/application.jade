@@ -30,7 +30,7 @@
         ui-view
             spinner(ng-show='state.isPending()')
             application-overview(application='application', instances='instances',
-                ng-show='state.isLoaded()', on-delete='delete()', on-restage='restage()',
+                ng-show='state.isLoaded()', on-delete='delete()', on-restart='restart()',
                 on-start='start()', on-stop='stop()', on-refresh='refresh()')
 
     .panel.panel-danger(ng-if='state.is(state.values.NOT_FOUND)')

@@ -1,0 +1,31 @@
+//
+   Copyright (c) 2015 Intel Corporation
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+//-
+button.btn.btn-primary.fa-times(
+    ng-click='$ctrl.onDelete()'
+    ng-disabled="!$ctrl.canBeDeleted()")
+    | Delete
+button.btn.btn-primary.fa-play(
+    ng-click='$ctrl.onStart()'
+    ng-disabled="!$ctrl.canBeStarted()")
+    | Start
+button.btn.btn-primary.fa-stop(
+    ng-click='$ctrl.onStop()'
+    ng-disabled="!$ctrl.canBeStopped()")
+    | Stop
+button.btn.btn-primary.fa-refresh(
+    ng-click='$ctrl.onRestart()'
+    ng-disabled="!$ctrl.canBeRestarted()")
+    | Restart

@@ -14,7 +14,7 @@
    limitations under the License.
 //-
 div
-    h4.state State:
+    h4.instance-state State:
         span(class="state-{{ $ctrl.application.state.toLowerCase() }}"
             ng-class="{'fa-check': $ctrl.isRunning(), 'fa-stop': $ctrl.isStopped()}")
             | {{ $ctrl.application.state }}
@@ -22,22 +22,8 @@ div
 
     h4 Actions
     div.actions
-        button.btn.btn-primary.fa-times(
-            ng-click='$ctrl.onDelete()'
-            ng-disabled="!$ctrl.canBeDeleted()")
-            | Delete
-        button.btn.btn-primary.fa-play(
-            ng-click='$ctrl.onStart()'
-            ng-disabled="!$ctrl.canBeStarted()")
-            | Start
-        button.btn.btn-primary.fa-stop(
-            ng-click='$ctrl.onStop()'
-            ng-disabled="!$ctrl.canBeStopped()")
-            | Stop
-        button.btn.btn-primary.fa-refresh(
-            ng-click='$ctrl.onRestage()'
-            ng-disabled="!$ctrl.canBeRestarted()")
-            | Restart
+        instance-actions(instance="$ctrl.application" on-delete="$ctrl.onDelete()" on-start="$ctrl.onStart()"
+            on-stop="$ctrl.onStop()" on-restart="$ctrl.onRestart()")
 
     h4 Metrics
     table.table.metrics

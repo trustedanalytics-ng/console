@@ -16,18 +16,16 @@
 (function () {
     "use strict";
 
-    App.component('applicationOverview', {
+    App.component('instanceActions', {
         bindings: {
-            application: '<',
+            instance: '<',
             onDelete: '&',
             onRestart: '&',
             onStart: '&',
             onStop: '&',
             onRefresh: '&'
         },
-        templateUrl: 'app/applications/application/overview/overview.html',
-        controller: function($scope, InstanceStateInterpreter) {
-
+        controller: function(InstanceStateInterpreter) {
             this.canBeStarted = wrapInterpreter(InstanceStateInterpreter.canBeStarted);
             this.canBeStopped = wrapInterpreter(InstanceStateInterpreter.canBeStopped);
             this.canBeRestarted = wrapInterpreter(InstanceStateInterpreter.canBeRestarted);
@@ -35,10 +33,10 @@
 
             function wrapInterpreter(fn) {
                 return function() {
-                    return fn(this.application);
+                    return fn(this.instance);
                 };
             }
-        }
+        },
+        templateUrl: 'app/common/instances/instance-actions.html'
     });
-
 }());

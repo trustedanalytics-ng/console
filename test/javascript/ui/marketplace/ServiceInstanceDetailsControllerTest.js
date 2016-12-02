@@ -30,7 +30,6 @@ describe("Unit: ServiceInstanceDetailsControllerTest", function () {
         serviceInstanceDeferred,
         toolsInstanceDeferred,
         deleteInstanceDeferred,
-        $httpBackend,
         redirect = 'app.marketplace.instances';
 
     var SAMPLE_INSTANCE;
@@ -46,18 +45,20 @@ describe("Unit: ServiceInstanceDetailsControllerTest", function () {
         };
     });
 
-    beforeEach(inject(function ($controller, $rootScope, _$q_, State, _$state_, _$httpBackend_) {
+    beforeEach(inject(function ($controller, $rootScope, _$q_, State) {
         rootScope = $rootScope;
         scope = rootScope.$new();
         $q = _$q_;
-        $state = _$state_;
         state = new State();
         deleteState = new State();
         toolsState = new State();
         serviceInstanceDeferred = $q.defer();
         toolsInstanceDeferred = $q.defer();
         deleteInstanceDeferred = $q.defer();
-        $httpBackend = _$httpBackend_;
+
+        $state = {
+            go: sinon.stub()
+        };
 
         serviceInstanceResource = {
             supressGenericError: sinon.stub().returnsThis(),
@@ -66,12 +67,10 @@ describe("Unit: ServiceInstanceDetailsControllerTest", function () {
         };
 
         notificationService = {
-            success: function () {},
-            confirm: function() {
-                return $q.defer().promise;
-            },
-            genericError: function () {},
-            error: function () {}
+            success: sinon.stub(),
+            confirm: sinon.stub().returns($q.defer().promise),
+            genericError: sinon.stub(),
+            error: sinon.stub()
         };
 
         toolsInstanceResource = {
@@ -115,52 +114,37 @@ describe("Unit: ServiceInstanceDetailsControllerTest", function () {
     });
 
     it('init, getById  404 error, redirect to instances page', function () {
-        var spy = sinon.spy($state, 'go');
         serviceInstanceDeferred.reject({status: 404});
-        $httpBackend.expectGET('/rest/orgs').respond(200, []);
         scope.$digest();
-        expect(spy.calledWith(redirect)).to.be.true;
+        expect($state.go).to.be.calledWith(redirect);
     });
 
     it('init, getById other than 404 error, set state on error', function () {
-        var errorSpied = sinon.spy(notificationService, 'error');
         serviceInstanceDeferred.reject({status: 500, data: {message: 'error message'}});
         scope.$digest();
         expect(scope.state.value).to.be.equals(state.values.ERROR);
-        expect(errorSpied.called).to.be.true;
+        expect(notificationService.error).to.be.called;
     });
 
     it('deleteInstance, invoke, set deleteState on pending', function () {
-        scope.deleteServiceInstance();
+        scope.delete();
         scope.$digest();
         expect(scope.deleteState.value).to.be.equals(deleteState.values.PENDING);
     });
 
     it('deleteInstance, success, redirect to instances page', function () {
-        var successSpied = sinon.spy(notificationService, 'success');
-        var spy = sinon.spy($state, 'go');
         deleteInstanceDeferred.resolve();
-        scope.deleteServiceInstance();
-        $httpBackend.expectGET('/rest/orgs').respond(200, []);
+        scope.delete();
         scope.$digest();
-        expect(successSpied.called).to.be.true;
-        expect(spy.calledWith(redirect)).to.be.true;
+        expect(notificationService.success).to.be.called;
+        expect($state.go).to.be.calledWith(redirect);
     });
 
-    it('deleteInstance, reject with 504 error, notify about success', function () {
-        var successSpied = sinon.spy(notificationService, 'success');
-        deleteInstanceDeferred.reject({status: 504});
-        scope.deleteServiceInstance();
+    it('deleteInstance, reject, do not show success message', function () {
+        deleteInstanceDeferred.reject({status: 500});
+        scope.delete();
         scope.$digest();
-        expect(successSpied.called).to.be.true;
-    });
-
-    it('deleteInstance, reject with other than 504 error, notify about error', function () {
-        var genericErrorSpied = sinon.spy(notificationService, 'genericError');
-        deleteInstanceDeferred.reject({status: 404});
-        scope.deleteServiceInstance();
-        scope.$digest();
-        expect(genericErrorSpied.called).to.be.true;
+        expect(notificationService.success).not.to.be.called;
     });
 
 });

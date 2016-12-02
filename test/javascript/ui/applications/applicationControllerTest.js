@@ -118,10 +118,10 @@ describe("Unit: ApplicationController", function () {
         expect($scope.state.value, 'state').to.be.equal(state.values.LOADED);
     });
 
-    it('restage, set restage status', function(){
+    it('restart, set restart status', function(){
         createAndInitializeController(SAMPLE_APP);
 
-        $scope.restage();
+        $scope.restart();
 
         expect(applicationStateClient.restartApplication).to.be.calledWith(APP_ID);
     });
@@ -231,7 +231,7 @@ describe("Unit: ApplicationController", function () {
     it('restart, use client to restart app', function(){
         createAndInitializeController(SAMPLE_APP);
 
-        $scope.restage();
+        $scope.restart();
         $scope.$digest();
 
         expect(applicationStateClient.restartApplication).to.be.calledWith(APP_ID);
@@ -241,7 +241,7 @@ describe("Unit: ApplicationController", function () {
         applicationStateClient.restartApplication = sinon.stub().returns(successPromise());
         createAndInitializeController(SAMPLE_APP);
 
-        $scope.restage();
+        $scope.restart();
         $scope.$digest();
 
         expect(applicationResource.getApplication).to.be.calledTwice;
@@ -251,7 +251,7 @@ describe("Unit: ApplicationController", function () {
         applicationStateClient.restartApplication = sinon.stub().returns(failedPromise());
         createAndInitializeController(SAMPLE_APP);
 
-        $scope.restage();
+        $scope.restart();
         $scope.$digest();
 
         expect(applicationResource.getApplication).to.be.calledOnce;

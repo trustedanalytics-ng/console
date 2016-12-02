@@ -20,7 +20,6 @@
     App.controller('ServiceInstanceDetailsController', function ($scope, State, ServiceInstancesResource,
             NotificationService, $stateParams, $state) {
         var instanceId = $stateParams.instanceId;
-        var GATEWAY_TIMEOUT_ERROR = 504;
         var INSTANCE_NOT_FOUND_ERROR = 404;
         var state = new State().setPending();
         var toolsState = new State().setPending();
@@ -28,47 +27,71 @@
         $scope.toolsState = toolsState;
         $scope.deleteState = new State().setDefault();
 
-        ServiceInstancesResource.getById(instanceId)
-            .then(function (serviceInstance) {
-                fillTimestamps(serviceInstance);
-                $scope.serviceInstance = serviceInstance;
-                $scope.state.setLoaded();
-            })
-            .catch(function onError (error) {
-                if (error.status === INSTANCE_NOT_FOUND_ERROR) {
-                    $state.go('app.marketplace.instances');
-                } else {
-                    $scope.state.setError();
-                    NotificationService.error(error.data.message || 'An error occurred while loading service instance page');
-                }
-            });
-
-        $scope.tryDeleteInstance = function () {
-            NotificationService.confirm('confirm-delete', {instance: $scope.serviceInstance.name})
-                .then(function onConfirm () {
-                    $scope.deleteServiceInstance();
+        $scope.reload = function () {
+            $scope.state.setPending();
+            ServiceInstancesResource.getById(instanceId)
+                .then(function (serviceInstance) {
+                    fillTimestamps(serviceInstance);
+                    $scope.serviceInstance = serviceInstance;
+                    $scope.state.setLoaded();
+                })
+                .catch(function onError (error) {
+                    if (error.status === INSTANCE_NOT_FOUND_ERROR) {
+                        $state.go('app.marketplace.instances');
+                    } else {
+                        $scope.state.setError();
+                        NotificationService.error(error.data.message || 'An error occurred while loading service instance page');
+                    }
                 });
         };
+        $scope.reload();
 
-        $scope.deleteServiceInstance = function () {
+        $scope.deleteWithConfirmation = function () {
+            NotificationService
+                .confirm('confirm-delete', {instance: $scope.serviceInstance.name})
+                .then($scope.delete);
+        };
+
+        $scope.delete = function () {
             $scope.deleteState.setPending();
             ServiceInstancesResource
-                .supressGenericError()
                 .deleteInstance(instanceId)
                 .then(function () {
-                    NotificationService.success('Instance has been deleted');
+                    NotificationService.success('Instance deletion has been scheduled');
                     $state.go('app.marketplace.instances');
-                })
-                .catch(function (error) {
-                    if (error.status === GATEWAY_TIMEOUT_ERROR) {
-                        NotificationService.success("Deleting an instance may take a while. Please refresh the page after a minute or two.", "Task scheduled");
-                    }
-                    else {
-                        NotificationService.genericError(error.data, 'Error while deleting the instance');
-                    }
                 })
                 .finally(function () {
                     $scope.deleteState.setDefault();
+                });
+        };
+
+        $scope.restart = function () {
+            $scope.state.setPending();
+            ServiceInstancesResource
+                .restartInstance(instanceId)
+                .then(function() {
+                    NotificationService.success('Instance restart has been scheduled');
+                    $scope.reload();
+                });
+        };
+
+        $scope.start = function () {
+            $scope.state.setPending();
+            ServiceInstancesResource
+                .startInstance(instanceId)
+                .then(function() {
+                    NotificationService.success('Instance start has been scheduled');
+                    $scope.reload();
+                });
+        };
+
+        $scope.stop = function () {
+            $scope.state.setPending();
+            ServiceInstancesResource
+                .stopInstance(instanceId)
+                .then(function() {
+                    NotificationService.success('Instance stop has been scheduled');
+                    $scope.reload();
                 });
         };
     });

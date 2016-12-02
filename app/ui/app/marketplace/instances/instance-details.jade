@@ -14,59 +14,59 @@
    limitations under the License.
 //-
 .instance-details
-   h3 Instances: {{serviceInstance.name}}
-   spinner(ng-show='state.isPending() || deleteState.isPending()')
-   .panel(ng-show='state.isLoaded() && deleteState.isDefault()')
+    h3 Instances: {{serviceInstance.name}}
+    spinner(ng-show='state.isPending() || deleteState.isPending()')
+    .panel(ng-show='state.isLoaded() && deleteState.isDefault()')
+        button.btn.btn-primary.fa-refresh.app-refresher(ng-click='reload()') Refresh page
+        instance-state(instance="serviceInstance")
 
-      //div(ng-show="toolsState.isError()", class="alert alert-danger", role="alert")
-          span(class="glyphicon glyphicon-exclamation-sign")
-          Error An error occurred while loading service instance credentials
+        h4 Actions
+        div.actions
+            instance-actions(instance="serviceInstance" on-delete="deleteWithConfirmation()" on-start="start()"
+                on-stop="stop()" on-restart="restart()")
+            button.btn.btn-primary(
+                ui-sref='app.service({serviceId: serviceInstance.classId})')
+                | Create new instance
 
-      h4 Actions
+        h4 Metadata
+        table.table
+            tr
+                td Offering name
+                td {{serviceInstance.serviceName}}
+            tr
+                td Instance name
+                td {{serviceInstance.name}}
+            tr
+                td State
+                td {{serviceInstance.state}}
+            tr
+                td Plan instantiated
+                td {{serviceInstance.planName}}
+            tr
+                td Created on
+                td {{serviceInstance.auditTrail.createdOn * 1000 | date:'medium'}} by {{serviceInstance.auditTrail.createdBy}}
+            //tr(ng-show="credentials.login")
+               td Login
+               td {{ credentials.login }}
+            //tr(ng-show="credentials.password")
+                td Password
+                td
+                    input.passwordView(type="text", ng-disabled="!showPass", readonly="readonly", ng-value="showPass ? credentials.password : '****************'", disabled="disabled")
+                    button.passwordView(type="button", class="btn btn-sm", ng-class="!showPass ? 'btn-success' : 'btn-warning'"
+                                               ng-click="showPass = !showPass") {{ !showPass ? 'Show' : 'Hide' }}
 
-      .actions
-         button.btn.btn-primary.fa-times(ng-click='tryDeleteInstance()') Delete
-         button.btn.btn-primary(ui-sref='app.service({serviceId: serviceInstance.classId})') Create new instance
-
-      h4 Metadata
-      table.table
-         tr
-            td Offering name
-            td {{serviceInstance.serviceName}}
-         tr
-            td Instance name
-            td {{serviceInstance.name}}
-         tr
-            td State
-            td {{serviceInstance.state}}
-         tr
-            td Plan instantiated
-            td {{serviceInstance.planName}}
-         tr
-            td Created on
-            td {{serviceInstance.auditTrail.createdOn * 1000 | date:'medium'}} by {{serviceInstance.auditTrail.createdBy}}
-         //tr(ng-show="credentials.login")
-            td Login
-            td {{ credentials.login }}
-         //tr(ng-show="credentials.password")
-             td Password
-             td
-                 input.passwordView(type="text", ng-disabled="!showPass", readonly="readonly", ng-value="showPass ? credentials.password : '****************'", disabled="disabled")
-                 button.passwordView(type="button", class="btn btn-sm", ng-class="!showPass ? 'btn-success' : 'btn-warning'"
-                                            ng-click="showPass = !showPass") {{ !showPass ? 'Show' : 'Hide' }}
-
-   .panel.panel-warning(ng-show='state.isError()')
-      .panel-heading Error loading content
-      .panel-body Service instance page is unavailable
+    .panel.panel-warning(ng-show='state.isError()')
+        .panel-heading Error loading content
+        .panel-body Service instance page is unavailable
 
 script(type="text/ng-template", id="confirm-delete")
-   .ngdialog-message.clearfix
-      | {{ serviceInstance.name }}
-      p
-         | Are you sure you want to delete
-         = ' '
-         b {{ data.instance }}
-         | ?
-      .pull-right
-         button.btn.btn-primary(type='button', ng-click='confirm()') Delete
-         button.btn.btn-default(type='button', ng-click="cancel()") Cancel
+    .ngdialog-message.clearfix
+        | {{ serviceInstance.name }}
+        p
+            | Are you sure you want to delete
+            = ' '
+            b {{ data.instance }}
+            | ?
+        .pull-right
+            button.btn.btn-primary(type='button', ng-click='confirm()') Delete
+            button.btn.btn-default(type='button', ng-click="cancel()") Cancel
