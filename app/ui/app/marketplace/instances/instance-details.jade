@@ -25,7 +25,7 @@
             instance-actions(instance="serviceInstance" on-delete="deleteWithConfirmation()" on-start="start()"
                 on-stop="stop()" on-restart="restart()")
             button.btn.btn-primary(
-                ui-sref='app.service({serviceId: serviceInstance.classId})')
+                ui-sref='app.service({offeringId: serviceInstance.classId})')
                 | Create new instance
 
         h4 Metadata

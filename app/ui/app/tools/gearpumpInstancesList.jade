@@ -27,7 +27,6 @@ h3
                   th State
                   th Dashboard link
                   th Deploy App
-                  th Delete
                tbody
                   tr(ng-repeat="(name, instance) in instances" ng-init="showPass = false")
                      td {{ instance.name || name }}
@@ -41,7 +40,7 @@ h3
                            | Deploy
                         span(ng-if='!instance.uiUrl') -
                      td
-                        a.delete(ng-click='deleteInstance(instance.id)')
+                        a(ui-sref='app.marketplace.instance({ instanceId: instance.id })') See details &raquo;
             .no-instances(ng-hide="instances.length")
                | No instances found
 

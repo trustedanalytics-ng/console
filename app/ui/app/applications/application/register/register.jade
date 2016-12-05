@@ -62,6 +62,6 @@
             spinner(ng-if='offerings === undefined')
             .list-group
                .list-group-item(ng-repeat="app in offerings")
-                  a(ui-sref="app.service({ serviceId: app.metadata.guid })") {{ app.entity.label }}
+                  a(ui-sref="app.service({ offeringId: app.metadata.guid })") {{ app.entity.label }}
                .list-group-item(ng-if="offerings !== undefined && !offerings.length")
                   | No service offerings found

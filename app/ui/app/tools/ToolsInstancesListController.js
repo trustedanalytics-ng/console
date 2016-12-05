@@ -80,23 +80,6 @@
                 });
         };
 
-        $scope.deleteInstance = function (appId) {
-            NotificationService.confirm('confirm-delete')
-                .then(function () {
-                    $scope.state.setPending();
-                    return ServiceInstancesResource
-                        .withErrorMessage('Deleting instance of ' + $scope.brokerName + ' failed')
-                        .deleteInstance(appId);
-                })
-                .then(function onSuccess() {
-                    NotificationService.success('Deleting instance of ' + $scope.brokerName +
-                        ' may take a while. You can try to refresh the page after few seconds.');
-                })
-                .finally(function () {
-                    refreshInstances();
-                });
-        };
-
         $scope.hasLogin = function (instances) {
             return _.some(instances, $scope.getLogin);
         };

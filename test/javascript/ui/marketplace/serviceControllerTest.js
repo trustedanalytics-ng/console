@@ -45,7 +45,7 @@ describe("Unit: ServiceController", function () {
         $q = _$q_;
         scope = $rootScope.$new();
 
-        scope.serviceId = SERVICE_ID;
+        scope.offeringId = SERVICE_ID;
 
         getServiceDefer = $q.defer();
 
@@ -178,7 +178,7 @@ describe("Unit: ServiceController", function () {
         createController();
         notificationService.confirm = sinon.stub().returns(successPromise());
         offeringsMock.deleteService = sinon.stub().returns($q.defer().promise);
-        controller.serviceId = 'service-id';
+        controller.offeringId = 'service-id';
 
         controller.tryDeleteOffering();
         $rootScope.$digest();
@@ -203,7 +203,7 @@ describe("Unit: ServiceController", function () {
         createController();
         notificationService.confirm = sinon.stub().returns(successPromise());
         offeringsMock.deleteService = sinon.stub().returns(successPromise());
-        controller.serviceId = 'service-id';
+        controller.offeringId = 'service-id';
 
         controller.tryDeleteOffering();
         $rootScope.$digest();

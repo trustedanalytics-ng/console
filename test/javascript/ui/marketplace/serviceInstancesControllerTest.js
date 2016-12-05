@@ -37,8 +37,6 @@ describe("Unit: ServiceInstancesController", function () {
         $q = _$q_;
         $rootScope = _$rootScope_;
         scope = $rootScope.$new();
-        // TODO: remove when DPNG-10877 is done
-        scope.serviceName = "sample-name";
 
         notificationService = {
             success: function(){},
@@ -73,7 +71,7 @@ describe("Unit: ServiceInstancesController", function () {
         $rootScope.$digest();
 
         expect(controller.instances).to.be.deep.equal(instances);
-        expect(controller.instancesState.value).to.be.equal(controller.instancesState.values.LOADED);
+        expect(controller.state.isLoaded(), 'loaded').to.be.true;
     });
 
     it('init, got instances error, set status error', function () {
@@ -83,7 +81,7 @@ describe("Unit: ServiceInstancesController", function () {
         createController();
         deferred.reject();
         $rootScope.$digest();
-        expect(controller.instancesState.value).to.be.equal(controller.instancesState.values.ERROR);
+        expect(controller.state.value).to.be.equal(controller.state.values.ERROR);
     });
 
     it('on targetChanged, get instances second time', function () {
@@ -104,72 +102,6 @@ describe("Unit: ServiceInstancesController", function () {
         scope.$emit('instanceCreated');
         $rootScope.$digest();
         expect(serviceInstancesMock.getAllByType.called).to.be.true;
-    });
-
-    it('deleteInstance, set status pending and delete entity', function () {
-        var instance = { guid: 12345 };
-
-        var deferredAll = $q.defer();
-        serviceInstancesMock.getAllByType = sinon.stub().returns(deferredAll.promise);
-
-        var deferred = $q.defer();
-        serviceInstancesMock.deleteInstance = sinon.stub().returns(deferred.promise);
-
-        createController();
-        controller.deleteInstance(instance);
-        deferredAll.resolve();
-        deferred.resolve();
-
-        $rootScope.$digest();
-        expect(serviceInstancesMock.deleteInstance.calledWith(instance.id)).to.be.true;
-
-    });
-
-    it('deleteInstance, success, set status loaded and reload instances', function () {
-        var instance = { guid: 12345 };
-
-        var deferredAll = $q.defer();
-        serviceInstancesMock.getAllByType = sinon.stub().returns(deferredAll.promise);
-
-        var deferred = $q.defer();
-        serviceInstancesMock.deleteInstance = sinon.stub().returns(deferred.promise);
-        createController();
-        deferred.resolve();
-
-        controller.deleteInstance(instance);
-
-        $rootScope.$digest();
-
-        expect(controller.deleteState.value).to.be.equal(controller.deleteState.values.DEFAULT);
-        expect(serviceInstancesMock.deleteInstance .called).to.be.true;
-    });
-
-    it('deleteInstance, error, set status error and show notification', function () {
-        var instance = { guid: 12345 };
-
-        var deferredAll = $q.defer();
-        serviceInstancesMock.getAllByType = sinon.stub().returns(deferredAll.promise);
-
-        var deferred = $q.defer();
-        serviceInstancesMock.deleteInstance = sinon.stub().returns(deferred.promise);
-        deferred.reject({status: 500});
-
-        notificationService.genericError = sinon.stub();
-        createController();
-        controller.service = {name: 'notAtk'};
-        controller.deleteInstance(instance);
-
-        $rootScope.$digest();
-        expect(controller.deleteState.value).to.be.equal(controller.deleteState.values.DEFAULT);
-        expect(notificationService.genericError.called).to.be.true;
-    });
-
-    it('deleteInstance, empty instance to delete, do not delete instance', function () {
-        var deleteSpied = sinon.spy(serviceInstancesMock, 'deleteInstance');
-
-        controller.deleteInstance();
-
-        expect(deleteSpied.called).to.be.false;
     });
 
     function getServiceInstances() {

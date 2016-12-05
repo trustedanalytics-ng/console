@@ -108,45 +108,4 @@ describe("Unit: ToolsInstanceListController", function () {
 
         expect(serviceInstancesMock.createInstance.called, 'createInstance called').to.be.true;
     });
-
-
-    it('deleteInstance, delete entity ok, list refreshed', function () {
-        serviceInstancesMock.deleteInstance = sinon.stub().returns(getResolvedPromise());
-        serviceResourceMock.getAll = sinon.stub().returns(getResolvedPromise());
-        notificationService.confirm = sinon.stub().returns(getResolvedPromise());
-
-
-        createController();
-        scope.deleteInstance('1234');
-        $rootScope.$digest();
-
-        expect(serviceInstancesMock.deleteInstance.calledWith('1234'), 'deleteInstance calledWith').to.be.true;
-
-    });
-
-
-    it('deleteInstance, not confirmed, deleteInstance should not be called', function () {
-        notificationService.confirm = sinon.stub().returns(getRejectedPromise());
-        serviceInstancesMock.getAll = sinon.stub().returns(getResolvedPromise());
-
-        createController();
-        scope.deleteInstance('1234');
-
-        scope.$apply();
-
-        expect(serviceInstancesMock.deleteInstance.called, 'deleteInstance called').to.be.false;
-
-    });
-
-    function getResolvedPromise(data) {
-        var deferred = $q.defer();
-        deferred.resolve(data);
-        return deferred.promise;
-    }
-
-    function getRejectedPromise(data) {
-        var deferred = $q.defer();
-        deferred.reject(data);
-        return deferred.promise;
-    }
 });

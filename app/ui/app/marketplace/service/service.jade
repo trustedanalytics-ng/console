@@ -70,7 +70,7 @@
                                     a(ng-click="ctrl.addExtraParam()") + Add an extra parameter
                             spinner(text="'Creating new instance... Please wait'", ng-if='ctrl.newInstanceState.isPending()')
 
-        d-service-instances(service-id='ctrl.serviceId', service-name='ctrl.service.name')
+        d-service-instances(offering-id='ctrl.offeringId', service-name='ctrl.service.name')
 
     .panel.panel-danger(ng-show='ctrl.state.isGenericError()')
         .panel-heading Error

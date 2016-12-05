@@ -29,11 +29,10 @@ h3
                    th Url
                    th State
                    th(ng-if="hasDeployer(brokerName)") Deploy App
-                   th Delete
                 tbody
                    tr(ng-repeat="instance in instances | orderBy:'name'" ng-init="showPass = false")
                       td
-                        a(ui-sref='app.marketplace.instance({ instanceId: instance.id })') {{ instance.name }}
+                        | {{ instance.name }}
                       td(ng-if="loginAvailable")
                          span
                             | {{ getLogin(instance) }}
@@ -50,8 +49,8 @@ h3
                          span(ng-if='!getUrl(instance)') -
                       td {{ instance.state }}
                       td
-                         a.delete(ng-click='deleteInstance(instance.id)')
-             .no-instances(ng-hide="instances.length")
+                         a(ui-sref='app.marketplace.instance({ instanceId: instance.id })') See details &raquo;
+            .no-instances(ng-hide="instances.length")
                 | No instances found
 
          div(ng-show='offering')
@@ -63,14 +62,3 @@ h3
                div(ng-messages="newInstanceType.instanceName.$error")
                   span(class="validationMessage", ng-message="regexValidator")
                      | {{ validationMessage }}
-
-    script(type="text/ng-template", id="confirm-delete")
-      .ngdialog-message.clearfix
-         p
-            | Are you sure you want to delete 
-            = ' '
-            b {{ data.instanceToDelete }}
-            | ?
-         .pull-right
-            button.btn.btn-primary(type='button', ng-click='confirm(true)') Delete
-            button.btn.btn-default(type='button', ng-click="cancel()") Cancel

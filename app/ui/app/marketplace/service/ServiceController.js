@@ -26,9 +26,9 @@
         $scope.validationMessage = ValidationPatterns.INSTANCE_NAME.validationMessage;
 
         var self = this,
-            id = $stateParams.serviceId;
+            id = $stateParams.offeringId;
 
-        self.serviceId = id;
+        self.offeringId = id;
 
         self.state = new State().setPending();
         self.deleteState = new State().setLoaded();
@@ -81,7 +81,7 @@
                     self.state.setPending();
                     OfferingsResource
                         .withErrorMessage('Failed to delete service offering from marketplace')
-                        .deleteService(self.serviceId)
+                        .deleteService(self.offeringId)
                         .then(function () {
                             NotificationService.success('Application has been delete from marketplace');
                             $location.path('/app/marketplace/service');

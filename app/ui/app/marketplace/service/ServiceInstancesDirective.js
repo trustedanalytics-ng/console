@@ -16,80 +16,27 @@
 (function () {
     "use strict";
 
-    App.controller('ServiceInstancesController', function (ServiceInstancesResource, $scope, targetProvider, State,
-        NotificationService) {
+    App.controller('ServiceInstancesController', function (ServiceInstancesResource, $scope, targetProvider, State) {
 
-        var self = this,
-            id = $scope.serviceId;
-
-        var GATEWAY_TIMEOUT_ERROR = 504;
+        var self = this;
 
         var state = new State().setPending();
         self.state = state;
 
-        self.instancesState = new State().setLoaded();
-        self.deleteState = new State().setDefault();
-
         self.getInstances = function () {
-            getInstancesData(self, targetProvider.getOrganization(), id, $scope.serviceName, ServiceInstancesResource);
+            getInstancesData(self, targetProvider.getOrganization(), this.offeringId, ServiceInstancesResource);
         };
-
-        var updateInstances = function () {
-            self.instancesState.setPending();
-            self.deleteState.setDefault();
-            self.getInstances();
-        };
-
-        // TODO: remove scope watch when DPNG-10877 is done - just update on init
-        $scope.$watch('serviceName', function(value) {
-            if(value) {
-                updateInstances();
-            }
-        });
+        self.getInstances();
 
         $scope.$on('instanceCreated', function () {
-            updateInstances();
+            self.getInstances();
         });
 
-        self.tryDeleteInstance = function (instance) {
-            NotificationService.confirm('confirm-delete', {instanceToDelete: instance})
-                .then(function onConfirm() {
-                    self.deleteInstance(instance);
-                });
-        };
-
-        self.deleteInstance = function (instance) {
-            if (!instance) {
-                return;
-            }
-
-            self.deleteState.setPending();
-            ServiceInstancesResource
-                .supressGenericError()
-                .deleteInstance(instance.id)
-                .then(function () {
-                    self.deleteState.setDefault();
-                    NotificationService.success('Instance has been deleted');
-                    updateInstances();
-                })
-                .catch(function (error) {
-                    if (error.status === GATEWAY_TIMEOUT_ERROR) {
-                        NotificationService.success("Deleting an instance may take a while. Please refresh the page after a minute or two.", "Task scheduled");
-                    }
-                    else {
-                        NotificationService.genericError(error.data, 'Error while deleting the instance');
-                    }
-                    self.deleteState.setDefault();
-                });
-        };
-
         $scope.$on('targetChanged', function () {
-            updateInstances();
+            self.getInstances();
         });
 
         self.organization = targetProvider.getOrganization;
-
-        self.refresh = updateInstances;
 
         self.getNormalizedState = function(instance) {
             return instance.state.replace(/\s+/g, '-').toLowerCase();
@@ -97,29 +44,26 @@
     });
 
 
-    App.directive('dServiceInstances', function () {
-        return {
-            scope: {
-                serviceId: '=',
-                serviceName: '='
-            },
-            controller: 'ServiceInstancesController as ctrl',
-            templateUrl: 'app/marketplace/service/service-instances.html'
-        };
+    App.component('dServiceInstances', {
+        bindings: {
+            offeringId: '<'
+        },
+        controller: 'ServiceInstancesController',
+        templateUrl: 'app/marketplace/service/service-instances.html'
     });
 
 
-    function getInstancesData(self, organization, serviceId, serviceName, ServiceInstancesResource) {
+    function getInstancesData(self, organization, offeringId, ServiceInstancesResource) {
+        self.state.setPending();
         ServiceInstancesResource
             .withErrorMessage('Failed to retrieve service instances')
-            .getAllByType(organization.guid, serviceId)
+            .getAllByType(organization.guid, offeringId)
             .then(function (instances) {
-                // TODO: remove filtering when DPNG-10877 is done
-                self.instances = _.where(instances, {serviceName: serviceName});
-                self.instancesState.setLoaded();
+                self.instances = instances;
+                self.state.setLoaded();
             })
             .catch(function () {
-                self.instancesState.setError();
+                self.state.setError();
             });
     }
 

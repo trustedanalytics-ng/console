@@ -15,20 +15,19 @@
 //-
 .panel.instances
     .header
-        button.btn.btn-primary.fa-refresh.pull-right(ng-hide='ctrl.instancesState.isPending() || ctrl.deleteState.isPending()'
-            ng-click='ctrl.refresh()') Refresh
+        button.btn.btn-primary.fa-refresh.pull-right(ng-hide='$ctrl.state.isPending()'
+            ng-click='$ctrl.getInstances()') Refresh
         | Running instances
 
-    spinner(ng-show='ctrl.instancesState.isPending() || ctrl.deleteState.isPending()')
+    spinner(ng-if='$ctrl.state.isPending()')
 
-    .panel.panel-danger(ng-show='ctrl.instancesState.isError()')
+    .panel.panel-danger(ng-if='$ctrl.state.isError()')
         .panel-body Error while downloading service instances list
 
-    div(ng-show='ctrl.instancesState.isLoaded() && !ctrl.instances.length')
+    div(ng-if='$ctrl.state.isLoaded() && !$ctrl.instances.length')
         .panel-body No running instances
 
-    table.table(ng-if='ctrl.instancesState.isLoaded() && ctrl.instances.length\
-    && !ctrl.deleteState.isPending()')
+    table.table(ng-if='$ctrl.state.isLoaded() && $ctrl.instances.length')
         thead
             tr
                 th Name
@@ -37,29 +36,14 @@
                 th State
                 th
                 th
-                th Delete
         tbody
-            tr(ng-repeat="instance in ctrl.instances | orderBy: 'name'")
+            tr(ng-repeat="instance in $ctrl.instances | orderBy: 'name'")
                 td {{ instance.name }}
                 td {{ instance.planName }}
                 td
                     a.app-bound(ng-repeat='app in instance.bound_apps', ui-sref='app.application({ appId: app.guid })') {{ app.name }}
-                td(class="state state-{{ ctrl.getNormalizedState(instance) }}")  {{instance.state}}
+                td(class="state state-{{ $ctrl.getNormalizedState(instance) }}")  {{instance.state}}
                 td
                     a(ng-if='instance.dashboard_url', ng-href='{{ instance.dashboard_url }}', target="_blank") Go to dashboard &raquo;
                 td
                     a(ui-sref='app.marketplace.instance({instanceId: instance.id})') See details &raquo;
-                td
-                    a.delete(ng-click='ctrl.tryDeleteInstance(instance)')
-| {{ instanceToDelete.name }}
-script(type="text/ng-template", id="confirm-delete")
-    .ngdialog-message.clearfix
-        | {{ instanceToDelete.name }}
-        p
-            | Are you sure you want to delete
-            = ' '
-            b {{ data.instanceToDelete.name }}
-            | ?
-        .pull-right
-            button.btn.btn-primary(type='button', ng-click='confirm()') Delete
-            button.btn.btn-default(type='button', ng-click="cancel()") Cancel
