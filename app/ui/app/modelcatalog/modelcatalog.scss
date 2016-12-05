@@ -255,6 +255,39 @@ $bootstrap-input-text-color: #555;
     }
   }
 
+  .scoring-engines {
+    h4 {
+      font-size: 15px;
+      font-weight: bold;
+      margin-top: 20px;
+      display: inline-block;
+    }
+
+    button {
+      margin-top: 20px;
+    }
+
+    p {
+      padding-left: 10px;
+    }
+
+    .table {
+      border-collapse: collapse;
+      margin-bottom: 0;
+
+      td {
+        border: none;
+        padding: 12px 8px;
+      }
+    }
+
+    .divider {
+      width: 100%;
+      border-bottom: 1px solid $table-cell-border-color;
+      padding: 10px 0;
+    }
+  }
+
   .artifacts {
     margin-top: 25px;
     padding: 30px 25px;

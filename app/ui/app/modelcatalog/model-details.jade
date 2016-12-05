@@ -55,6 +55,30 @@
                 td Creator
                 td {{model.addedBy}}
 
+        .scoring-engines(ng-hide="scoringEngineState.isError()")
+           h4 Scoring Engine Instances
+           button.btn.btn-primary.fa-refresh.pull-right(ng-click='refresh()'
+               ng-hide='scoringEngineState.isPending()') Refresh
+           spinner(ng-show="scoringEngineState.isPending()")
+           p(ng-show='!scoringEngineInstances.length && scoringEngineState.isLoaded()') No running instances
+
+           table.table(ng-show="scoringEngineInstances.length && scoringEngineState.isLoaded()")
+              thead
+                 tr
+                    th Name
+                    th URL
+                    th State
+                    th
+              tbody
+                 tr(ng-repeat="instance in scoringEngineInstances | orderBy: 'name'")
+                    td {{ instance.name }}
+                    td
+                       a(href='{{ instance.url | ensureProtocol }}' target="_blank") {{ instance.url }}
+                    td {{ instance.state }}
+                    td
+                       a(ui-sref='app.marketplace.instance({instanceId: instance.id})') See details &raquo;
+           .divider
+
         .artifacts(ng-hide='true')
            h4(ng-if='extraArtifacts.length') Additional Artifacts
            div(ng-if='!extraArtifacts.length') No Additional Artifacts
@@ -78,13 +102,17 @@
         .panel-heading Error loading content
         .panel-body Model details page is unavailable
 
+   .panel.panel-warning(ng-show='scoringEngineState.isError()')
+      .panel-heading Error loading content
+      .panel-body Information about running scoring engine instances is unavailable
+
 script(type="text/ng-template", id="confirm-delete")
     .ngdialog-message.clearfix
         | {{ model.name }}
         p
             | Are you sure you want to delete
             = ' '
-            b {{ data.model || data.artifact }}
+            b {{ data.model || data.artifact || data.instance }}
             | ?
         .pull-right
             button.btn.btn-primary(type='button', ng-click='confirm()') Delete

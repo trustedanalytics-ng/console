@@ -18,7 +18,8 @@
     'use strict';
 
     App.controller('ModelsDetailsController', function ($scope, State, ModelResource, NotificationService,
-                                                        $stateParams, $state, CommonTableParams, FileUploaderService) {
+                                                        ScoringEngineRetriever, $stateParams, $state,
+                                                        CommonTableParams, FileUploaderService) {
         var modelId = $stateParams.modelId;
         var MODEL_NOT_FOUND_ERROR = 404;
         var file = null;
@@ -27,8 +28,10 @@
 
         $scope.mainArtifact = null;
         $scope.extraArtifacts = [];
+        $scope.scoringEngineInstances = [];
         $scope.state = state;
         $scope.deleteState = new State().setDefault();
+        $scope.scoringEngineState = new State().setPending();
         $scope.deleteArtifactState = new State().setDefault();
         $scope.addArtifactState = new State().setDefault();
 
@@ -37,6 +40,7 @@
         //};
 
         getModelMetadata();
+        getScoringEngineInstancesFromThatModel();
 
         $scope.updateModelName = function (currentText) {
             if (currentText === $scope.model.name) {
@@ -131,6 +135,10 @@
                 });
         };
 
+        $scope.refresh = function () {
+            getScoringEngineInstancesFromThatModel();
+        };
+
         function getModelMetadata () {
             ModelResource.getModelMetadata(modelId)
                 .then(function (model) {
@@ -150,6 +158,18 @@
                         $scope.state.setError();
                         NotificationService.error(error.data.message || 'An error occurred while loading model details page');
                     }
+                });
+        }
+
+        function getScoringEngineInstancesFromThatModel () {
+            $scope.scoringEngineState.setPending();
+            ScoringEngineRetriever.getScoringEngineInstancesCreatedFromThatModel(modelId)
+                .then(function(scoringEngines) {
+                    $scope.scoringEngineInstances = scoringEngines;
+                    $scope.scoringEngineState.setLoaded();
+                })
+                .catch(function () {
+                    $scope.scoringEngineState.setError();
                 });
         }
 

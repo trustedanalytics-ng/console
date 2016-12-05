@@ -25,38 +25,40 @@ describe("Unit: ModelsDetailsController", function() {
         deleteModelArtifactDeferred,
         addModelArtifactDeferred,
         modelUpdateDeferred,
+        getAllScoringEngineInstancesDeferred,
         confirmDeferred,
         progressDeferred,
         notificationService,
         commonTableParams,
         state,
+        scoringEngineState,
         deleteState,
         deleteArtifactState,
         addArtifactState,
-        $stateParams,
         $state,
         $q,
         fileUploaderService,
+        scoringEngineRetriever,
         modelsMock,
         redirect = 'app.modelcatalog.models';
 
     beforeEach(module('app'));
 
-    beforeEach(inject(function ($controller, $rootScope, _$q_, State, ModelsMock, _$stateParams_, _$state_) {
+    beforeEach(inject(function ($controller, $rootScope, _$q_, State, ModelsMock) {
         modelsMock = ModelsMock;
         scope = $rootScope.$new();
-        $state = _$state_;
         $q = _$q_;
         state = new State();
         deleteState = new State();
         deleteArtifactState = new State();
         addArtifactState = new State();
-        $stateParams = _$stateParams_;
+        scoringEngineState = new State();
         modelDetailsDeferred = $q.defer();
         modelUpdateDeferred = $q.defer();
         deleteModelDeferred = $q.defer();
         addModelArtifactDeferred = $q.defer();
         deleteModelArtifactDeferred = $q.defer();
+        getAllScoringEngineInstancesDeferred = $q.defer();
         confirmDeferred = $q.defer();
         progressDeferred = $q.defer();
 
@@ -84,15 +86,24 @@ describe("Unit: ModelsDetailsController", function() {
             uploadFiles: sinon.stub().returns(addModelArtifactDeferred.promise)
         };
 
+        scoringEngineRetriever = {
+            getScoringEngineInstancesCreatedFromThatModel: sinon.stub().returns(getAllScoringEngineInstancesDeferred.promise),
+            deleteScoringEngineInstances: sinon.stub()
+        };
+
+        $state = {
+            go: sinon.stub()
+        };
+
         createController = function () {
             controller = $controller('ModelsDetailsController', {
                 $scope: scope,
                 ModelResource: modelResource,
                 NotificationService: notificationService,
-                $stateParams: $stateParams,
                 $state: $state,
                 CommonTableParams: commonTableParams,
-                FileUploaderService: fileUploaderService
+                FileUploaderService: fileUploaderService,
+                ScoringEngineRetriever: scoringEngineRetriever
             });
         };
 
@@ -114,6 +125,11 @@ describe("Unit: ModelsDetailsController", function() {
         createController();
         expect(scope.state.value).to.be.equals(state.values.PENDING);
         expect(scope.deleteState.value).to.be.equals(state.values.DEFAULT);
+    });
+
+    it('init, set scoringEngineState to pending', function () {
+        createController();
+        expect(scope.scoringEngineState.value).to.be.equals(state.values.PENDING);
     });
 
     it('init, getModelMetadata called', function () {
@@ -153,12 +169,11 @@ describe("Unit: ModelsDetailsController", function() {
 
     it('init, getModelMetadata 404 error, redirect to models', function () {
         var deferred = $q.defer();
-        var spy = sinon.spy($state, 'go');
         modelResource.getModelMetadata = sinon.stub().returns(deferred.promise);
         deferred.reject({status: 404, data: {message: 'Model not found'}});
         createController();
         scope.$digest();
-        expect(spy.calledWith(redirect)).to.be.true;
+        expect($state.go.calledWith(redirect)).to.be.true;
     });
 
     it('init, getModelMetadata other than 404 error, set state on error', function () {
@@ -170,6 +185,30 @@ describe("Unit: ModelsDetailsController", function() {
         expect(errorSpied.called).to.be.true;
     });
 
+    it('init, getScoringEngineInstancesCreatedFromThatModel called', function () {
+        createController();
+        expect(scoringEngineRetriever.getScoringEngineInstancesCreatedFromThatModel).to.be.called;
+    });
+
+    it('getScoringEngineInstancesFromThatModel, invoke, set scoringEngineState on pending', function () {
+        createController();
+        expect(scope.scoringEngineState.value).to.be.equals(scoringEngineState.values.PENDING);
+    });
+
+    it('getScoringEngineInstancesFromThatModel, success, set scoringEngineState on loaded', function () {
+        createController();
+        getAllScoringEngineInstancesDeferred.resolve();
+        scope.$digest();
+        expect(scope.scoringEngineState.value).to.be.equals(scoringEngineState.values.LOADED);
+    });
+
+    it('getScoringEngineInstancesFromThatModel, reject, set scoringEngineState on error', function () {
+        createController();
+        getAllScoringEngineInstancesDeferred.reject();
+        scope.$digest();
+        expect(scope.scoringEngineState.value).to.be.equals(scoringEngineState.values.ERROR);
+    });
+
     it('deleteModel, invoke, set deleteState on pending', function () {
         createController();
         scope.deleteModel();
@@ -179,25 +218,23 @@ describe("Unit: ModelsDetailsController", function() {
 
     it('deleteModel, success, redirect to models, set deleteState to default', function () {
         var successSpied = sinon.spy(notificationService, 'success');
-        var redirectSpied = sinon.spy($state, 'go');
         createController();
         deleteModelDeferred.resolve();
         scope.deleteModel();
         scope.$digest();
         expect(successSpied.called).to.be.true;
-        expect(redirectSpied.calledWith(redirect)).to.be.true;
+        expect($state.go.calledWith(redirect)).to.be.true;
         expect(scope.deleteState.value).to.be.equals(deleteState.values.DEFAULT);
     });
 
     it('deleteModel, delete failed, do not notify about success, set deleteState to default', function () {
         var successSpied = sinon.spy(notificationService, 'success');
-        var redirectSpied = sinon.spy($state, 'go');
         createController();
         deleteModelDeferred.reject({status: 404});
         scope.deleteModel();
         scope.$digest();
         expect(successSpied).not.to.be.called;
-        expect(redirectSpied).not.to.be.called;
+        expect($state.go).not.to.be.called;
         expect(scope.deleteState.value).to.be.equals(deleteState.values.DEFAULT);
     });
 
@@ -304,5 +341,4 @@ describe("Unit: ModelsDetailsController", function() {
         scope.$digest();
         expect(spy).to.be.calledWith();
     });
-
 });
