@@ -281,8 +281,8 @@ App.config(function ($stateProvider, $urlRouterProvider, LazyLoadProvider, AppCo
             templateUrl: getViewPath('tools/toolsInstancesList.html'),
             resolve: LazyLoadProvider.load(['ngMessages'])
         })
-        .state('app.h2o', {
-            url: '/h2o',
+        .state('app.h2o-350', {
+            url: '/h2o-350',
             title: 'H2O UI',
             targetHeader: {org: true, space: true},
             entityDisplayName: 'H2O',
@@ -290,8 +290,8 @@ App.config(function ($stateProvider, $urlRouterProvider, LazyLoadProvider, AppCo
             templateUrl: getViewPath('tools/toolsInstancesList.html'),
             resolve: LazyLoadProvider.load(['ngMessages'])
         })
-        .state('app.gearpump', {
-            url: '/gearpump',
+        .state('app.gearpump-080', {
+            url: '/gearpump-080',
             title: 'Apache Gearpump',
             targetHeader: {org: true, space: true},
             entityDisplayName: 'Apache Gearpump',

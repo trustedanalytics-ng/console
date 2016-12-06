@@ -102,12 +102,12 @@
                     "tool": "rstudio"
                 }, {
                     "text": "H2O",
-                    "sref": "app.h2o",
-                    "tool": "h2o"
+                    "sref": "app.h2o-350",
+                    "tool": "h2o-350"
                 }, {
                     "text": "Apache Gearpump",
-                    "sref": "app.gearpump",
-                    "tool": "gearpump"
+                    "sref": "app.gearpump-080",
+                    "tool": "gearpump-080"
                 }
 
             ]
