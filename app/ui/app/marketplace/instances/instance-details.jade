@@ -45,15 +45,20 @@
             tr
                 td Created on
                 td {{serviceInstance.auditTrail.createdOn * 1000 | date:'medium'}} by {{serviceInstance.auditTrail.createdBy}}
-            //tr(ng-show="credentials.login")
-               td Login
-               td {{ credentials.login }}
-            //tr(ng-show="credentials.password")
+            tr(ng-if='getLogin(serviceInstance)')
+                td Login
+                td {{ getLogin(serviceInstance) }}
+            tr(ng-if='getPassword(serviceInstance)')
                 td Password
                 td
-                    input.passwordView(type="text", ng-disabled="!showPass", readonly="readonly", ng-value="showPass ? credentials.password : '****************'", disabled="disabled")
-                    button.passwordView(type="button", class="btn btn-sm", ng-class="!showPass ? 'btn-success' : 'btn-warning'"
-                                               ng-click="showPass = !showPass") {{ !showPass ? 'Show' : 'Hide' }}
+                    input.password-view.input-pass(type="text", ng-disabled="!showPass", readonly="readonly", ng-value="showPass ? getPassword(serviceInstance) : '****************'", disabled="disabled")
+                    button.password-view.btn-pass(type="button", class="btn btn-sm", ng-class="!showPass ? 'btn-success' : 'btn-warning'"
+                    ng-click="showPass = !showPass") {{ !showPass ? 'Show' : 'Hide' }}
+            tr(ng-if='getUrl(serviceInstance)')
+                td Url
+                td
+                    a(href='{{ getUrl(serviceInstance) | ensureProtocol }}', target="_blank")
+                        | {{ getUrl(serviceInstance) }}
 
     .panel.panel-warning(ng-show='state.isError()')
         .panel-heading Error loading content

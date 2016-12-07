@@ -429,22 +429,6 @@
         font-weight: bold;
         width: 160px;
       }
-
-      .passwordView {
-        height: 30px;
-        padding-left: 10px;
-        margin-top: 4px;
-        margin-bottom: 6px;
-        vertical-align: middle;
-
-        &.input {
-          border-width: 1px;
-          padding-top: 1px;
-        }
-        &.button {
-          padding-top: 2px;
-        }
-      }
     }
   }
 }

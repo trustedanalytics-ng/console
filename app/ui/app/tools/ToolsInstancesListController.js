@@ -20,7 +20,7 @@
     var METADATA_SETTINGS_KEY = 'VCAP';
 
     App.controller('ToolsInstancesListController', function ($scope, $location, targetProvider, State,
-        NotificationService, OfferingsResource, ServiceInstancesResource, $state, ValidationPatterns) {
+        NotificationService, OfferingsResource, ServiceInstancesResource, $state, ValidationPatterns, ServiceMetadataFetcher) {
 
         var GATEWAY_TIMEOUT_ERROR = 504;
         var GEARPUMP_LINK_SUFFIX = '/login/oauth2/cloudfoundryuaa/authorize';
@@ -84,9 +84,9 @@
             return _.some(instances, $scope.getLogin);
         };
 
-        $scope.getLogin = getLogin;
-        $scope.getPassword = getPassword;
-        $scope.getUrl = getUrl;
+        $scope.getLogin = ServiceMetadataFetcher.getLogin;
+        $scope.getPassword = ServiceMetadataFetcher.getPassword;
+        $scope.getUrl = ServiceMetadataFetcher.getUrl;
     });
 
 
@@ -96,8 +96,8 @@
             .getAll()
             .then(function (response) {
                 $scope.instances = _.filter(response, {serviceName: offeringName});
-                $scope.loginAvailable = loginAvailable($scope.instances);
-                $scope.passwordAvailable = passwordAvailable($scope.instances);
+                $scope.loginAvailable = loginAvailable($scope.instances, $scope.getLogin);
+                $scope.passwordAvailable = passwordAvailable($scope.instances, $scope.getPassword);
 
                 _.each($scope.instances, function (instance) {
                     if(instance.state === INSTANCE_OK_STATE) {
@@ -127,32 +127,12 @@
             });
     }
 
-    function getLogin(instance) {
-        return getMetadataValue(instance, ["username", "login"]);
+    function loginAvailable(instances, login) {
+        return _.some(instances, login);
     }
 
-    function getPassword(instance) {
-        return getMetadataValue(instance, ["password"]);
+    function passwordAvailable(instances, password) {
+        return _.some(instances, password);
     }
-
-    function getUrl(instance) {
-        var urls = getMetadataValue(instance, ["urls"]);
-        return _.isArray(urls) ? urls[0] : urls;
-    }
-
-    function loginAvailable(instances) {
-        return _.some(instances, getLogin);
-    }
-
-    function passwordAvailable(instances) {
-        return _.some(instances, getPassword);
-    }
-
-    function getMetadataValue(instance, listOfPossibleKeys) {
-        var metaObject = _.find(instance.metadata, function(meta) {
-            return _.isString(meta.key) && _.contains(listOfPossibleKeys, meta.key.toLowerCase());
-        }) || {};
-        return metaObject.value;
-    }
-
+    
 }());

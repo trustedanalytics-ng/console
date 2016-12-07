@@ -38,9 +38,9 @@ h3
                             | {{ getLogin(instance) }}
                          span(ng-if='!getLogin(instance)') -
                       td(ng-show="passwordAvailable")
-                         input(ng-show="getPassword(instance)", type="text", class="form-control",
+                         input.password-view.input-pass(ng-show="getPassword(instance)", type="text",
                             ng-disabled="!showPass", readonly=true, ng-value="showPass ? getPassword(instance) : '****************'")
-                         button(ng-show="getPassword(instance)", type="button", class="btn btn-sm", ng-class="!showPass ? 'btn-success' : 'btn-warning'"
+                         button.password-view.btn-pass(ng-show="getPassword(instance)", type="button", class="btn btn-sm", ng-class="!showPass ? 'btn-success' : 'btn-warning'"
                             ng-click="showPass = !showPass") {{ !showPass ? 'Show' : 'Hide' }}
                          span(ng-if="!getPassword(instance)") -
                       td
@@ -53,7 +53,7 @@ h3
             .no-instances(ng-hide="instances.length")
                 | No instances found
 
-         div(ng-show='offering')
+         div.new-offering-instance(ng-show='offering')
             form(name='newInstanceType', ng-submit='createInstance(newInstanceName)')
                input.form-control(name='instanceName', type='text', required='', placeholder='Instance name',
                   ng-model='newInstanceName', ng-trim="true" pattern-validator="{{ validationPattern }}")

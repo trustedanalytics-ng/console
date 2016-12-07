@@ -64,11 +64,6 @@
         margin-top: 20px;
       }
 
-      input {
-        width: 400px;
-        display: inline-block;
-      }
-
       button {
         height: 35px;
       }
@@ -86,17 +81,9 @@
         margin-bottom: 20px;
       }
 
-      table {
-        input {
-          width: 170px;
-          height: 35px;
-          float: left;
-        }
-
-        button {
-          float: left;
-          width: 50px;
-        }
+      .new-offering-instance input {
+        width: 400px;
+        display: inline-block;
       }
     }
 

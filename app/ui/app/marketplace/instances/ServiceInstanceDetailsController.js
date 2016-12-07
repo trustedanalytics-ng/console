@@ -18,7 +18,7 @@
     'use strict';
 
     App.controller('ServiceInstanceDetailsController', function ($scope, State, ServiceInstancesResource,
-            NotificationService, $stateParams, $state) {
+            NotificationService, ServiceMetadataFetcher, $stateParams, $state) {
         var instanceId = $stateParams.instanceId;
         var INSTANCE_NOT_FOUND_ERROR = 404;
         var state = new State().setPending();
@@ -27,6 +27,10 @@
         $scope.toolsState = toolsState;
         $scope.deleteState = new State().setDefault();
 
+        $scope.getLogin = ServiceMetadataFetcher.getLogin;
+        $scope.getPassword = ServiceMetadataFetcher.getPassword;
+        $scope.getUrl = ServiceMetadataFetcher.getUrl;
+        
         $scope.reload = function () {
             $scope.state.setPending();
             ServiceInstancesResource.getById(instanceId)
