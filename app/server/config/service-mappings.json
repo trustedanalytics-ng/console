@@ -27,7 +27,8 @@
   "name": "api"
 }, {
   "path": "/applications",
-  "name": "api"
+  "name": "api",
+  "prefix": "/api/v3"
 }, {
   "path": "/orgs/[^/]+/name",
   "name": "user-management"

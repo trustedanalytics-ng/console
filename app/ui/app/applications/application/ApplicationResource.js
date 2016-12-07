@@ -69,7 +69,7 @@
         };
 
         service.unbindService = function (appId, serviceId) {
-            return this.one(appId).all("bindings").one(serviceId).remove();
+            return this.one(appId).all("bindings").all("services").one(serviceId).remove();
         };
 
         return service;
