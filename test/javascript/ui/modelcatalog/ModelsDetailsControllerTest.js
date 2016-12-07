@@ -23,8 +23,6 @@ describe("Unit: ModelsDetailsController", function() {
         scoringEngineResource,
         modelDetailsDeferred,
         deleteModelDeferred,
-        deleteModelArtifactDeferred,
-        addModelArtifactDeferred,
         modelUpdateDeferred,
         getAllScoringEngineInstancesDeferred,
         addScoringEngineDeferred,
@@ -35,12 +33,12 @@ describe("Unit: ModelsDetailsController", function() {
         state,
         scoringEngineState,
         deleteState,
-        deleteArtifactState,
-        addArtifactState,
         addScoringEngineState,
         $state,
+        $stateParams,
         $q,
         fileUploaderService,
+        modelCatalogArtifactsClient,
         scoringEngineRetriever,
         modelsMock,
         redirect = 'app.modelcatalog.models',
@@ -61,15 +59,11 @@ describe("Unit: ModelsDetailsController", function() {
         $q = _$q_;
         state = new State();
         deleteState = new State();
-        deleteArtifactState = new State();
-        addArtifactState = new State();
         scoringEngineState = new State();
         addScoringEngineState = new State();
         modelDetailsDeferred = $q.defer();
         modelUpdateDeferred = $q.defer();
         deleteModelDeferred = $q.defer();
-        addModelArtifactDeferred = $q.defer();
-        deleteModelArtifactDeferred = $q.defer();
         getAllScoringEngineInstancesDeferred = $q.defer();
         addScoringEngineDeferred = $q.defer();
         confirmDeferred = $q.defer();
@@ -79,7 +73,6 @@ describe("Unit: ModelsDetailsController", function() {
             getModelMetadata: sinon.stub().returns(modelDetailsDeferred.promise),
             updateModelMetadata: sinon.stub().returns(modelUpdateDeferred.promise),
             deleteModel: sinon.stub().returns(deleteModelDeferred.promise),
-            deleteModelArtifact: sinon.stub().returns(deleteModelArtifactDeferred.promise),
             withErrorMessage: sinon.stub().returnsThis()
         };
 
@@ -100,17 +93,22 @@ describe("Unit: ModelsDetailsController", function() {
             getTableParams: function () {}
         };
 
-        fileUploaderService = {
-            uploadFiles: sinon.stub().returns(addModelArtifactDeferred.promise)
-        };
-
         scoringEngineRetriever = {
             getScoringEngineInstancesCreatedFromThatModel: sinon.stub().returns(getAllScoringEngineInstancesDeferred.promise),
             deleteScoringEngineInstances: sinon.stub()
         };
 
+        modelCatalogArtifactsClient = {
+            deleteArtifact: sinon.stub(),
+            uploadArtifact: sinon.stub()
+        };
+
         $state = {
             go: sinon.stub()
+        };
+
+        $stateParams = {
+            modelId: 1234
         };
 
         createController = function () {
@@ -119,10 +117,12 @@ describe("Unit: ModelsDetailsController", function() {
                 ModelResource: modelResource,
                 NotificationService: notificationService,
                 $state: $state,
+                $stateParams: $stateParams,
                 CommonTableParams: commonTableParams,
                 FileUploaderService: fileUploaderService,
                 ScoringEngineRetriever: scoringEngineRetriever,
                 ScoringEngineResource: scoringEngineResource,
+                ModelCatalogArtifactsClient: modelCatalogArtifactsClient
             });
         };
 
@@ -271,33 +271,6 @@ describe("Unit: ModelsDetailsController", function() {
         expect(modelResource.updateModelMetadata.called).to.be.true;
     });
 
-    it('deleteArtifact, invoke, set deleteArtifactState on pending', function () {
-        createController();
-        scope.deleteArtifact();
-        scope.$digest();
-        expect(scope.deleteArtifactState.value).to.be.equals(deleteArtifactState.values.PENDING);
-    });
-
-    it('deleteArtifact, success, redirect to models, set deleteArtifactState to default', function () {
-        var spy = sinon.spy(notificationService, 'success');
-        createController();
-        deleteModelArtifactDeferred.resolve();
-        scope.deleteArtifact();
-        scope.$digest();
-        expect(spy.called).to.be.true;
-        expect(scope.deleteArtifactState.value).to.be.equals(deleteArtifactState.values.DEFAULT);
-    });
-
-    it('deleteArtifactModel, delete failed , do not notify about success, set deleteArtifactState to default', function () {
-        var spy = sinon.spy(notificationService, 'success');
-        createController();
-        deleteModelArtifactDeferred.reject();
-        scope.deleteArtifact();
-        scope.$digest();
-        expect(spy).not.to.be.called;
-        expect(scope.deleteArtifactState.value).to.be.equals(deleteArtifactState.values.DEFAULT);
-    });
-
     it('tryDeleteArtifact, invoke, user should be prompt about deleting artifact', function () {
         createController();
         scope.tryDeleteArtifact({filename: 'filename', id: '1234-5678'});
@@ -308,40 +281,9 @@ describe("Unit: ModelsDetailsController", function() {
     it('tryDeleteArtifact, success, deleteArtifact should be called', function () {
         confirmDeferred.resolve();
         createController();
-        scope.deleteArtifact = sinon.stub();
         scope.tryDeleteArtifact({filename: 'filename', id: '1234-5678'});
         scope.$digest();
-        expect(scope.deleteArtifact).to.be.calledWith('1234-5678');
-    });
-
-    it('uploadArtifact, invoke, set addArtifactState on pending', function () {
-        createController();
-        scope.uploadArtifact();
-        scope.$digest();
-        expect(scope.addArtifactState.value).to.be.equals(addArtifactState.values.PENDING);
-    });
-
-    it('uploadArtifact, invoke, NotificationService progress method called', function () {
-        createController();
-        scope.uploadArtifact();
-        scope.$digest();
-        expect(notificationService.progress.called).to.be.true;
-    });
-
-    it('uploadArtifact, success, set addArtifactState to default', function () {
-        createController();
-        addModelArtifactDeferred.resolve();
-        progressDeferred.resolve();
-        scope.$digest();
-        expect(scope.addArtifactState.value).to.be.equals(addArtifactState.values.DEFAULT);
-    });
-
-    it('uploadArtifact, success, ModelResource getModelMetadata method called', function () {
-        createController();
-        addModelArtifactDeferred.resolve();
-        progressDeferred.resolve();
-        scope.$digest();
-        expect(modelResource.getModelMetadata.called).to.be.true;
+        expect(modelCatalogArtifactsClient.deleteArtifact).to.be.calledWith($stateParams.modelId, '1234-5678');
     });
 
     it('tryUploadArtifact, invoke, popup window should appear', function () {
@@ -354,11 +296,9 @@ describe("Unit: ModelsDetailsController", function() {
     it('tryUploadArtifact, success, uploadArtifact should be called', function () {
         confirmDeferred.resolve();
         createController();
-        scope.uploadArtifact = function () {};
-        var spy = sinon.spy(scope, 'uploadArtifact');
         scope.tryUploadArtifact();
         scope.$digest();
-        expect(spy).to.be.calledWith();
+        expect(modelCatalogArtifactsClient.uploadArtifact).to.be.calledWith($stateParams.modelId);
     });
 
     it('addScoringEngine, invoke, setPending state', function () {

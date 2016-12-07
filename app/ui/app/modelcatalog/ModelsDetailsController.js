@@ -19,7 +19,7 @@
 
     App.controller('ModelsDetailsController', function ($scope, State, ModelResource, NotificationService,
                                                         ScoringEngineRetriever, $stateParams, $state, CommonTableParams,
-                                                        FileUploaderService, ScoringEngineResource, artifactActions) {
+                                                        ModelCatalogArtifactsClient, ScoringEngineResource, artifactActions) {
         var modelId = $stateParams.modelId;
         var MODEL_NOT_FOUND_ERROR = 404;
         var file = null;
@@ -85,28 +85,14 @@
         $scope.tryDeleteArtifact = function (artifact) {
             NotificationService.confirm('confirm-delete', {artifact: artifact.filename})
                 .then(function () {
-                    $scope.deleteArtifact(artifact.id);
-                });
-        };
-
-        $scope.deleteArtifact = function (artifactId) {
-            $scope.deleteArtifactState.setPending();
-            ModelResource
-                .withErrorMessage('Error occurred while deleting model artifact.')
-                .deleteModelArtifact(modelId, artifactId)
-                .then(function () {
-                    NotificationService.success('Model Artifact has been deleted');
-                    getModelMetadata();
-                })
-                .finally(function () {
-                    $scope.deleteArtifactState.setDefault();
+                    ModelCatalogArtifactsClient.deleteArtifact(modelId, artifact.id, $scope.deleteArtifactState, getModelMetadata);
                 });
         };
 
         $scope.tryUploadArtifact = function () {
             NotificationService.confirm('confirm-add-artifact', {scope: $scope})
                 .then(function () {
-                    $scope.uploadArtifact();
+                    uploadArtifact();
                 });
         };
 
@@ -114,31 +100,13 @@
             file = _file;
         };
 
-        $scope.uploadArtifact = function () {
-            $scope.addArtifactState.setPending();
-            var url = '/rest/models/' + modelId + '/artifacts';
-            var files = {artifactFile: file};
-            var uploader = FileUploaderService
-                .uploadFiles(url, {}, files, function (response) {
-                    var message = response.status + ': ' + (response.data ? response.data.message : '');
-
-                    NotificationService.error(message);
-                    return {
-                        message: message,
-                        close: true
-                    };
-                });
-
-            NotificationService.progress(uploader)
-                .then(function() {
-                    getModelMetadata();
-                    $scope.addArtifactState.setDefault();
-                });
-        };
-
         $scope.refresh = function () {
             getScoringEngineInstancesFromThatModel();
         };
+
+        function uploadArtifact () {
+            ModelCatalogArtifactsClient.uploadArtifact(modelId, file, $scope.addArtifactState, getModelMetadata);
+        }
 
         function getModelMetadata () {
             ModelResource.getModelMetadata(modelId)

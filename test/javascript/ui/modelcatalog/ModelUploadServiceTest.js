@@ -131,8 +131,4 @@ describe("Unit: ModelUploadService", function() {
         deferred.reject(data);
         return deferred.promise;
     }
-
-
-
-
 });
