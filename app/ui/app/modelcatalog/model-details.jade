@@ -32,6 +32,7 @@
             // should be deleted when UI will support additional artifact section
             a.btn.btn-primary.fa-download(ng-href='/rest/models/{{model.id}}/artifacts/{{extraArtifacts[0].id}}/file'
                ng-if="extraArtifacts && !mainArtifact") Download
+            a.btn.btn-primary.fa-plus(ng-click='addScoringEngine()') Add Scoring Engine
             a.btn.btn-primary.fa-plus(ng-click='tryUploadArtifact()' ng-hide='true') Add Artifact
 
         h4 Metadata
@@ -59,10 +60,10 @@
            h4 Scoring Engine Instances
            button.btn.btn-primary.fa-refresh.pull-right(ng-click='refresh()'
                ng-hide='scoringEngineState.isPending()') Refresh
-           spinner(ng-show="scoringEngineState.isPending()")
+           spinner(ng-show="scoringEngineState.isPending() || addScoringEngineState.isPending()")
            p(ng-show='!scoringEngineInstances.length && scoringEngineState.isLoaded()') No running instances
 
-           table.table(ng-show="scoringEngineInstances.length && scoringEngineState.isLoaded()")
+           table.table(ng-show="scoringEngineInstances.length && scoringEngineState.isLoaded() && addScoringEngineState.isDefault()")
               thead
                  tr
                     th Name

@@ -33,7 +33,7 @@
                         })
                         .map(function(scoringEngine) {
                             var url = _.findWhere(scoringEngine.metadata, {key: 'urls'});
-                            return _.extend(scoringEngine, {url: url.value + API_DOCS_SUFFIX});
+                            return (url ? _.extend(scoringEngine, {url: url.value + API_DOCS_SUFFIX}) : _.extend(scoringEngine, {url: "Not yet available"}));
                         })
                         .value();
                 });

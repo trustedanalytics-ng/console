@@ -20,12 +20,14 @@ describe("Unit: ModelsDetailsController", function() {
         createController,
         scope,
         modelResource,
+        scoringEngineResource,
         modelDetailsDeferred,
         deleteModelDeferred,
         deleteModelArtifactDeferred,
         addModelArtifactDeferred,
         modelUpdateDeferred,
         getAllScoringEngineInstancesDeferred,
+        addScoringEngineDeferred,
         confirmDeferred,
         progressDeferred,
         notificationService,
@@ -35,12 +37,21 @@ describe("Unit: ModelsDetailsController", function() {
         deleteState,
         deleteArtifactState,
         addArtifactState,
+        addScoringEngineState,
         $state,
         $q,
         fileUploaderService,
         scoringEngineRetriever,
         modelsMock,
-        redirect = 'app.modelcatalog.models';
+        redirect = 'app.modelcatalog.models',
+        SAMPLE_MODEL = {
+            creationTool : 'h2o',
+            id: "1234",
+            name: 'superModel'
+        },
+        SAMPLE_ARTIFACT = {
+            id: "1234"
+        };
 
     beforeEach(module('app'));
 
@@ -53,12 +64,14 @@ describe("Unit: ModelsDetailsController", function() {
         deleteArtifactState = new State();
         addArtifactState = new State();
         scoringEngineState = new State();
+        addScoringEngineState = new State();
         modelDetailsDeferred = $q.defer();
         modelUpdateDeferred = $q.defer();
         deleteModelDeferred = $q.defer();
         addModelArtifactDeferred = $q.defer();
         deleteModelArtifactDeferred = $q.defer();
         getAllScoringEngineInstancesDeferred = $q.defer();
+        addScoringEngineDeferred = $q.defer();
         confirmDeferred = $q.defer();
         progressDeferred = $q.defer();
 
@@ -67,6 +80,11 @@ describe("Unit: ModelsDetailsController", function() {
             updateModelMetadata: sinon.stub().returns(modelUpdateDeferred.promise),
             deleteModel: sinon.stub().returns(deleteModelDeferred.promise),
             deleteModelArtifact: sinon.stub().returns(deleteModelArtifactDeferred.promise),
+            withErrorMessage: sinon.stub().returnsThis()
+        };
+
+        scoringEngineResource = {
+            addScoringEngine: function () {},
             withErrorMessage: sinon.stub().returnsThis()
         };
 
@@ -103,7 +121,8 @@ describe("Unit: ModelsDetailsController", function() {
                 $state: $state,
                 CommonTableParams: commonTableParams,
                 FileUploaderService: fileUploaderService,
-                ScoringEngineRetriever: scoringEngineRetriever
+                ScoringEngineRetriever: scoringEngineRetriever,
+                ScoringEngineResource: scoringEngineResource,
             });
         };
 
@@ -340,5 +359,56 @@ describe("Unit: ModelsDetailsController", function() {
         scope.tryUploadArtifact();
         scope.$digest();
         expect(spy).to.be.calledWith();
+    });
+
+    it('addScoringEngine, invoke, setPending state', function () {
+        scoringEngineResource.addScoringEngine=sinon.stub().returns(addScoringEngineDeferred.promise);
+
+        createController();
+
+        scope.model = SAMPLE_MODEL;
+        scope.extraArtifacts = [{id: SAMPLE_ARTIFACT.id, actions: []}];
+        scope.addScoringEngine();
+        scope.$digest();
+
+        expect(scope.addScoringEngineState.value).to.be.equals(addScoringEngineState.values.PENDING);
+    });
+
+    it('addScoringEngine, success, create correct path ', function () {
+        var successSpied = sinon.spy(notificationService, 'success');
+        scoringEngineResource.addScoringEngine=sinon.stub().returns(addScoringEngineDeferred.promise);
+        addScoringEngineDeferred.resolve();
+
+        createController();
+        scope.model = SAMPLE_MODEL;
+        scope.extraArtifacts = [{id: SAMPLE_ARTIFACT.id, actions: []}];
+
+        var path = 'jar-scoring-engine';
+
+        scope.addScoringEngine();
+        scope.$digest();
+
+        expect(scope.path).to.be.deep.equal(path);
+        expect(successSpied.called).to.be.true;
+        expect(scope.addScoringEngineState.value).to.be.equals(addScoringEngineState.values.DEFAULT);
+    });
+
+    it('addScoringEngine, error, create correct path ', function () {
+        var successSpied = sinon.spy(notificationService, 'success');
+        scoringEngineResource.addScoringEngine=sinon.stub().returns(addScoringEngineDeferred.promise);
+        addScoringEngineDeferred.reject({data: {message: 'error message'}});
+
+        createController();
+        scope.model = SAMPLE_MODEL;
+        scope.extraArtifacts = [{id: SAMPLE_ARTIFACT.id, actions: []}];
+
+        var path = 'jar-scoring-engine';
+
+        scope.addScoringEngine();
+        scope.$digest();
+
+        expect(scope.path).to.be.deep.equal(path);
+        expect(successSpied).not.to.be.called;
+        expect(scope.addScoringEngineState.value).to.be.equals(addScoringEngineState.values.DEFAULT);
     });
 });

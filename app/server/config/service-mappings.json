@@ -87,4 +87,10 @@
 }, {
   "path": "/kubernetes/(.*)",
   "name": "kubernetes-broker"
+},{
+  "path" : "/scoring-engine/jar-scoring-engine",
+  "name" : "h2o-engines-publisher"
+},{
+  "path" : "/scoring-engine/tap-scoring-engine",
+  "name" : "tap-scoring-engine-publisher"
 }]

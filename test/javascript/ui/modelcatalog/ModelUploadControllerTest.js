@@ -37,7 +37,7 @@ describe("Unit: ModelUploadController", function() {
                 name: "filename.mar"
             },
             extension: '.mar',
-            action: ["PUBLISH_TO_TAP_SCORING_ENGINE"]
+            action: ["PUBLISH_TAP_SCORING_ENGINE"]
         };
 
     beforeEach(module('app'));

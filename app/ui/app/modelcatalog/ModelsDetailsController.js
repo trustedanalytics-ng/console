@@ -18,8 +18,8 @@
     'use strict';
 
     App.controller('ModelsDetailsController', function ($scope, State, ModelResource, NotificationService,
-                                                        ScoringEngineRetriever, $stateParams, $state,
-                                                        CommonTableParams, FileUploaderService) {
+                                                        ScoringEngineRetriever, $stateParams, $state, CommonTableParams,
+                                                        FileUploaderService, ScoringEngineResource, artifactActions) {
         var modelId = $stateParams.modelId;
         var MODEL_NOT_FOUND_ERROR = 404;
         var file = null;
@@ -34,6 +34,8 @@
         $scope.scoringEngineState = new State().setPending();
         $scope.deleteArtifactState = new State().setDefault();
         $scope.addArtifactState = new State().setDefault();
+        $scope.addScoringEngineState = new State().setDefault();
+        $scope.path = "";
 
         //$scope.goToEditMode = function () {
         //    $state.go('app.modelcatalog.edit', {modelId: modelId, model: $scope.model});
@@ -178,5 +180,31 @@
                 return action.toLowerCase().indexOf(MAIN_ARTIFACT_PREFIX) === 0;
             });
         }
+
+        $scope.addScoringEngine = function () {
+            $scope.addScoringEngineState.setPending();
+
+            var artifactAction = _.find(artifactActions[$scope.model.creationTool] || [], function(action) {
+                return action.indexOf("PUBLISH_") === 0;
+            });
+
+            if(!artifactAction) {
+                NotificationService.error("Cannot create a scoring engine from selected artifact");
+                return;
+            }
+
+            $scope.path = artifactAction.split('_').slice(1).join('-').toLowerCase();
+
+            ScoringEngineResource
+                .withErrorMessage('An error occurred while adding new scoring engine')
+                .addScoringEngine($scope.path, {modelId: $scope.model.id, artifactId: $scope.extraArtifacts[0].id , modelName: $scope.model.name})
+                .then(function onSuccess() {
+                    NotificationService.success('Scoring engine has been added');
+                    $scope.refresh();
+                })
+                .finally(function () {
+                    $scope.addScoringEngineState.setDefault();
+                });
+        };
     });
 }());
