@@ -23,6 +23,16 @@
             searchHandler = null,
             state = new State();
 
+        var filters = {
+            search: function (offering) {
+                return isServiceMatching($scope.searchText, offering);
+            },
+            rejectScoringEngine: function (offering) {
+                return rejectScoringEngineFromOfferings(offering)
+            }
+        };
+
+
         self.state = state;
 
         $scope.currentPage = 1;
@@ -40,7 +50,7 @@
                     self.services = _.sortBy(serviceExtractor.extract(data), function (service) {
                         return service.name.toLowerCase();
                     });
-                    self.filtered = self.services;
+                    self.filtered = filterOfferings(filters, self.services);
                     calculatePagination($scope.currentPage, $scope.itemsPerPage);
                     self.state.setLoaded();
 
@@ -63,7 +73,7 @@
 
         searchHandler = $scope.$on('searchChanged', function (eventName, searchText) {
             $scope.searchText = searchText;
-            self.filtered = _.filter(self.services, _.partial(isServiceMatching, $scope.searchText));
+            self.filtered = filterOfferings(filters, self.services);
 
             calculatePagination($scope.currentPage, $scope.itemsPerPage);
         });
@@ -83,7 +93,6 @@
         }
     });
 
-
     function fieldMatches(searchText, value) {
         if(_.isString(value)) {
             return value.toLowerCase().indexOf(searchText) > -1;
@@ -94,13 +103,24 @@
         return false;
     }
 
+    function rejectScoringEngineFromOfferings(offering) {
+        return !offering.description.startsWith("Offering of h2o");
+    }
+
     function isServiceMatching(searchText, service) {
         if (!searchText) {
             return true;
         }
+
         return _.chain(service)
             .pick(['name', 'description', 'tags'])
             .some(_.partial(fieldMatches, searchText.toLowerCase()))
             .value();
+    }
+
+    function filterOfferings (filters, offerings) {
+        return _.reduce(filters, function (memo, filterMethod) {
+            return _.filter(memo, filterMethod);
+        }, offerings);
     }
 }());
