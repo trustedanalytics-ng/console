@@ -41,7 +41,7 @@ function forwardRequest(req, res) {
         targetUrl = host;
     } else {
         var cleanPath = path.replace(defaults.reverse_proxy.request_prefix, '');
-        var prefix = servicesConfig.getServicePrefix(service);
+        var prefix = service.prefix || servicesConfig.getServicePrefix(service);
         targetUrl = urlJoin(host, prefix, cleanPath);
     }
     if(!targetUrl.match(/(http(s)?:)?\/\//)) {
