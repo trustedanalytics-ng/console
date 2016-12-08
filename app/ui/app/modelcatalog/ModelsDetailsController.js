@@ -34,7 +34,6 @@
         $scope.scoringEngineState = new State().setPending();
         $scope.deleteArtifactState = new State().setDefault();
         $scope.addArtifactState = new State().setDefault();
-        $scope.addScoringEngineState = new State().setDefault();
         $scope.path = "";
 
         //$scope.goToEditMode = function () {
@@ -182,7 +181,7 @@
         }
 
         $scope.addScoringEngine = function () {
-            $scope.addScoringEngineState.setPending();
+            $scope.state.setPending();
 
             var artifactAction = _.find(artifactActions[$scope.model.creationTool] || [], function(action) {
                 return action.indexOf("PUBLISH_") === 0;
@@ -203,7 +202,7 @@
                     $scope.refresh();
                 })
                 .finally(function () {
-                    $scope.addScoringEngineState.setDefault();
+                    $scope.state.setLoaded();
                 });
         };
     });

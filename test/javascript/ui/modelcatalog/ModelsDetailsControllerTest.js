@@ -371,7 +371,7 @@ describe("Unit: ModelsDetailsController", function() {
         scope.addScoringEngine();
         scope.$digest();
 
-        expect(scope.addScoringEngineState.value).to.be.equals(addScoringEngineState.values.PENDING);
+        expect(scope.state.value).to.be.equals(addScoringEngineState.values.PENDING);
     });
 
     it('addScoringEngine, success, create correct path ', function () {
@@ -390,7 +390,7 @@ describe("Unit: ModelsDetailsController", function() {
 
         expect(scope.path).to.be.deep.equal(path);
         expect(successSpied.called).to.be.true;
-        expect(scope.addScoringEngineState.value).to.be.equals(addScoringEngineState.values.DEFAULT);
+        expect(scope.state.value).to.be.equals(addScoringEngineState.values.LOADED);
     });
 
     it('addScoringEngine, error, create correct path ', function () {
@@ -409,6 +409,6 @@ describe("Unit: ModelsDetailsController", function() {
 
         expect(scope.path).to.be.deep.equal(path);
         expect(successSpied).not.to.be.called;
-        expect(scope.addScoringEngineState.value).to.be.equals(addScoringEngineState.values.DEFAULT);
+        expect(scope.state.value).to.be.equals(addScoringEngineState.values.LOADED);
     });
 });
