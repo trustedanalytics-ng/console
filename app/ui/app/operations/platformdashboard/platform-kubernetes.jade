@@ -23,4 +23,5 @@
    iframe(ng-src="{{ getIframeSrc(5, 'kubernetes-pods', 'now-1h') }}", src="", width="100%", height="400" frameborder="0")
    iframe(ng-src="{{ getIframeSrc(6, 'kubernetes-pods', 'now-1h') }}", src="", width="100%", height="400" frameborder="0")
    .row
-      a.btn.btn-primary(type='button', ng-href="{{ getGrafanaDashboardLink('kubernetes-pods') }}", target="_blank").btn-monitor-details Monitoring Details
+      a.btn.btn-primary(type='button', ng-href="{{ getGrafanaDashboardLink('kubernetes-pods') }}", target="_blank").btn-monitor-details Monitoring Details  
+            span.fa-external-link
