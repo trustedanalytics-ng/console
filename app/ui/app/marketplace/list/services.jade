@@ -26,20 +26,20 @@ h3
                search-bar.pull-left
             .available-services
                p {{ ctrl.filtered.length }} Available Services
-            .service-card.col-lg-4.col-md-6(ng-repeat="service in ctrl.filtered.slice(begin, end)")
+            .service-card.col-lg-4.col-md-6(ng-repeat="offering in ctrl.filtered.slice(begin, end)")
                .card
                   .card-top
                      h1
-                        a(ui-sref='app.service({ offeringId: service.id })') {{ service.name }}
-                     .description(data-ng-bind="service.description" data-ellipsis title="{{service.description}}")
-                     a.details(ui-sref='app.service({ offeringId: service.id })') See Details
+                        a(ui-sref='app.service({ offeringId: offering.id })') {{ offering.name }}
+                     .description(data-ng-bind="offering.description" data-ellipsis title="{{offering.description}}")
+                     a.details(ui-sref='app.service({ offeringId: offering.id })') See Details
                         span.fa.fa-angle-double-right
                   .card-bottom
                      span.fa.fa-tags
                      span.title Tags:
                      .clearfix
                      .tags
-                        span(ng-repeat='tag in service.tags') {{ tag }}{{ $last ? '' : ', ' }}
+                        span(ng-repeat='tag in offering.tags') {{ tag }}{{ $last ? '' : ', ' }}
 
             .pagination-wrapper
                .pagination(ng-show="numPages > 1" uib-pagination total-items="ctrl.filtered.length" ng-model="currentPage"

@@ -18,7 +18,6 @@ describe("Unit: ServicesController", function () {
     var controller,
         httpBackend,
         rootScope,
-        _serviceExtractor,
         createController,
         OfferingsResource,
         serviceListDeferred,
@@ -32,7 +31,14 @@ describe("Unit: ServicesController", function () {
         name: 'SomeService1',
         image: 'c29tZSBleGFtcGxlIGJhc2U2NCBpbWFnZQ==',
         description: 'Service one description',
-        tags: ['tag1', 'tag2']
+        tags: ['tag1', 'tag2'],
+        metadata: [{key: 'value'}]
+    };
+
+    var h2oServiceSample = {
+        name: 'h2o-sample',
+        description: 'h2o-model based offering description',
+        metadata: [{key: 'MODEL_ID'}]
     };
 
     beforeEach(module('app'));
@@ -41,12 +47,11 @@ describe("Unit: ServicesController", function () {
         $provide.value('targetProvider', targetProvider);
     }));
 
-    beforeEach(inject(function ($controller, $location, $httpBackend, $rootScope, serviceExtractor,
+    beforeEach(inject(function ($controller, $location, $httpBackend, $rootScope,
                                 targetUrlBuilder, TestHelpers, _OfferingsResource_, $q) {
         httpBackend = $httpBackend;
         rootScope = $rootScope;
         OfferingsResource = _OfferingsResource_;
-        _serviceExtractor = serviceExtractor;
         _targetUrlBuilder = targetUrlBuilder;
         _targetUrlBuilder.get = function() {
             return SERVICES_URL;
@@ -59,18 +64,11 @@ describe("Unit: ServicesController", function () {
 
         createController = function () {
             controller = $controller('ServicesController', {
-                serviceExtractor: serviceExtractor,
                 $scope: scope
             });
             state = controller.state;
         };
     }));
-
-    beforeEach(function () {
-        _serviceExtractor.extract = function () {
-            return [serviceSample];
-        };
-    });
 
     it('should not be null', function () {
         expect(createController()).not.to.be.null;
@@ -80,7 +78,7 @@ describe("Unit: ServicesController", function () {
         createController();
         serviceListDeferred.resolve([serviceSample]);
         rootScope.$digest();
-        expect(controller.services).to.deep.have.members([serviceSample]);
+        expect(controller.offerings).to.deep.have.members([serviceSample]);
     });
 
     it('init should set status pending', function () {
@@ -111,66 +109,82 @@ describe("Unit: ServicesController", function () {
         expect(OfferingsResource.getAll.calledTwice).to.be.true;
     });
 
-    it('filterService: empty searchText, should find service', function () {
+    it('filterOfferings: empty searchText, should find service', function () {
         createController();
-        controller.services = [serviceSample];
+        controller.offerings = [serviceSample];
 
         scope.$emit('searchChanged', "");
 
         expect(controller.filtered).not.to.be.empty;
     });
 
-    it('filterService: name contains case insensitive string, should find service', function () {
+    it('filterOfferings: name contains case insensitive string, should find service', function () {
         createController();
-        controller.services = [serviceSample];
+        controller.offerings = [serviceSample];
 
         scope.$emit('searchChanged', "service1");
 
         expect(controller.filtered).not.to.be.empty;
     });
 
-    it('filterService: description contains case insensitive string, should find service', function () {
+    it('filterOfferings: description contains case insensitive string, should find service', function () {
         createController();
-        controller.services = [serviceSample];
+        controller.offerings = [serviceSample];
 
         scope.$emit('searchChanged', "ONE");
 
         expect(controller.filtered).not.to.be.empty;
     });
 
-    it('filterService: tags contains case insensitive string, should find service', function () {
+    it('filterOfferings: tags contains case insensitive string, should find service', function () {
         createController();
-        controller.services = [serviceSample];
+        controller.offerings = [serviceSample];
 
         scope.$emit('searchChanged', "Tag");
 
         expect(controller.filtered).not.to.be.empty;
     });
 
-    it('filterService: tags contains case insensitive string, should find service', function () {
+    it('filterOfferings: tags contains case insensitive string, should find service', function () {
         createController();
-        controller.services = [serviceSample];
+        controller.offerings = [serviceSample];
 
         scope.$emit('searchChanged', "Tag");
 
         expect(controller.filtered).not.to.be.empty;
     });
 
-    it('filterService: no property contains string, should not find service', function () {
+    it('filterOfferings: no property contains string, should not find service', function () {
         createController();
-        controller.services = [serviceSample];
+        controller.offerings = [serviceSample];
 
         scope.$emit('searchChanged', "asdasd");
 
         expect(controller.filtered).to.be.empty;
     });
 
-    it('filterService: should not find in image', function () {
+    it('filterOfferings: should not find in image', function () {
         createController();
-        controller.services = [serviceSample];
+        controller.offerings = [serviceSample];
 
         scope.$emit('searchChanged', "c29");
 
         expect(controller.filtered).to.be.empty;
     });
+
+    it('filtersOfferings: offering contains key "MODEL_ID" in metadata, list should be empty', function () {
+        createController();
+        controller.offerings = [h2oServiceSample];
+
+        scope.$emit('searchChanged', "");
+        expect(controller.filtered).to.be.empty;
+    });
+
+    it('filtersOfferings: offering doesn\'t contain key "MODEL_ID" in metadata, list should not be empty', function () {
+        createController();
+        controller.offerings = [serviceSample];
+
+        scope.$emit('searchChanged', "");
+        expect(controller.filtered).to.not.be.empty;
+    })
 });

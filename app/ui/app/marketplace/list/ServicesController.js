@@ -16,8 +16,7 @@
 (function () {
     "use strict";
 
-    App.controller('ServicesController', function ($http, serviceExtractor, targetUrlBuilder, $scope, State,
-        OfferingsResource) {
+    App.controller('ServicesController', function ($http, targetUrlBuilder, $scope, State, OfferingsResource) {
 
         var self = this,
             searchHandler = null,
@@ -25,10 +24,10 @@
 
         var filters = {
             search: function (offering) {
-                return isServiceMatching($scope.searchText, offering);
+                return isOfferingMatching($scope.searchText, offering);
             },
             rejectScoringEngine: function (offering) {
-                return rejectScoringEngineFromOfferings(offering)
+                return rejectScoringEngineFromOfferings(offering);
             }
         };
 
@@ -43,14 +42,13 @@
             self.state.setPending();
 
             OfferingsResource
-                .withErrorMessage('Failed to retrieve services list')
+                .withErrorMessage('Failed to retrieve offerings list')
                 .getAll()
-                .then(function (data) {
-                    data = data || {};
-                    self.services = _.sortBy(serviceExtractor.extract(data), function (service) {
-                        return service.name.toLowerCase();
+                .then(function (offerings) {
+                    self.offerings = _.sortBy(offerings, function (offering) {
+                        return offering.name.toLowerCase();
                     });
-                    self.filtered = filterOfferings(filters, self.services);
+                    self.filtered = filterOfferings(filters, self.offerings); 
                     calculatePagination($scope.currentPage, $scope.itemsPerPage);
                     self.state.setLoaded();
 
@@ -73,7 +71,7 @@
 
         searchHandler = $scope.$on('searchChanged', function (eventName, searchText) {
             $scope.searchText = searchText;
-            self.filtered = filterOfferings(filters, self.services);
+            self.filtered = filterOfferings(filters, self.offerings);
 
             calculatePagination($scope.currentPage, $scope.itemsPerPage);
         });
@@ -104,15 +102,15 @@
     }
 
     function rejectScoringEngineFromOfferings(offering) {
-        return !offering.description.startsWith("Offering of h2o");
+        return !_.findWhere(offering.metadata, {key: "MODEL_ID"});
     }
 
-    function isServiceMatching(searchText, service) {
+    function isOfferingMatching(searchText, offering) {
         if (!searchText) {
             return true;
         }
 
-        return _.chain(service)
+        return _.chain(offering)
             .pick(['name', 'description', 'tags'])
             .some(_.partial(fieldMatches, searchText.toLowerCase()))
             .value();

@@ -17,19 +17,19 @@
     "use strict";
 
     App.factory('OfferingsResource', function (Restangular, targetProvider) {
-        var service = Restangular.service("offerings");
-        service.getService = function (id) {
-            return this.one(id).get();
+        var offering = Restangular.service("offerings");
+        offering.getOffering = function (id) {
+            return offering.one(id).get();
         };
 
-        service.getAll = function () {
+        offering.getAll = function () {
             return this.one().customGET("", {org: targetProvider.getOrganization().guid});
         };
 
-        service.deleteService = function (id) {
+        offering.deleteOffering = function (id) {
             return this.one(id).remove();
         };
 
-        return service;
+        return offering;
     });
 }());

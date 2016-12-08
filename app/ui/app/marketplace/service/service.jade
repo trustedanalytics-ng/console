@@ -19,18 +19,18 @@
 
     div(ng-show='ctrl.state.isLoaded()')
         h3
-            | {{ ctrl.service.name }}
-            small {{ ctrl.service.provider }}
+            | {{ ctrl.offering.name }}
+            small {{ ctrl.offering.provider }}
 
         .description.panel.clearfix
-            span {{ ctrl.service.description }}
+            span {{ ctrl.offering.description }}
 
             .pull-right(ng-if='ctrl.deletable')
                 button.btn.btn-danger(ng-click='ctrl.tryDeleteOffering()')
                     | Delete offering
 
-            .tags(ng-if='ctrl.service.tags.length')
-                span.label.label-tag(data-ng-repeat='tag in ctrl.service.tags')
+            .tags(ng-if='ctrl.offering.tags.length')
+                span.label.label-tag(data-ng-repeat='tag in ctrl.offering.tags')
                     | {{ tag }}
 
         h4 Available plans
@@ -38,10 +38,10 @@
             .vertical-tabs
                 div
                     ul
-                        li(ng-repeat='plan in ctrl.service.plans', ng-class='{ active: ctrl.selectedPlan === plan }')
+                        li(ng-repeat='plan in ctrl.offering.offeringPlans', ng-class='{ active: ctrl.selectedPlan === plan }')
                             a(ng-click='ctrl.selectPlan(plan)') {{ plan.name }}
 
-                    .plan-details(ng-repeat='plan in ctrl.service.plans', ng-show='ctrl.selectedPlan === plan')
+                    .plan-details(ng-repeat='plan in ctrl.offering.offeringPlans', ng-show='ctrl.selectedPlan === plan')
                         .description {{ plan.description }}
                         .price
                             | Price:
@@ -61,7 +61,7 @@
                                     span.validationMessage(ng-message="regexValidator")
                                         | {{ validationMessage }}
                                 .extra-params
-                                    .header(ng-if="ctrl.newInstance.params.length") Extra service parameters:
+                                    .header(ng-if="ctrl.newInstance.params.length") Extra offering parameters:
                                     .param(ng-repeat="param in ctrl.newInstance.params")
                                         input.form-control.key(ng-model="param.key" placeholder="key")
                                         | :
@@ -70,11 +70,11 @@
                                     a(ng-click="ctrl.addExtraParam()") + Add an extra parameter
                             spinner(text="'Creating new instance... Please wait'", ng-if='ctrl.newInstanceState.isPending()')
 
-        d-service-instances(offering-id='ctrl.offeringId', service-name='ctrl.service.name')
+        d-service-instances(offering-id='ctrl.offeringId', service-name='ctrl.offering.name')
 
     .panel.panel-danger(ng-show='ctrl.state.isGenericError()')
         .panel-heading Error
-        .panel-body Error while getting service data
+        .panel-body Error while getting offering data
 
     .panel.panel-danger(ng-show='ctrl.state.is(ctrl.state.values.NOT_FOUND)')
         .panel-heading Error
@@ -85,7 +85,7 @@
             p
                 | Are you sure you want to delete service offering
                 = ' '
-                b {{ data.service.name }}
+                b {{ data.offering.name }}
                 | ?
             .pull-right
                 button.btn.btn-primary(type='button', ng-click='confirm()') Delete

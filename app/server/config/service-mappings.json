@@ -21,7 +21,8 @@
   "name": "service-exposer"
 }, {
   "path": "/offerings",
-  "name": "api"
+  "name": "api",
+  "prefix": "/api/v3"
 }, {
   "path": "/services",
   "name": "api"

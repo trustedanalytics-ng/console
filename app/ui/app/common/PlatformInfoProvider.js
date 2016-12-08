@@ -40,7 +40,7 @@
                     .then(function success(data) {
                         externalTools[org] = _.map(data, function(offering) {
                                 return {
-                                    name: offering.entity.label,
+                                    name: offering.name,
                                     available: true
                                 };
                             });

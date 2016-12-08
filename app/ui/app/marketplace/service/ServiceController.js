@@ -17,7 +17,7 @@
     "use strict";
 
 
-    App.controller('ServiceController', function (OfferingsResource, serviceExtractor, NotificationService, $stateParams,
+    App.controller('ServiceController', function (OfferingsResource, NotificationService, $stateParams,
         targetProvider, $scope, ServiceInstancesResource, State, ApplicationRegisterResource, $location, ValidationPatterns) {
 
         var GATEWAY_TIMEOUT_ERROR = 504;
@@ -45,8 +45,8 @@
             return targetProvider.getOrganization();
         };
 
-        self.getService = function () {
-            getServiceData(self, id, OfferingsResource, serviceExtractor);
+        self.getOffering = function () {
+            getOfferingData(self, id, OfferingsResource);
         };
 
         self.createServiceInstance = function (plan) {
@@ -55,7 +55,7 @@
                 .createInstance(
                     id,
                     self.newInstance.name,
-                    plan.guid,
+                    plan.id,
                     transformParams(self.newInstance.params)
                 )
                 .then(function () {
@@ -76,22 +76,22 @@
         };
 
         self.tryDeleteOffering = function() {
-            NotificationService.confirm('confirm-delete-offering', { service: self.service })
+            NotificationService.confirm('confirm-delete-offering', { offering: self.offering })
                 .then(function () {
                     self.state.setPending();
                     OfferingsResource
                         .withErrorMessage('Failed to delete service offering from marketplace')
-                        .deleteService(self.offeringId)
+                        .deleteOffering(self.offeringId)
                         .then(function () {
                             NotificationService.success('Application has been delete from marketplace');
-                            $location.path('/app/marketplace/service');
+                            $location.path('/app/marketplace/services');
                         }).finally(function () {
                             self.state.setLoaded();
                         });
                 });
         };
 
-        self.getService();
+        self.getOffering();
 
         self.selectPlan = function (plan) {
             self.selectedPlan = plan;
@@ -107,14 +107,14 @@
         };
     });
 
-    function getServiceData(self, id, Service, serviceExtractor) {
-        Service
-            .withErrorMessage('Failed to retrieve service details')
-            .getService(id)
-            .then(function (serviceData) {
-                self.service = serviceExtractor.extractService(serviceData || {});
-                self.selectedPlan = self.service.plans[0];
-                self.deletable = serviceData.deletable;
+    function getOfferingData(self, id, OfferingsResource) {
+        OfferingsResource
+            .withErrorMessage('Failed to retrieve offering details')
+            .getOffering(id)
+            .then(function (offeringData) {
+                self.offering = offeringData;
+                self.selectedPlan = self.offering.offeringPlans[0];
+                self.deletable = offeringData.deletable;
                 self.state.setLoaded();
             })
             .catch(function (status) {

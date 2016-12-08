@@ -122,7 +122,7 @@
             .getAll()
             .then(function(offerings) {
                 $scope.offering = _.find(offerings, function(offering) {
-                    return offering.entity.label === offeringName;
+                    return offering.name === offeringName;
                 });
             });
     }
