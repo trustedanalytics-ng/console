@@ -39,10 +39,13 @@
         }
 
         function getMetadataValue(instance, listOfPossibleKeys) {
-            var metaObject = _.find(instance.metadata, function(meta) {
-                    return _.isString(meta.key) && _.contains(listOfPossibleKeys, meta.key.toLowerCase());
-                }) || {};
-            return metaObject.value;
+            if (instance) {
+                var metaObject = _.find(instance.metadata, function(meta) {
+                        return _.isString(meta.key) && _.contains(listOfPossibleKeys, meta.key.toLowerCase());
+                    }) || {};
+                return metaObject.value;
+            }
+            return;
         }
     });
 }());
