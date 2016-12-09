@@ -38,6 +38,7 @@
                 .then(function (data) {
                     data = data || {};
                     $scope.dataSet = data._source;
+                    $scope.dataSetId = data._id;
 
                     privacySettingsState();
                     state.value = state.values.LOADED;

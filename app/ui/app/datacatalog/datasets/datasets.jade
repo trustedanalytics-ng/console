@@ -83,7 +83,7 @@ div(ng-show='state.isLoaded() || state.isError()')
             div
                 span.format.fa(class='fa-{{ getFormatIcon(dataSet.format) }}')
                 a.title(ui-sref='app.dataset({ datasetId: dataSet.id })' ng-bind="dataSet.title" data-ellipsis data-ellipsis-separator="")
-                d-publish-data-set.publish-btn(data='dataSet', tool="tool", mode="unified")
+                d-publish-data-set.publish-btn(dataset-id='dataSet.id', tool="tool", mode="unified")
 
     .clearfix
         ul.pagination.pull-right

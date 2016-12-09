@@ -17,10 +17,10 @@
     "use strict";
 
     App.factory('DataTableResource', function (Restangular) {
-        var resource = Restangular.service('tables');
+        var resource = Restangular.service('datasets');
 
-        resource.publish = function(dataSet){
-            return this.post(dataSet);
+        resource.publish = function(datasetId){
+            return this.one(datasetId).one('table').post();
         };
 
         return resource;

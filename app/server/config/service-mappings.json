@@ -11,9 +11,6 @@
   "path": "/datasets",
   "name": "datacatalog"
 }, {
-  "path": "/tables",
-  "name": "dataset-publisher"
-}, {
   "path": "/das",
   "name": "dataaquisitionservice"
 }, {

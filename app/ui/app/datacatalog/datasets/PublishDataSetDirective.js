@@ -29,7 +29,7 @@
     App.directive('dPublishDataSet', function (DataTableResource, State, $window, ngDialog, PlatformInfoProvider) {
         return {
             scope: {
-                dataSet: "=data",
+                dataSetId: "=datasetId",
                 mode: "@?",
                 tool: "=?"
             },
@@ -75,7 +75,7 @@
 
                     DataTableResource
                         .withErrorMessage('Publish of the data set failed')
-                        .publish($scope.dataSet)
+                        .publish($scope.dataSetId)
                         .then(function onSucces(data) {
                             windowId.location.href = data[tool + '_url'];
                         })
