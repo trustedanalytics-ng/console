@@ -1,4 +1,4 @@
-FROM tapimages.us.enableiot.com:8080/tap-base-node:latest
+FROM tapimages:8080/tap-base-node:node4.4-jessie
 # Create app directory
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
