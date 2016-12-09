@@ -27,7 +27,7 @@ h3
 
         table#listTransfers.table(ng-table='transfers', show-filter='true')
             tr(ng-repeat='item in $data')
-                td(data-title="'Source'", filter="{'source':'text'}")
+                td.break-word(data-title="'Source'", filter="{'source':'text'}")
                     span(ng-if='!isUrl(item.source)')
                         | {{item.source}}
                     a(ng-if='isUrl(item.source)', target='_blank', href='{{item.source}}')
@@ -46,7 +46,7 @@ h3
                 td(data-title="'Category'", sortable="'category'", filter="{'category':'text'}")
                     | {{item.category}}
 
-                td(data-title="'Title'", sortable="'title'", filter="{'title':'text'}")
+                td.break-word(data-title="'Title'", sortable="'title'", filter="{'title':'text'}")
                     | {{item.title}}
 
                 td(data-title="'Item'")
