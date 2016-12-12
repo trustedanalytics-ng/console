@@ -17,7 +17,7 @@
     h3
         | Add New Model
     .panel
-        form(name="uploadForm" ng-submit='addModel()' enctype="multipart/form-data")
+        form(name="uploadForm" ng-submit='addModel()')
             .form-group
                 label.label-title(for='modelType') Specify model type
                 .form-field
@@ -30,7 +30,8 @@
                     label.label-title(for='name') Model name
                     span
                         .form-field
-                            input#name.form-control(type='text', name='name', ng-model='uploadModel.name', pattern-validator="{{ validationPattern }}", required)
+                            input#name.form-control(type='text', name='name', ng-model='uploadModel.name',
+                                pattern-validator="{{ validationPattern }}", required)
                             span
                                 div(ng-hide="uploadForm.name.$valid")
                                     span.validationMessage(ng-message="regexValidator")

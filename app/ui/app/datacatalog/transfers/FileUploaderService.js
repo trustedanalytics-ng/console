@@ -62,6 +62,10 @@
                 });
 
                 return uploaderData;
+            },
+
+            toJsonBlob: function(value) {
+                return Upload.jsonBlob(value);
             }
         };
 

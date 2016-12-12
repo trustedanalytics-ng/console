@@ -34,6 +34,10 @@ describe("Unit: ModelUploadService", function() {
             data: {
                 message: "message"
             }
+        },
+        SAMPLE_ARTIFACT = {
+            filename: "/tmp/fake",
+            artifactActions: ["PUBLISH_JAR_SCORING_ENGINE"]
         };
 
     beforeEach(module('app'));
@@ -56,7 +60,8 @@ describe("Unit: ModelUploadService", function() {
         };
 
         fileUploaderService = {
-            uploadFiles: sinon.stub()
+            uploadFiles: sinon.stub(),
+            toJsonBlob: sinon.stub().returnsArg(0)
         };
 
         modelsResource = {
@@ -100,8 +105,9 @@ describe("Unit: ModelUploadService", function() {
 
         fileUploaderService.uploadFiles = sinon.stub().returns(successfulPromise(SAMPLE_UPLOAD_FILES_RESPONSE));
 
-        service.addModelArtifact(SAMPLE_MODEL, SAMPLE_MODEL_ID.id)
+        service.addModelArtifact(SAMPLE_ARTIFACT, SAMPLE_MODEL_ID.id)
             .then(function (result) {
+                expect(fileUploaderService.toJsonBlob).to.be.calledWith(SAMPLE_ARTIFACT.artifactActions);
                 expect(result).to.be.deep.equal(notificationService.progress(SAMPLE_UPLOAD_FILES_RESPONSE));
                 expect(errorSpy).not.to.be.called();
             });
@@ -113,12 +119,14 @@ describe("Unit: ModelUploadService", function() {
 
         fileUploaderService.uploadFiles = sinon.stub().returns(rejectedPromise());
 
-        service.addModelArtifact(SAMPLE_MODEL, SAMPLE_MODEL_ID.id)
+        service.addModelArtifact(SAMPLE_ARTIFACT, SAMPLE_MODEL_ID.id)
             .then(function (result) {
+                expect(fileUploaderService.toJsonBlob).to.be.calledWith(SAMPLE_ARTIFACT.artifactActions);
                 expect(result).not.to.be.deep.equal(notificationService.progress(SAMPLE_UPLOAD_FILES_RESPONSE));
                 expect(errorSpy).to.be.called();
             });
     });
+
 
     function successfulPromise(data) {
         var deferred = $q.defer();
