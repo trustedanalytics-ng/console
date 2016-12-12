@@ -57,8 +57,8 @@
 
         $scope.createInstance = function (name) {
             $scope.state.setPending();
-            var offeringId = $scope.offering.metadata.guid;
-            var planId = $scope.offering.entity.service_plans[0].metadata.guid;
+            var offeringId = $scope.offering.id;
+            var planId = $scope.offering.offeringPlans[0].id;
             ServiceInstancesResource
                 .supressGenericError()
                 .createInstance(offeringId, name, planId)

@@ -28,16 +28,10 @@ describe("Unit: ToolsInstanceListController", function () {
         notificationService,
         organization = { guid: 111, name: "org" },
         SAMPLE_OFFERING = {
-            metadata: {
-                guid: 'offering-id'
-            },
-            entity: {
-                service_plans: [{
-                    metadata: {
-                        guid: 'plan-id'
-                    }
-                }]
-            }
+            id: 'offering-id',
+            offeringPlans: [{
+                id: 'offering-plan-id'
+            }]
         };
 
     beforeEach(module('app'));
