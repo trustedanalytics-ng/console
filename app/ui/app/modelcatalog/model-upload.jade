@@ -17,7 +17,7 @@
     h3
         | Add New Model
     .panel
-        form(name="uploadForm" ng-submit='addModel()')
+        form(name="uploadForm" ng-submit='addModel()' enctype="multipart/form-data")
             .form-group
                 label.label-title(for='modelType') Specify model type
                 .form-field

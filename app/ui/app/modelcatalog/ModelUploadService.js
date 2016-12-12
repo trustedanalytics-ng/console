@@ -16,7 +16,7 @@
 (function () {
     "use strict";
 
-    App.service('ModelUploadService', function (ModelResource, targetProvider, $state, NotificationService, FileUploaderService) {
+    App.service('ModelUploadService', function (ModelResource, targetProvider, $state, NotificationService, FileUploaderService, Upload) {
 
         return {
             addModelMetadata: function (model) {
@@ -36,7 +36,7 @@
 
                 var files = {
                     artifactFile: model.filename,
-                    artifactActions: model.artifactAction
+                    artifactActions: Upload.jsonBlob(model.artifactAction)
                 };
 
                 var url = '/rest/models/' + modelId + '/artifacts';
