@@ -44,7 +44,7 @@ h3
             .no-instances(ng-hide="instances.length")
                | No instances found
 
-         div(ng-show='offering')
+         div.new-offering-instance(ng-show='offering')
             form(name='newInstanceType', ng-submit='createInstance(newInstanceName)')
                input.form-control(name='instanceName', type='text', required='', placeholder='Instance name',
                   ng-model='newInstanceName', ng-trim="true" pattern-validator="{{ validationPattern }}")
