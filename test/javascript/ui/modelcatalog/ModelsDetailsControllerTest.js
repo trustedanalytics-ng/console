@@ -45,11 +45,18 @@ describe("Unit: ModelsDetailsController", function() {
         SAMPLE_MODEL = {
             creationTool : 'h2o',
             id: "1234",
-            name: 'superModel'
+            name: 'superModel',
+            artifacts: [{
+                actions: []
+            }, {
+                actions: ["PUBLISH_TAP_SCORING_ENGINE"]
+            }]
         },
         SAMPLE_ARTIFACT = {
-            id: "1234"
-        };
+            id: "1234",
+            actions: ["PUBLISH_TAP_SCORING_ENGINE"]
+        },
+        TAP_SCORING_ENGINE_PATH = "tap-scoring-engine";
 
     beforeEach(module('app'));
 
@@ -77,16 +84,16 @@ describe("Unit: ModelsDetailsController", function() {
         };
 
         scoringEngineResource = {
-            addScoringEngine: function () {},
+            addScoringEngine: sinon.stub(),
             withErrorMessage: sinon.stub().returnsThis()
         };
 
         notificationService = {
-            success: function () {},
+            success: sinon.stub(),
             confirm: sinon.stub().returns(confirmDeferred.promise),
             progress: sinon.stub().returns(progressDeferred.promise),
-            withErrorMessage: function () {},
-            error: function () {}
+            withErrorMessage: sinon.stub().returnsThis(),
+            error: sinon.stub()
         };
 
         commonTableParams = {
@@ -196,12 +203,11 @@ describe("Unit: ModelsDetailsController", function() {
     });
 
     it('init, getModelMetadata other than 404 error, set state on error', function () {
-        var errorSpied = sinon.spy(notificationService, 'error');
         modelDetailsDeferred.reject({status: 500, data: {message: 'error message'}});
         createController();
         scope.$digest();
         expect(scope.state.value).to.be.equals(state.values.ERROR);
-        expect(errorSpied.called).to.be.true;
+        expect(notificationService.error).to.be.called;
     });
 
     it('init, getScoringEngineInstancesCreatedFromThatModel called', function () {
@@ -236,23 +242,21 @@ describe("Unit: ModelsDetailsController", function() {
     });
 
     it('deleteModel, success, redirect to models, set deleteState to default', function () {
-        var successSpied = sinon.spy(notificationService, 'success');
         createController();
         deleteModelDeferred.resolve();
         scope.deleteModel();
         scope.$digest();
-        expect(successSpied.called).to.be.true;
+        expect(notificationService.success).to.be.called;
         expect($state.go.calledWith(redirect)).to.be.true;
         expect(scope.deleteState.value).to.be.equals(deleteState.values.DEFAULT);
     });
 
     it('deleteModel, delete failed, do not notify about success, set deleteState to default', function () {
-        var successSpied = sinon.spy(notificationService, 'success');
         createController();
         deleteModelDeferred.reject({status: 404});
         scope.deleteModel();
         scope.$digest();
-        expect(successSpied).not.to.be.called;
+        expect(notificationService.success).not.to.be.called;
         expect($state.go).not.to.be.called;
         expect(scope.deleteState.value).to.be.equals(deleteState.values.DEFAULT);
     });
@@ -314,41 +318,68 @@ describe("Unit: ModelsDetailsController", function() {
         expect(scope.state.value).to.be.equals(addScoringEngineState.values.PENDING);
     });
 
-    it('addScoringEngine, success, create correct path ', function () {
-        var successSpied = sinon.spy(notificationService, 'success');
-        scoringEngineResource.addScoringEngine=sinon.stub().returns(addScoringEngineDeferred.promise);
+    it('addScoringEngine, no main artifact, show error message', function () {
+        scoringEngineResource.addScoringEngine = sinon.stub().returns(addScoringEngineDeferred.promise);
+
+        createController();
+        scope.model = SAMPLE_MODEL;
+        scope.mainArtifact = null;
+
+        scope.addScoringEngine();
+        scope.$digest();
+
+        expect(notificationService.error).to.be.called;
+        expect(scoringEngineResource.addScoringEngine).not.to.be.called;
+    });
+
+    it('addScoringEngine, success, create correct path', function () {
+        scoringEngineResource.addScoringEngine = sinon.stub().returns(successfulPromise());
         addScoringEngineDeferred.resolve();
 
         createController();
         scope.model = SAMPLE_MODEL;
-        scope.extraArtifacts = [{id: SAMPLE_ARTIFACT.id, actions: []}];
-
-        var path = 'jar-scoring-engine';
+        scope.mainArtifact = SAMPLE_ARTIFACT;
 
         scope.addScoringEngine();
         scope.$digest();
 
-        expect(scope.path).to.be.deep.equal(path);
-        expect(successSpied.called).to.be.true;
-        expect(scope.state.value).to.be.equals(addScoringEngineState.values.LOADED);
+        expect(scoringEngineResource.addScoringEngine).to.be.calledWith(TAP_SCORING_ENGINE_PATH, {
+            modelId: SAMPLE_MODEL.id,
+                artifactId: SAMPLE_ARTIFACT.id,
+                modelName: SAMPLE_MODEL.name
+        });
+        expect(notificationService.success).to.be.called;
+        expect(scope.state.isLoaded(), 'loaded').to.be.true;
     });
 
     it('addScoringEngine, error, create correct path ', function () {
-        var successSpied = sinon.spy(notificationService, 'success');
-        scoringEngineResource.addScoringEngine=sinon.stub().returns(addScoringEngineDeferred.promise);
-        addScoringEngineDeferred.reject({data: {message: 'error message'}});
+        scoringEngineResource.addScoringEngine = sinon.stub().returns(failedPromise({data: {message: 'error message'}}));
 
         createController();
         scope.model = SAMPLE_MODEL;
-        scope.extraArtifacts = [{id: SAMPLE_ARTIFACT.id, actions: []}];
-
-        var path = 'jar-scoring-engine';
+        scope.mainArtifact = SAMPLE_ARTIFACT;
 
         scope.addScoringEngine();
         scope.$digest();
 
-        expect(scope.path).to.be.deep.equal(path);
-        expect(successSpied).not.to.be.called;
+        expect(scoringEngineResource.addScoringEngine).to.be.calledWith(TAP_SCORING_ENGINE_PATH, {
+            modelId: SAMPLE_MODEL.id,
+            artifactId: SAMPLE_ARTIFACT.id,
+            modelName: SAMPLE_MODEL.name
+        });
+        expect(notificationService.success).not.to.be.called;
         expect(scope.state.value).to.be.equals(addScoringEngineState.values.LOADED);
     });
+
+    function successfulPromise(data) {
+        var deferred = $q.defer();
+        deferred.resolve(data);
+        return deferred.promise;
+    }
+
+    function failedPromise(data) {
+        var deferred = $q.defer();
+        deferred.reject(data);
+        return deferred.promise;
+    }
 });

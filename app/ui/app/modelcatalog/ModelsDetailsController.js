@@ -19,7 +19,7 @@
 
     App.controller('ModelsDetailsController', function ($scope, State, ModelResource, NotificationService,
                                                         ScoringEngineRetriever, $stateParams, $state, CommonTableParams,
-                                                        ModelCatalogArtifactsClient, ScoringEngineResource, artifactActions) {
+                                                        ModelCatalogArtifactsClient, ScoringEngineResource) {
         var modelId = $stateParams.modelId;
         var MODEL_NOT_FOUND_ERROR = 404;
         var file = null;
@@ -56,7 +56,7 @@
                 .then(function () {
                     NotificationService.success("Model Name has been updated");
                 })
-                .finally(function onFinally () {
+                .finally(function onFinally() {
                     $scope.state.setLoaded();
                 });
         };
@@ -104,16 +104,16 @@
             getScoringEngineInstancesFromThatModel();
         };
 
-        function uploadArtifact () {
+        function uploadArtifact() {
             ModelCatalogArtifactsClient.uploadArtifact(modelId, file, $scope.addArtifactState, getModelMetadata);
         }
 
-        function getModelMetadata () {
+        function getModelMetadata() {
             ModelResource.getModelMetadata(modelId)
                 .then(function (model) {
                     $scope.model = model;
-                    $scope.mainArtifact = _.find($scope.model.artifacts, isArtifactPublishable);
-                    $scope.extraArtifacts = _.reject($scope.model.artifacts, isArtifactPublishable);
+                    $scope.mainArtifact = _.find($scope.model.artifacts, getPublishAction);
+                    $scope.extraArtifacts = _.reject($scope.model.artifacts, getPublishAction);
                     $scope.tableParams = CommonTableParams.getTableParams($scope, function () {
                         return $scope.extraArtifacts || [];
                     });
@@ -122,7 +122,7 @@
                 .catch(function onError(error) {
                     if (error.status === MODEL_NOT_FOUND_ERROR) {
                         $state.go('app.modelcatalog.models');
-                        NotificationService.error(error.data.message  || 'Model not found');
+                        NotificationService.error(error.data.message || 'Model not found');
                     } else {
                         $scope.state.setError();
                         NotificationService.error(error.data.message || 'An error occurred while loading model details page');
@@ -130,10 +130,10 @@
                 });
         }
 
-        function getScoringEngineInstancesFromThatModel () {
+        function getScoringEngineInstancesFromThatModel() {
             $scope.scoringEngineState.setPending();
             ScoringEngineRetriever.getScoringEngineInstancesCreatedFromThatModel(modelId)
-                .then(function(scoringEngines) {
+                .then(function (scoringEngines) {
                     $scope.scoringEngineInstances = scoringEngines;
                     $scope.scoringEngineState.setLoaded();
                 })
@@ -142,29 +142,28 @@
                 });
         }
 
-        function isArtifactPublishable (artifact) {
-            return _.some(artifact.actions, function (action) {
+        function getPublishAction(artifact) {
+            return _.find(artifact.actions, function (action) {
                 return action.toLowerCase().indexOf(MAIN_ARTIFACT_PREFIX) === 0;
             });
         }
 
         $scope.addScoringEngine = function () {
-            $scope.state.setPending();
-
-            var artifactAction = _.find(artifactActions[$scope.model.creationTool] || [], function(action) {
-                return action.indexOf("PUBLISH_") === 0;
-            });
-
-            if(!artifactAction) {
+            if (!$scope.mainArtifact) {
                 NotificationService.error("Cannot create a scoring engine from selected artifact");
                 return;
             }
+            $scope.state.setPending();
 
-            $scope.path = artifactAction.split('_').slice(1).join('-').toLowerCase();
+            var publishPath = actionToPath(getPublishAction($scope.mainArtifact));
 
             ScoringEngineResource
                 .withErrorMessage('An error occurred while adding new scoring engine')
-                .addScoringEngine($scope.path, {modelId: $scope.model.id, artifactId: $scope.extraArtifacts[0].id , modelName: $scope.model.name})
+                .addScoringEngine(publishPath, {
+                    modelId: $scope.model.id,
+                    artifactId: $scope.mainArtifact.id,
+                    modelName: $scope.model.name
+                })
                 .then(function onSuccess() {
                     NotificationService.success('Scoring engine has been added');
                     $scope.refresh();
@@ -173,5 +172,13 @@
                     $scope.state.setLoaded();
                 });
         };
+
+        $scope.supportsScoringEngines = function () {
+            return $scope.mainArtifact;
+        };
     });
+
+    function actionToPath(action) {
+        return action.split('_').slice(1).join('-').toLowerCase();
+    }
 }());

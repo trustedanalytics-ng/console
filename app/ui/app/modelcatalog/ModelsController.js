@@ -83,7 +83,7 @@
 
         $scope.$watch('filters.created.to', function (newValue, oldValue) {
             if(_.difference(newValue, oldValue))  {
-                if ($scope.filters.created.to) {
+                if ($scope.filters && $scope.filters.created.to) {
                     $scope.filters.created.to.setHours(23, 59, 59);
                 }
                 reload();

@@ -32,7 +32,7 @@
             // should be deleted when UI will support additional artifact section
             a.btn.btn-primary.fa-download(ng-href='/rest/models/{{model.id}}/artifacts/{{extraArtifacts[0].id}}/file'
                ng-if="extraArtifacts && !mainArtifact") Download
-            a.btn.btn-primary.fa-plus(ng-click='addScoringEngine()') Add Scoring Engine
+            a.btn.btn-primary.fa-plus(ng-if="supportsScoringEngines()" ng-click='addScoringEngine()') Add Scoring Engine
             a.btn.btn-primary.fa-plus(ng-click='tryUploadArtifact()' ng-hide='true') Add Artifact
 
         h4 Metadata
@@ -56,7 +56,7 @@
                 td Creator
                 td {{model.addedBy}}
 
-        .scoring-engines(ng-hide="scoringEngineState.isError()")
+        .scoring-engines(ng-show="supportsScoringEngines() && !scoringEngineState.isError()")
            h4 Scoring Engine Instances
            button.btn.btn-primary.fa-refresh.pull-right(ng-click='refresh()'
                ng-hide='scoringEngineState.isPending()') Refresh
