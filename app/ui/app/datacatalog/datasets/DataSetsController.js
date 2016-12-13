@@ -81,23 +81,25 @@
         $scope.$on('searchChanged', function (eventName, _searchText) {
             if(_searchText !== searchText) {
                 searchText = _searchText;
-                $scope.changePage(1);
+                $scope.changePage(1, true);
             }
         });
 
         $scope.$on('targetChanged', function () {
-            $scope.changePage(1);
+            $scope.changePage(1, true);
         });
 
         $scope.$watchGroup(['created.from', 'created.to', 'format.value'], function (newValues, oldValues) {
             if (_.difference(newValues, oldValues)) {
-                $scope.changePage(1);
+                $scope.changePage(1, true);
             }
         });
 
-        $scope.changePage = function (pageNo) {
-            $scope.pagination.currentPage = pageNo;
-            $scope.search();
+        $scope.changePage = function (pageNo, reload) {
+            if ((pageNo !== $scope.pagination.currentPage) || (reload)) {
+                $scope.pagination.currentPage = pageNo;
+                $scope.search();
+            }
         };
 
         $scope.getFormatIcon = DataSetsHelper.getFormatIcon;
