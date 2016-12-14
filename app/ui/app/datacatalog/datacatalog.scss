@@ -406,4 +406,8 @@
     word-wrap: break-word;
     word-break: break-all;
   }
+
+  td.no-wrapping {
+    white-space: nowrap;
+  }
 }
