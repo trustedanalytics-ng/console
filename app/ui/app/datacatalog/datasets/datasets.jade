@@ -36,22 +36,32 @@ h3
                     div(class='fa fa-{{ getFormatIcon(f) }}')
                     | {{ f }}
         div
-            .heading Creation time
-            .dates
-                div
-                    span from:
-                    .input-group
-                        input.form-control(type='text', uib-datepicker-popup="yyyy-MM-dd", ng-model='created.from', is-open='fromOpened')
-                        span.input-group-btn
-                            button.btn.btn-default(type='button', ng-click='openFrom($event)')
-                                em.fa.fa-calendar
-                div
-                    span to:
-                    .input-group
-                        input.form-control(type='text', uib-datepicker-popup="yyyy-MM-dd", ng-model='created.to', is-open='toOpened')
-                        span.input-group-btn
-                            button.btn.btn-default(type='button', ng-click='openTo($event)')
-                                em.fa.fa-calendar
+            form(name="creation")
+                .heading Creation time
+                .dates
+                    div
+                        span from:
+                        .input-group
+                            input.form-control(name="from" type='text', uib-datepicker-popup="dd-MM-yyyy", placeholder="dd-MM-yyyy"  ng-model='created.from', is-open='fromOpened' date-validator="{{ validationPattern }}")
+                            span.input-group-btn
+                                button.btn.btn-default(type='button', ng-click='openFrom($event)')
+                                    em.fa.fa-calendar
+                            span
+                            div(ng-hide="creation.from.$valid")
+                                span.validationMessage(ng-message="regexValidator")
+                                    | {{ validationMessage }}
+                    div
+                        span to:
+                        .input-group
+                            input.form-control(name="to" type='text', uib-datepicker-popup="dd-MM-yyyy", placeholder="dd-MM-yyyy" ng-model='created.to', is-open='toOpened' date-validator="{{ validationPattern }}")
+                            span.input-group-btn
+                                button.btn.btn-default(type='button', ng-click='openTo($event)')
+                                    em.fa.fa-calendar
+                            span
+                            div(ng-hide="creation.to.$valid")
+                                span.validationMessage(ng-message="regexValidator")
+                                    | {{ validationMessage }}
+
         div(ng-show='availableVisualizationsTools.length > 1')
             .heading Tool for visualization
             .tools

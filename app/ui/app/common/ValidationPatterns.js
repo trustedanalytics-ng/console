@@ -21,5 +21,9 @@ App.constant('ValidationPatterns', {
     MODEL_UPLOAD: {
         pattern: "[^]",
         validationMessage: "Field must contain at least 1 character"
+    },
+    DATE: {
+        pattern: "(0[1-9]|1[0-9]|2[0-9]|3[01])/(0[1-9]|1[012])/[0-9]{4}",
+        validationMessage: "Wrong date format, expected: DD-MM-YYYY"
     }
 });

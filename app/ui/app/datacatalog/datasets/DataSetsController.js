@@ -17,7 +17,7 @@
     "use strict";
 
     App.controller('DataSetsController', function ($scope, $routeParams, ngTableParams, State,
-                                                   $cookies, DataSetsHelper) {
+                                                   $cookies, DataSetsHelper, ValidationPatterns) {
 
         var TOOL_KEY = 'datacatalog_tool',
             DEFAULT_TOOL = 'arcadia',
@@ -29,6 +29,9 @@
             currentPage: 1,
             pages: []
         };
+
+        $scope.validationPattern = ValidationPatterns.DATE.pattern;
+        $scope.validationMessage= ValidationPatterns.DATE.validationMessage;
 
         var category = null;
         $scope.onCategoryChange = function (c) {

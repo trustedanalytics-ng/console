@@ -18,6 +18,12 @@ $bootstrap-input-text-color: #555;
 
 .modelcatalog {
 
+  .validationMessage {
+    color: $validation-message-color;
+    font-size: 11px;
+    margin-bottom: 5px;
+  }
+
   .panel {
     padding: 40px 30px;
 

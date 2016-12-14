@@ -16,7 +16,7 @@
 (function () {
     "use strict";
 
-    App.controller('ModelsController', function ($scope, State, $state, ModelResource, CommonTableParams, targetProvider) {
+    App.controller('ModelsController', function ($scope, State, $state, ModelResource, CommonTableParams, targetProvider, ValidationPatterns) {
         var state = new State().setPending();
         var searchFields = [ "name", "algorithm", "creationTool" ];
         var searchText = '';
@@ -28,6 +28,8 @@
         };
 
         $scope.modelTypes = [ "Choose Model Type" ];
+        $scope.validationPattern = ValidationPatterns.DATE.pattern;
+        $scope.validationMessage= ValidationPatterns.DATE.validationMessage;
 
         var defaultFilters = {
             selectedType: $scope.modelTypes[0],

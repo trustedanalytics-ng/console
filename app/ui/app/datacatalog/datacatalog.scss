@@ -210,6 +210,13 @@
       }
 
       .dates {
+
+        .validationMessage {
+          color: $validation-message-color;
+          font-size: 11px;
+          margin-bottom: 5px;
+        }
+
         line-height: 35px;
 
         > div {
