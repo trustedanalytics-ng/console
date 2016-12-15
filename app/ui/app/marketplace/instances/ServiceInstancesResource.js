@@ -27,7 +27,7 @@
                 metadata: [{
                     key: 'PLAN_ID',
                     value: planGuid
-                }].concat(envs)
+                }].concat(_.defaults([], envs))
             });
         };
 
