@@ -384,7 +384,7 @@ App.config(function ($stateProvider, $urlRouterProvider, LazyLoadProvider, AppCo
             controller: 'ModelUploadController',
             controllerAs: 'ctrl',
             templateUrl: getViewPath('modelcatalog/model-upload.html'),
-            resolve: LazyLoadProvider.load(['ng-file-upload'])
+            resolve: LazyLoadProvider.load(['ng-file-upload','ngMessages'])
         })
         //.state('app.modelcatalog.edit', {
         //    url: '/edit/model/:modelId',
