@@ -18,15 +18,13 @@
   "name": "service-exposer"
 }, {
   "path": "/offerings",
-  "name": "api",
-  "prefix": "/api/v3"
+  "name": "api"
 }, {
   "path": "/services",
   "name": "api"
 }, {
   "path": "/applications",
-  "name": "api",
-  "prefix": "/api/v3"
+  "name": "api"
 }, {
   "path": "/orgs/[^/]+/name",
   "name": "user-management"
@@ -41,7 +39,8 @@
   "name": "user-management"
 }, {
   "path": "/platform_info",
-  "name": "api"
+  "name": "api",
+  "prefix": "/api/v2"
 }, {
   "path": "/external_tools",
   "name": "platformcontext"

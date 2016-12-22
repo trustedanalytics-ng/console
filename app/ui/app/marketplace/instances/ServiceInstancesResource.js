@@ -21,7 +21,7 @@
 
         service.createInstance = function(offeringId, name, planGuid, envs) {
             return service.post({
-                classId: offeringId,
+                offeringId: offeringId,
                 name: name,
                 type: 'SERVICE',
                 metadata: [{

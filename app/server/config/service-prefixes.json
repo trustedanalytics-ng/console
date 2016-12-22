@@ -1,7 +1,7 @@
 [
   {
     "name": "api",
-    "value": "/api/v2"
+    "value": "/api/v3"
   },
   {
     "name":"user-management",
