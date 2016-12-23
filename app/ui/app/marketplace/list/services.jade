@@ -30,8 +30,8 @@ h3
                .card
                   .card-top
                      h1
-                        a(ui-sref='app.service({ offeringId: offering.id })') {{ offering.displayName || offering.name }}
-                     .description(data-ng-bind="offering.description" data-ellipsis title="{{offering.description}}")
+                         a(ui-sref='app.service({ offeringId: offering.id })') {{offering.displayName || offering.name}}
+                     .description {{offering.description}}
                      a.details(ui-sref='app.service({ offeringId: offering.id })') See Details
                         span.fa.fa-angle-double-right
                   .card-bottom
