@@ -19,8 +19,7 @@ spinner(ng-show='state.isPending()')
 .panel.send-invitation
 
     form(name="invite_user_form" data-ng-submit='sendInvitation()', ng-show='state.isDefault()')
-        .description Sending an invitation will allow invited person to create a new organization
-            | and become its manager.
+        .description Sending an invitation will allow invited person to join the platform and organization.
         .form
             input.form-control(type='email', name='email', ng-model='email', placeholder='Enter e-mail',
             email-validator, required)
