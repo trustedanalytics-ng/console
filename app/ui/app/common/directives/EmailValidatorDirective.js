@@ -25,7 +25,7 @@
     var MAX_NUMBER_OF_CHARACTERS_IN_DOMAIN_PART = 252;
     var MAX_NUMBER_OF_CHARACTERS_IN_LOCAL_PART = 64;
     var MAX_NUMBER_OF_CHARACTERS_IN_EMAIL_IN_TOTAL = 254;
-    var EMAIL_REGEX = /^[a-z0-9!#$%&'*+=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/;
+    var EMAIL_REGEX = /^[A-Za-z0-9!#$%&'*+=?^_`{|}~-]+(?:\.[A-Za-z0-9!#$%&'*+=?^_`{|}~-]+)*@(?:[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?\.)+[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?$/;
 
     App.directive('emailValidator', function () {
         return {
