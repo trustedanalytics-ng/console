@@ -16,50 +16,27 @@
 (function () {
     "use strict";
 
-    App.value('CliConfiguration', {
-        windowsX64: {
-            name: 'Windows 64 bit',
-            release: 'windows64',
-            os: 'windows',
-            order: 1
-        },
-        windowsX86: {
+    App.constant('CliConfiguration', [
+        {
             name: 'Windows 32 bit',
-            release: 'windows32',
             os: 'windows',
-            order: 2
+            release: 'windows32'
         },
-        osxX64: {
+        {
             name: 'Mac OS X 64 bit',
-            release: 'macosx64',
             os: 'apple',
-            order: 3
+            release: 'macosx64'
         },
-        debX64: {
-            name: 'Linux 64 bit (.deb)',
-            release: 'debian64',
+        {
+            name: 'Linux 64 bit',
             os: 'linux',
-            order: 4
+            release: 'linux64'
         },
-        debX86: {
-            name: 'Linux 32 bit (.deb)',
-            release: 'debian32',
+        {
+            name: 'Linux 32 bit',
             os: 'linux',
-            order: 5
-        },
-        rpmX64: {
-            name: 'Linux 64 bit (.rpm)',
-            release: 'redhat64',
-            os: 'linux',
-            order: 6
-        },
-        rpmX86: {
-            name: 'Linux 32 bit (.rpm)',
-            release: 'redhat32',
-            os: 'linux',
-            order: 7
+            release: 'linux32'
         }
-
-    });
+    ]);
 
 }());

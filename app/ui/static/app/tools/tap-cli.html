@@ -15,7 +15,8 @@
     limitations under the License.
 
 -->
-<pre><code>$ tap login {{ apiEndpoint || '&lt;your_api_endpoint&gt;' }} {{ username || '&lt;username&gt;' }} &lt;password&gt;
+<pre><code>$ tap login --api={{ apiEndpoint || '&lt;your_api_endpoint&gt;' }} --username={{ username || '&lt;username&gt;' }}
+  Password: ********
   Authenticating...
   Authentication succeeded
 $ cd app_directory

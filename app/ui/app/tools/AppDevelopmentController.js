@@ -16,17 +16,13 @@
 (function () {
     "use strict";
 
-    App.controller('AppDevelopmentController', function ($scope, userAgent, CliConfiguration, PlatformInfoProvider, State,
+    App.controller('AppDevelopmentController', function ($scope, userAgent, CliConfiguration, PlatformInfoProvider,
             UserProvider) {
 
-        var baseUrl = '',
-            cliVersion = 'latest',
-            architectureSymbol = getArchitectureSymbol(userAgent),
-            state = new State().setPending();
+        var CLI_BASE_PATH = '/rest/resources/cli/';
 
-        $scope.state = state;
-        $scope.clis = _.values(CliConfiguration);
-        $scope.currentPackage = getCurrentPackage();
+        $scope.cliList = CliConfiguration;
+        $scope.autoChosenCli = autoChooseCli(userAgent, CliConfiguration);
         UserProvider.getUser()
             .then(function(user) {
                 $scope.username = user.username;
@@ -35,45 +31,33 @@
         PlatformInfoProvider
             .getPlatformInfo()
             .then(function onSuccess(platformContext) {
-                cliVersion = platformContext.cli_version || 'latest';
-                baseUrl = platformContext.cli_url || '';
-                // get the endpoint address, remove trailing / if present
                 $scope.apiEndpoint = platformContext.api_endpoint.replace(/\/$/, '');
-            })
-            .then(function() {
-                //$scope.currentPackageUrl = $scope.getCliUrl($scope.currentPackage);
-                state.setLoaded();
             });
 
         $scope.getCliUrl = function(cli) {
-            return getCliUrl(cli, baseUrl, cliVersion);
+            return CLI_BASE_PATH + cli.release;
         };
-
-
-        function getCurrentPackage() {
-            switch (userAgent.family) {
-                case 'windows':
-                    return CliConfiguration[userAgent.family + architectureSymbol];
-                case 'linux':
-                    return CliConfiguration[userAgent.pkgFormat + architectureSymbol];
-                case 'osx':
-                    return CliConfiguration.osxX64;
-                default:
-                    return null;
-            }
-        }
-
     });
 
-    function getCliUrl(cliInfo, baseUrl, cliVersion) {
-        return baseUrl
-            .replace('{RELEASE}', cliInfo.release)
-            .replace('{VERSION}', cliVersion);
+    function autoChooseCli(userAgent, cliList) {
+        return _.findWhere(cliList, {
+            release: getRelease(userAgent)
+        });
     }
 
+    function getRelease(userAgent) {
+        switch(userAgent.family) {
+            case 'windows':
+                return 'windows32';
+            case 'osx':
+                return 'macosx' + getArchitecture(userAgent);
+            default:
+                return userAgent.family + getArchitecture(userAgent);
+        }
+    }
 
-    function getArchitectureSymbol(userAgent) {
-        return is64Bit(userAgent) ? 'X64' : 'X86';
+    function getArchitecture(userAgent) {
+        return is64Bit(userAgent) ? '64' : '32';
     }
 
     function is64Bit(userAgent) {

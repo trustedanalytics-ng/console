@@ -14,28 +14,27 @@
    limitations under the License.
 //-
 h3 Tools
-spinner(ng-hide="state.isLoaded()")
-.tools(ng-show="state.isLoaded()")
+.tools
     .panel
         h3 What the TAP CLI is?
         | TAP CLI is a command line client for TAP. For more information visit
         = ' '
         a(href='https://github.com/trustedanalytics/tap-cli', target="_blank") tap-cli documentation
 
-    //.panel(ng-init="listVisible = false")
+    .panel(ng-init="listVisible = false")
         h3 Download and install
 
-        .download-button(ng-show='currentPackage')
-            a.btn.btn-primary(class='fa-{{ currentPackage.os }}', href='{{ currentPackageUrl }}')
-                | {{ currentPackage.name }}
+        .download-button(ng-show='autoChosenCli')
+            a.btn.btn-primary(class='fa-{{ autoChosenCli.os }}', href='{{ getCliUrl(autoChosenCli) }}')
+                | {{ autoChosenCli.name }}
             a.toggle-list(ng-hide='listVisible', ng-click='listVisible = true')
                 | Show list of all installers
             a.toggle-list(ng-show='listVisible', ng-click='listVisible = false')
                 | Hide list of all installers
 
-        .cli-list(ng-show='listVisible')
-            div(ng-repeat="cli in clis")
-                a(ng-show="getCliUrl(cli) !== currentPackageUrl" ng-href='{{ getCliUrl(cli) }}', class='fa-{{ cli.os }}') {{ cli.name }}
+        .cli-list(ng-show='listVisible || !autoChosenCli')
+            div(ng-repeat="cli in cliList")
+                a(ng-show="cli !== autoChosenCli" ng-href='{{ getCliUrl(cli) }}', class='fa-{{ cli.os }}') {{ cli.name }}
 
     .panel
         h3 Getting started   

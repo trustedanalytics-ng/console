@@ -25,6 +25,9 @@
 }, {
   "path": "/applications",
   "name": "api"
+},{
+  "path": "/resources/cli",
+  "name": "api"
 }, {
   "path": "/orgs/[^/]+/name",
   "name": "user-management"
@@ -84,9 +87,9 @@
   "path": "/kubernetes/(.*)",
   "name": "kubernetes-broker"
 },{
-  "path" : "/scoring-engine/jar-scoring-engine",
-  "name" : "h2o-engines-publisher"
+  "path": "/scoring-engine/jar-scoring-engine",
+  "name": "h2o-engines-publisher"
 },{
-  "path" : "/scoring-engine/tap-scoring-engine",
-  "name" : "tap-scoring-engine-publisher"
+  "path": "/scoring-engine/tap-scoring-engine",
+  "name": "tap-scoring-engine-publisher"
 }]
