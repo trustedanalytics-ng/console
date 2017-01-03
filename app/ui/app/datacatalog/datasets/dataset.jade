@@ -37,9 +37,10 @@
                 tr(data-ng-repeat='(fieldName, fieldValue) in dataSet', ng-if='isArray(fieldValue)==false')
                     td
                         b {{fieldName}}
-                    td
-                        div(ng-if="fieldName==='size'") {{fieldValue | translateSize}}
-                        div(ng-if="fieldName!=='size'") {{fieldValue}}
+                    td(ng-switch="fieldName")
+                        div(ng-switch-when="size") {{fieldValue | translateSize}}
+                        div(ng-switch-when="creationTime") {{fieldValue | date:&apos;dd.MM.yyyy HH:mm:ss&apos;}}
+                        div(ng-switch-default) {{fieldValue}}
                 tr(ng-show='dataSet.distribution.length')
                     td Formats
                     td
