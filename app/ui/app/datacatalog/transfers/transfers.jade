@@ -36,7 +36,7 @@ h3
                 td(data-title="'Created'", sortable="'timestamps.NEW'")
                     span(ng-if='item.timestamps.NEW') {{epochToUtc(item.timestamps.NEW) | date:&apos;dd.MM.yyyy HH:mm:ss&apos;}}
 
-                td.no-wrapping(data-title="'Last state'", sortable="'lastTimestamp.time'", align='center')
+                td.no-wrapping(data-title="'Last state'", sortable="'lastTimestamp.state + lastTimestamp.time'", align='center')
                     div
                         span(ng-if='item.lastTimestamp.time>0')
                             | {{item.lastTimestamp.state}}
