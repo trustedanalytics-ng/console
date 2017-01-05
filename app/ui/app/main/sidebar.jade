@@ -18,7 +18,7 @@ nav(ng-controller="MenuController")
         ul.nav
             li(ng-if="isVisible(item)" ng-repeat='item in menuItems'
                 ng-init="item.collapse = !isActive(item); initSelected(item); collapse=item.collapse; initial = true" )
-                a(ng-href="{{ getHref(item.sref) }}" title="{{ item.text }}"
+                a(ng-href="{{ getHref(item) }}" title="{{ item.text }}"
                     ng-click="clickOnMenu(item, $event); initial = false"
                     ng-class="{ active: isActive(item), expand: item.items.length }")
 
