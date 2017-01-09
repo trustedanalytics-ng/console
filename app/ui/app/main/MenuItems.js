@@ -57,10 +57,6 @@
                 {
                     "text": "Job Browser",
                     "sref": "app.jobsscheduler.jobs.workflowjobs"
-                },
-                {
-                    "text": "Define spark actions",
-                    "visualization_tool": "hue-oozie-editor"
                 }
             ]
         }, {

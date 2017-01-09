@@ -67,18 +67,8 @@
             $scope.access.admin = isAdmin;
         });
 
-        PlatformInfoProvider
-            .getPlatformInfo()
-            .then(function (platformInfo) {
-                $scope.info = platformInfo;
-            });
-
-        $scope.getHref = function (subitem) {
-            if(subitem.hasOwnProperty("visualization_tool")) {
-                var tool = subitem['visualization_tool'];
-                return _.findWhere($scope.info.external_tools.visualizations, {name: tool}).url;
-            }
-            return $state.href(subitem.sref);
+        $scope.getHref = function (sref) {
+            return $state.href(sref);
         };
 
         $scope.toggleCollapse = function () {
