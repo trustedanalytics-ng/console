@@ -30,6 +30,8 @@
             .btns
                 d-publish-data-set.view-btn(dataset-id='dataSetId', mode="separate")
                 button.btn.btn-primary.with-icon.fa-times(ng-click="delete()", ng-show="canModifyOrDelete") Delete
+                a(ng-href='{{ getHref() }}' ng-show="activeUrl", target="_blank")
+                    button.btn.btn-primary Open in Hue file browser
 
             h4 Metadata
 

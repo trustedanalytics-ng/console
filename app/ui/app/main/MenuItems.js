@@ -59,7 +59,7 @@
                     "sref": "app.jobsscheduler.jobs.workflowjobs"
                 },
                 {
-                    "text": "Define spark actions",
+                    "text": "Oozie editor",
                     "visualization_tool": "hue-oozie-editor"
                 }
             ]

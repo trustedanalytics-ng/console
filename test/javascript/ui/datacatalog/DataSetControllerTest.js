@@ -25,6 +25,7 @@ describe("Unit: DataSetController", function() {
         notificationService,
         q,
         angularState,
+        platformInfoResource,
         SAMPLE_DATASET = Object.freeze({
             id: "i1",
             orgUUID: ["o1", "o2"]
@@ -51,6 +52,12 @@ describe("Unit: DataSetController", function() {
             }
         };
 
+        platformInfoResource = {
+            getPlatformInfo: function() {
+                return $q.defer().promise;
+            }
+        };
+
         notificationService = {
             confirm: function() {
                 return $q.defer().promise;
@@ -64,7 +71,8 @@ describe("Unit: DataSetController", function() {
             NotificationService: notificationService,
             $stateParams: { datasetId: SAMPLE_DATASET.id },
             $state: angularState,
-            targetProvider: targetProvider
+            targetProvider: targetProvider,
+            PlatformInfoResource: platformInfoResource
         });
         state = scope.state;
     }));

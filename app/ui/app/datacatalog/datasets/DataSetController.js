@@ -17,7 +17,7 @@
     "use strict";
 
     App.controller('DataSetController', function ($scope, DataSetResource, $stateParams, State, NotificationService,
-                                                  $state, targetProvider) {
+                                                  $state, targetProvider, PlatformInfoResource) {
         $scope.errorMessage = '';
 
         var state = new State();
@@ -27,6 +27,9 @@
         $scope.id = $stateParams.datasetId || "";
         $scope.dataSet = {};
         $scope.isArray = angular.isArray;
+        var regExpCheckSourceUri = new RegExp("((hdfs):\/{2})+([a-z0-9])+\/");
+        var fileBrowserUrl;
+        $scope.activeUrl = false;
 
         var privacySettingsState = function () {
             $scope.canModifyOrDelete = !_.isUndefined(_.findWhere($scope.organizations, {guid: $scope.dataSet.orgUUID}));
@@ -81,6 +84,18 @@
                         state.setLoaded();
                     });
                 });
+        };
+
+        PlatformInfoResource.getPlatformInfo()
+            .then(function (response) {
+                fileBrowserUrl = _.findWhere(response.external_tools.visualizations, {name: "hue-file-browser"}).url;
+                $scope.activeUrl = true;
+            }).catch(function onError() {
+                state.setError();
+            });
+
+        $scope.getHref = function() {
+            return fileBrowserUrl + "/#/" + $scope.dataSet.targetUri.replace(regExpCheckSourceUri, "");
         };
 
     });

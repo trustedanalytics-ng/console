@@ -23,6 +23,8 @@ div(ng-if='state.isLoaded()')
          h4 Actions
             div.actions
                button.btn.btn-primary(ng-click='onStatusChange("kill")') Kill
+               a(ng-href='{{ getHref() }}' ng-show="activeUrl", target="_blank")
+                  button.btn.btn-primary Open in Hue file browser
       .panel-group
          .panel.panel-default
             .panel-heading Details

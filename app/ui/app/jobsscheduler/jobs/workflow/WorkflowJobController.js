@@ -17,10 +17,13 @@
     "use strict";
 
     App.controller('WorkflowJobController', function ($scope, State, WorkflowJobResource, $stateParams,
-                                                      NotificationService, targetProvider) {
+                                                      NotificationService, targetProvider, PlatformInfoResource) {
 
         var state = new State().setPending();
         $scope.state = state;
+        var regExpCheckTargetDir = new RegExp("((hdfs):\/{2})+([a-z0-9])+\/");
+        var fileBrowserUrl;
+        $scope.activeUrl = false;
 
 
         WorkflowJobResource.getJob($stateParams.workflowjobId, targetProvider.getOrganization().guid)
@@ -51,6 +54,18 @@
 
         $scope.toKilled = function(status){
             return (status !== 'KILLED' && status !=='FAILED' && status !=='DONEWITHERROR');
+        };
+
+        PlatformInfoResource.getPlatformInfo()
+            .then(function (response) {
+                fileBrowserUrl = _.findWhere(response.external_tools.visualizations, {name: "hue-file-browser"}).url;
+                $scope.activeUrl = true;
+            }).catch(function onError() {
+                state.setError();
+            });
+
+        $scope.getHref = function() {
+            return fileBrowserUrl + "/#/" + $scope.job.targetDirs[0].replace(regExpCheckTargetDir, "");
         };
     });
 }());

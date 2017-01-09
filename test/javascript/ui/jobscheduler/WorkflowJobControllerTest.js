@@ -18,8 +18,8 @@ describe("Unit: WorkflowJobController", function() {
 
     beforeEach(module("app"));
 
-    var controller, scope, targetProvider, workflowJobResource, notificationService, $q;
-    var JOB_ID = "job-id", defer;
+    var controller, scope, targetProvider, workflowJobResource, notificationService, $q, platformInfoResource;
+    var JOB_ID = "job-id", workflowJobResourceDefer, platformInfoResourceDefer;
 
     beforeEach(inject(function($controller, $rootScope, $stateParams, _$q_){
         scope = $rootScope.$new();
@@ -42,17 +42,23 @@ describe("Unit: WorkflowJobController", function() {
                 $stateParams: {workflowjobId: JOB_ID},
                 targetProvider: targetProvider,
                 NotificationService: notificationService,
-                WorkflowJobResource: workflowJobResource
+                WorkflowJobResource: workflowJobResource,
+                PlatformInfoResource: platformInfoResource
             });
         };
 
-        defer = $q.defer();
+        workflowJobResourceDefer = $q.defer();
+        platformInfoResourceDefer = $q.defer();
 
         workflowJobResource = {
-            getJob: sinon.stub().returns(defer.promise),
-            getLogs: sinon.stub().returns(defer.promise),
-            changeJobStatus: sinon.stub().returns(defer.promise)
+            getJob: sinon.stub().returns(workflowJobResourceDefer.promise),
+            getLogs: sinon.stub().returns(workflowJobResourceDefer.promise),
+            changeJobStatus: sinon.stub().returns(workflowJobResourceDefer.promise)
         };
+
+        platformInfoResource = {
+            getPlatformInfo: sinon.stub().returns(platformInfoResourceDefer.promise)
+        }
     }));
 
     it('should not be null', function () {
@@ -70,12 +76,14 @@ describe("Unit: WorkflowJobController", function() {
 
     it('init, set loaded and check response for getting jobs', function () {
         createController();
-        defer.resolve("response");
+        workflowJobResourceDefer.resolve("response");
+        platformInfoResourceDefer.resolve({"external_tools": {"visualizations": [{"name": "hue-file-browser", "url": "hue.url"}]}});
         scope.$apply();
 
         expect(scope.state.isLoaded(), 'loaded').to.be.true;
         expect(workflowJobResource.getJob).to.be.called;
         expect(scope.job).to.be.equal("response");
+        expect(platformInfoResource.getPlatformInfo).to.be.called;
     });
 
 
