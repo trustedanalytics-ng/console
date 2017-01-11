@@ -25,6 +25,7 @@ App.config(function ($stateProvider, $urlRouterProvider, LazyLoadProvider, AppCo
     $urlRouterProvider.when('/app/modelcatalog', '/app/modelcatalog/models');
     $urlRouterProvider.when('/app/platformdashboard', '/app/platformdashboard/summary');
     $urlRouterProvider.when('/app/jobsscheduler/jobs', '/app/jobsscheduler/jobs/workflowjobs');
+    $urlRouterProvider.when('/app/manage/invite', '/app/manage/invite/send');
 
     $urlRouterProvider.when('/app/platformtests', '/app/platformtests/list');
     $urlRouterProvider.otherwise('/app/dashboard');

@@ -56,7 +56,7 @@
                 },
                 {
                     "text": "Job Browser",
-                    "sref": "app.jobsscheduler.jobs.workflowjobs"
+                    "sref": "app.jobsscheduler.jobs"
                 },
                 {
                     "text": "Oozie editor",
@@ -121,7 +121,7 @@
             "items": [
                 {
                     "text": "Onboarding",
-                    "sref": "app.manage.invite.send",
+                    "sref": "app.manage.invite",
                     "access": ["admin"]
                 }, {
                     "text": "Manage Organization Users",
