@@ -59,7 +59,7 @@
                     "sref": "app.jobsscheduler.jobs"
                 },
                 {
-                    "text": "Oozie editor",
+                    "text": "Hue Submission",
                     "visualization_tool": "hue-oozie-editor"
                 }
             ]
