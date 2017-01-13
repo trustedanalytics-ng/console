@@ -22,46 +22,41 @@
          .form-group
             label.col-sm-2.control-label(for='uniq') Name
             .col-sm-10
-               input#uniq.form-control(type='text', placeholder='Name...', data-ng-model='service.name', required)
+               input#uniq.form-control(type='text', placeholder='Name...', data-ng-model='offeringRequest.offeringName', required)
 
          .form-group
             label.col-sm-2.control-label(for='name') Display name
             .col-sm-10
-               input#name.form-control(type='text', placeholder='Display name...', data-ng-model='service.metadata.displayName')
-
-         .form-group
-            label.col-sm-2.control-label(for='file') Icon
-            .col-sm-10
-               input.btn.btn-primary(type='file', name='upfile', image-reader, accept="image/*")
+               input#name.form-control(type='text', placeholder='Display name...', data-ng-model='offeringRequest.offeringDisplayName')
 
          .form-group
             label.col-sm-2.control-label(for='description') Description
             .col-sm-10
-               textarea#description.form-control(rows=5,placeholder='Description...', data-ng-model='service.description', required)
+               textarea#description.form-control(rows=5,placeholder='Description...', data-ng-model='offeringRequest.description', required)
 
          .form-group
             .col-sm-2
             .col-sm-4
-               input#uniq.form-control(type='text', placeholder='tag name...', data-ng-model='tag')
+               input.form-control(type='text', placeholder='tag name...', data-ng-model='tag')
             .col-sm-6
-               input.btn.btn-primary(type='button', value='Add tag', ng-click='addTag(tag)')
+               input.btn.btn-primary(type='button', value='Add tag', ng-click='addTag(tag); tag=null')
 
-         .form-group(ng-if='service.tags.length')
+         .form-group(ng-if='offeringRequest.tags.length')
             label.col-sm-2.control-label(for='uniq') Tags list
             .tags.col-sm-10
-               span.label.label-tag(data-ng-repeat='tag in service.tags')
+               span.label.label-tag(data-ng-repeat='tag in offeringRequest.tags')
                   | {{ tag }}
 
          .form-group
             .col-sm-offset-2.col-sm-10
-               input.btn.btn-primary(type='submit', value='Register')
+               input.btn.btn-primary(type='submit', value='Register' ng-disabled="uploadForm.$invalid")
 
       .col-md-6
          .panel.panel-default
             .panel-heading Service offerings
-            spinner(ng-if='offerings === undefined')
-            .list-group
-               .list-group-item(ng-repeat="app in offerings")
-                  a(ui-sref="app.service({ offeringId: app.metadata.guid })") {{ app.entity.label }}
-               .list-group-item(ng-if="offerings !== undefined && !offerings.length")
+            spinner(ng-show='offeringsState.isPending()')
+            .list-group(ng-if='offeringsState.isLoaded()')
+               .list-group-item(ng-repeat="offering in offerings")
+                  a(ui-sref="app.service({ offeringId: offering.id })") {{ offering.displayName || offering.name }}
+               .list-group-item(ng-if="!offerings.length")
                   | No service offerings found

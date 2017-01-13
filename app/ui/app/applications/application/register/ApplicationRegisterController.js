@@ -16,43 +16,28 @@
 (function () {
     'use strict';
 
-    App.controller('ApplicationRegisterController', function ($scope, State, targetProvider,
-            ApplicationRegisterHelpers) {
+    App.controller('ApplicationRegisterController', function ($scope, State, ApplicationMarketplaceRegistrator) {
 
-        $scope.service = {
-            app: {
-                metadata: {
-                    guid: $scope.appId
-                }
-            },
-            description: "",
-            name: "",
-            tags: [],
-            metadata: {}
-        };
-
-
-        $scope.state = new State().setPending();
+        $scope.state = new State().setLoaded();
+        $scope.offeringsState = new State().setLoaded();
         $scope.offerings = [];
+        $scope.offeringRequest = {
+            applicationId: $scope.appId,
+            tags: []
+        };
 
         $scope.submitRegister = submitRegister;
         $scope.addTag = addTag;
 
-        updateServiceOrgGuid();
         refreshOfferings();
 
-
-        $scope.$on('targetChanged', function () {
-            updateServiceOrgGuid();
-        });
 
         function submitRegister() {
             $scope.state.setPending();
 
-            ApplicationRegisterHelpers
-                .registerApp($scope.service)
-                .then(function(newOffering) {
-                    $scope.offerings.push(newOffering);
+            ApplicationMarketplaceRegistrator.registerApplication($scope.offeringRequest)
+                .then(function () {
+                    refreshOfferings();
                 })
                 .finally(function () {
                     $scope.state.setLoaded();
@@ -60,26 +45,23 @@
         }
 
         function refreshOfferings() {
-            $scope.state.setPending();
+            $scope.offeringsState.setPending();
 
-            ApplicationRegisterHelpers
-                .getOfferingsOfApp($scope.appId)
+            ApplicationMarketplaceRegistrator.getOfferingsOfApplication($scope.appId)
                 .then(function (offerings) {
                     $scope.offerings = offerings;
                 })
-                .finally(function() {
-                    $scope.state.setLoaded();
+                .finally(function () {
+                    $scope.offeringsState.setLoaded();
                 });
         }
 
         function addTag(tag) {
-            $scope.service.tags.push(tag);
-        }
-
-        function updateServiceOrgGuid() {
-            $scope.service.org_guid = (targetProvider.getOrganization() || {}).guid;
+            tag = tag && tag.trim();
+            if(tag) {
+                $scope.offeringRequest.tags.push(tag);
+            }
         }
     });
-
 
 })();

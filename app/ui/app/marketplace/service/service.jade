@@ -19,7 +19,7 @@
 
     div(ng-show='ctrl.state.isLoaded()')
         h3
-            | {{ ctrl.offering.name }}
+            | {{ ctrl.offering.displayName || ctrl.offering.name }}
             small {{ ctrl.offering.provider }}
 
         .description.panel.clearfix

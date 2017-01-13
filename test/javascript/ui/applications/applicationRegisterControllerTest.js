@@ -16,74 +16,112 @@
 /*jshint -W030 */
 describe("Unit: ApplicationRegisterController", function () {
     var scope,
-        ctrl,
+        sut,
         state,
-        mockApplicationRegisterHelpers,
-        _targetProvider,
+        applicationMarketplaceRegistrator,
         $q,
-        space = { guid: 's1', name: 'space1'},
-        org = { guid: 'o1', name: 'org1' };
+        createController;
+
+    var APP_ID = 'app-guid-1234';
 
     beforeEach(module('app'));
 
-    beforeEach(inject(function($controller, TestHelpers, $rootScope, State, _$q_) {
+    beforeEach(inject(function($controller, $rootScope, State, _$q_) {
         scope = $rootScope.$new();
         $q = _$q_;
-        mockApplicationRegisterHelpers = {
-            registerApp: sinon.stub().returns($q.defer().promise),
-            getOfferingsOfApp: sinon.stub().returns($q.defer().promise)
+        applicationMarketplaceRegistrator = {
+            registerApplication: sinon.stub().returns($q.defer().promise),
+            getOfferingsOfApplication: sinon.stub().returns($q.defer().promise)
         };
 
-        _targetProvider = (new TestHelpers()).stubTargetProvider({});
-        _targetProvider.space = space;
-        _targetProvider.org = org;
         state = new State();
-        scope.$parent = $rootScope.$new();
-        scope.$parent.appId = 'app-guid-1234';
-        ctrl = $controller('ApplicationRegisterController',{
-            targetProvider: _targetProvider,
-            $scope: scope,
-            ApplicationRegisterHelpers: mockApplicationRegisterHelpers
-        });
+        scope.appId = APP_ID;
+
+        createController = function () {
+            sut = $controller('ApplicationRegisterController', {
+                $scope: scope,
+                ApplicationMarketplaceRegistrator: applicationMarketplaceRegistrator
+            });
+        };
     }));
 
-    it('Register application with success', function(){
-        var service = {
-            app: {
-                metadata: {
-                    guid: ""
-                }
-            },
-            description: "",
-            name: "",
-            tags: [],
-            metadata: {}
-        };
-        scope.offerings = [{id: "mock1"}];
-        mockApplicationRegisterHelpers.registerApp = sinon.stub().returns(successfulPromise(service));
+    it('should not be null', function () {
+        createController();
+
+        expect(sut).not.to.be.null;
+    });
+
+    it('init, set state loaded', function () {
+        createController();
+
+        expect(scope.state.isLoaded(), 'state').to.be.true;
+    });
+
+    it('init, get offerings', function () {
+        createController();
+
+        expect(scope.offeringsState.isPending(), 'offerings state').to.be.true;
+        expect(applicationMarketplaceRegistrator.getOfferingsOfApplication).to.be.calledWith(APP_ID);
+    });
+
+    it('init, get offerings failed, set status loaded', function () {
+        applicationMarketplaceRegistrator.getOfferingsOfApplication = sinon.stub().returns(rejectedPromise());
+
+        createController();
+        scope.$digest();
+
+        expect(scope.offeringsState.isLoaded(), 'offerings state').to.be.true;
+        expect(scope.offerings).to.be.empty;
+    });
+
+    it('init, get offerings success, set offerings and status loaded', function () {
+        var offerings = [{
+            id: 11
+        }, {
+            id: 22
+        }];
+        applicationMarketplaceRegistrator.getOfferingsOfApplication = sinon.stub().returns(successfulPromise(offerings));
+
+        createController();
+        scope.$digest();
+
+        expect(scope.offeringsState.isLoaded(), 'offerings state').to.be.true;
+        expect(scope.offerings).to.be.deep.equal(offerings);
+    });
+
+    it('submitRegister, call create offering', function () {
+        createController();
 
         scope.submitRegister();
         scope.$digest();
 
-        expect(mockApplicationRegisterHelpers.registerApp).to.be.called;
-        expect(scope.state.value, 'state').to.be.equal(state.values.LOADED);
-        expect(scope.offerings.length).to.be.equal(2);
-        expect(scope.offerings[1]).to.be.equal(service);
+        expect(applicationMarketplaceRegistrator.registerApplication).to.be.called;
+        expect(scope.state.isPending(), 'state').to.be.true;
     });
 
-    it('Register application with fail', function(){
-        mockApplicationRegisterHelpers.registerApp = sinon.stub().returns(rejectedPromise({ status: 500 }));
-        scope.offerings = [{id: "mock1"}];
+    it('submitRegister, create offering fails, set state loaded and do not refresh offerings', function () {
+        createController();
+        applicationMarketplaceRegistrator.registerApplication = sinon.stub().returns(rejectedPromise());
 
         scope.submitRegister();
         scope.$digest();
 
-        expect(mockApplicationRegisterHelpers.registerApp).to.be.called;
-        expect(scope.state.value, 'state').to.be.equal(state.values.LOADED);
-        expect(scope.offerings.length).to.be.equal(1);
+        expect(applicationMarketplaceRegistrator.getOfferingsOfApplication).to.be.calledOnce; // + during init
+        expect(scope.state.isLoaded(), 'state').to.be.true;
     });
 
-    function successfulPromise() {
+    it('submitRegister, create offering success, set state loaded and refresh offerings', function () {
+        createController();
+        applicationMarketplaceRegistrator.registerApplication = sinon.stub().returns(successfulPromise());
+
+        scope.submitRegister();
+        scope.$digest();
+
+        expect(applicationMarketplaceRegistrator.getOfferingsOfApplication).to.be.calledTwice; // + during init
+        expect(scope.state.isLoaded(), 'state').to.be.true;
+    });
+
+    function successfulPromise(data) {
         var deferred = $q.defer();
         deferred.resolve.apply(deferred, arguments);
         return deferred.promise;

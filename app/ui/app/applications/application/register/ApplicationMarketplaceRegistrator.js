@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2016 Intel Corporation
+ * Copyright (c) 2017 Intel Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,24 +16,29 @@
 (function () {
     'use strict';
 
-    App.factory('ApplicationRegisterHelpers', function(ApplicationRegisterResource, NotificationService) {
+    App.factory('ApplicationMarketplaceRegistrator', function (OfferingsResource, NotificationService) {
         return {
-            getOfferingsOfApp: function(appGuid) {
-                return ApplicationRegisterResource
-                    .withErrorMessage('Failed to retrieve service offerings from catalog')
-                    .getClonedApplication(appGuid)
-                    .then(function (response) {
-                        return response.plain();
+            getOfferingsOfApplication: function(appId) {
+                return OfferingsResource
+                    .withErrorMessage('Failed to retrieve service offerings')
+                    .getAll()
+                    .then(function (offerings) {
+                        return _.filter(offerings, function(offering) {
+                            return _.some(offering.metadata, {
+                                key: 'APPLICATION_ID',
+                                value: appId
+                            });
+                        });
                     });
+
             },
 
-            registerApp: function(request) {
-                return ApplicationRegisterResource
+            registerApplication: function(offeringRequest) {
+                return OfferingsResource
                     .withErrorMessage('Failed to register application in marketplace')
-                    .registerApplication(request)
-                    .then(function (response) {
+                    .createFromApplication(offeringRequest)
+                    .then(function() {
                         NotificationService.success('Application has been registered in marketplace');
-                        return response.plain();
                     });
             }
         };

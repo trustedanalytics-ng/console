@@ -30,6 +30,10 @@
             return this.one(id).remove();
         };
 
+        offering.createFromApplication = function(offeringRequest) {
+            return this.one('application').post(null, offeringRequest);
+        };
+
         return offering;
     });
 }());

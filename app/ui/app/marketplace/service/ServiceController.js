@@ -18,7 +18,7 @@
 
 
     App.controller('ServiceController', function (OfferingsResource, NotificationService, $stateParams,
-        targetProvider, $scope, ServiceInstancesResource, State, ApplicationRegisterResource, $location, ValidationPatterns) {
+        targetProvider, $scope, ServiceInstancesResource, State, $location, ValidationPatterns) {
 
         var GATEWAY_TIMEOUT_ERROR = 504;
         
