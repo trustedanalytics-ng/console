@@ -97,19 +97,34 @@ App.config(function ($stateProvider, $urlRouterProvider, LazyLoadProvider, AppCo
             title: 'Platform Dashboard',
             controller: 'PlatformDashboardController',
             controllerAs: 'ctrl',
-            templateUrl: getViewPath('operations/platformdashboard/platform-dashboard.html')
+            templateUrl: getViewPath('operations/platformdashboard/platform-dashboard.html'),
+            resolve: {
+                security: /*@ngInject*/ function(UserProvider, $state) {
+                    redirectNonAdminUser(UserProvider, $state);
+                }
+            }
         })
         .state('app.platformdashboard.summary', {
             url: '/summary',
             title: 'Summary',
             targetHeader: {org: false, space: false},
-            templateUrl: getViewPath('operations/platformdashboard/platform-summary.html')
+            templateUrl: getViewPath('operations/platformdashboard/platform-summary.html'),
+            resolve: {
+                security: /*@ngInject*/ function(UserProvider, $state) {
+                    redirectNonAdminUser(UserProvider, $state);
+                }
+            }
         })
         .state('app.platformdashboard.computecluster', {
             url: '/kubernetes',
             title: 'Kubernetes',
             targetHeader: {org: false, space: false},
-            templateUrl: getViewPath('operations/platformdashboard/platform-computecluster.html')
+            templateUrl: getViewPath('operations/platformdashboard/platform-computecluster.html'),
+            resolve: {
+                security: /*@ngInject*/ function(UserProvider, $state) {
+                    redirectNonAdminUser(UserProvider, $state);
+                }
+            }
         })
         .state('app.versiontracking', {
             url: '/versiontracking',
@@ -123,39 +138,71 @@ App.config(function ($stateProvider, $urlRouterProvider, LazyLoadProvider, AppCo
             title: 'Snapshots',
             controller: 'PlatformSnapshotsController',
             controllerAs: 'ctrl',
-            templateUrl: getViewPath('operations/versiontracking/platformsnapshots/platformsnapshots.html')
+            templateUrl: getViewPath('operations/versiontracking/platformsnapshots/platformsnapshots.html'),
+            resolve: {
+                security: /*@ngInject*/ function(UserProvider, $state) {
+                    redirectNonAdminUser(UserProvider, $state);
+                }
+            }
+
         })
         .state('app.versiontracking.diffs', {
             url: '/diffs',
             title: 'Snapshots diffs',
             controller: 'PlatformSnapshotsDiffsController',
             controllerAs: 'ctrl',
-            templateUrl: getViewPath('operations/versiontracking/diffs/platformsnapshotsdiffs.html')
+            templateUrl: getViewPath('operations/versiontracking/diffs/platformsnapshotsdiffs.html'),
+            resolve: {
+                security: /*@ngInject*/ function(UserProvider, $state) {
+                    redirectNonAdminUser(UserProvider, $state);
+                }
+            }
         })
         .state('app.versiontrackingapp', {
             url: '/versiontracking/snapshots/:snapshotId/:appGuid',
             title: 'Application details',
             controller: 'ApplicationOverviewController',
-            templateUrl: getViewPath('operations/versiontracking/platformsnapshots/appoverview.html')
+            templateUrl: getViewPath('operations/versiontracking/platformsnapshots/appoverview.html'),
+            resolve: {
+                security: /*@ngInject*/ function (UserProvider, $state) {
+                    redirectNonAdminUser(UserProvider, $state);
+                }
+            }
         })
         .state('app.platformtests', {
             url: '/platformtests',
             title: 'Platform Test Suites',
-            templateUrl: getViewPath('operations/platformtests/platform-tests.html')
+            templateUrl: getViewPath('operations/platformtests/platform-tests.html'),
+            resolve: {
+                security: /*@ngInject*/ function(UserProvider, $state) {
+                    redirectNonAdminUser(UserProvider, $state);
+                }
+            }
+
         })
         .state('app.platformtests.list', {
             url: '/list',
             title: 'Platform Test Suites',
             controller: 'PlatformTestSuitesController',
             controllerAs: 'ctrl',
-            templateUrl: getViewPath('operations/platformtests/test-suites.html')
+            templateUrl: getViewPath('operations/platformtests/test-suites.html'),
+            resolve: {
+                security: /*@ngInject*/ function(UserProvider, $state) {
+                    redirectNonAdminUser(UserProvider, $state);
+                }
+            }
         })
         .state('app.platformtests.results', {
             url: '/results/:testSuiteId',
             title: 'Platform Test Suite Results',
             controller: 'PlatformTestSuiteResultsController',
             controllerAs: 'ctrl',
-            templateUrl: getViewPath('operations/platformtests/test-suite-results.html')
+            templateUrl: getViewPath('operations/platformtests/test-suite-results.html'),
+            resolve: {
+                security: /*@ngInject*/ function(UserProvider, $state) {
+                    redirectNonAdminUser(UserProvider, $state);
+                }
+            }
         })
         .state('app.dashboard', {
             url: '/dashboard',
@@ -409,21 +456,36 @@ App.config(function ($stateProvider, $urlRouterProvider, LazyLoadProvider, AppCo
             controller: 'InvitationsController',
             controllerAs: 'ctrl',
             abstract: true,
-            templateUrl: getViewPath('manageusers/invite/invitations.html')
+            templateUrl: getViewPath('manageusers/invite/invitations.html'),
+            resolve: {
+                security: /*@ngInject*/ function(UserProvider, $state) {
+                    redirectNonAdminUser(UserProvider, $state);
+                }
+            }
         })
         .state('app.manage.invite.send', {
             url: '/send',
             title: 'Invite new user',
             targetHeader: {org: false, space: false},
             controller: 'InvitationSendController as ctrl',
-            templateUrl: getViewPath('manageusers/invite/invite.html')
+            templateUrl: getViewPath('manageusers/invite/invite.html'),
+            resolve: {
+                security: /*@ngInject*/ function(UserProvider, $state) {
+                    redirectNonAdminUser(UserProvider, $state);
+                }
+            }
         })
         .state('app.manage.invite.pending', {
             url: '/pending',
             title: 'Pending',
             targetHeader: {org: false, space: false},
             controller: 'PendingInvitationsController as ctrl',
-            templateUrl: getViewPath('manageusers/invite/pending.html')
+            templateUrl: getViewPath('manageusers/invite/pending.html'),
+            resolve: {
+                security: /*@ngInject*/ function(UserProvider, $state) {
+                    redirectNonAdminUser(UserProvider, $state);
+                }
+            }
         })
         .state('app.manage.orgusers', {
             url: '/orgusers',
@@ -431,14 +493,24 @@ App.config(function ($stateProvider, $urlRouterProvider, LazyLoadProvider, AppCo
             targetHeader: {org: true, space: false, managedOnly: true},
             controller: 'ManageUsersController',
             controllerAs: 'ctrl',
-            templateUrl: getViewPath('manageusers/users/user.html')
+            templateUrl: getViewPath('manageusers/users/user.html'),
+            resolve: {
+                security: /*@ngInject*/ function(UserProvider, $state) {
+                    redirectNonAdminUser(UserProvider, $state);
+                }
+            }
         })
         .state('app.manage.organizations', {
             url: '/organizations',
             title: 'Organizations',
             controller: 'OrganizationsController',
             controllerAs: 'ctrl',
-            templateUrl: getViewPath('manageusers/organizations/organizations.html')
+            templateUrl: getViewPath('manageusers/organizations/organizations.html'),
+            resolve: {
+                security: /*@ngInject*/ function(UserProvider, $state) {
+                    redirectNonAdminUser(UserProvider, $state);
+                }
+            }
         })
         .state('app.manage.organizations.manage', {
             url: '/manageorganizations/:orgId',
@@ -447,7 +519,12 @@ App.config(function ($stateProvider, $urlRouterProvider, LazyLoadProvider, AppCo
             controller: 'ManageOrganizationsController',
             controllerAs: 'ctrl',
             templateUrl: getViewPath('manageusers/organizations/manageorganizations.html'),
-            resolve: LazyLoadProvider.load(['xeditable'])
+            resolve: {
+                lazyLoad: LazyLoadProvider.load(['xeditable']),
+                security: /*@ngInject*/ function (UserProvider, $state) {
+                    redirectNonAdminUser(UserProvider, $state);
+                }
+            }
         })
         .state('app.manage.organizations.add', {
             url: '/addorganization',
@@ -456,7 +533,12 @@ App.config(function ($stateProvider, $urlRouterProvider, LazyLoadProvider, AppCo
             controller: 'AddOrganizationsController',
             controllerAs: 'ctrl',
             templateUrl: getViewPath('manageusers/organizations/addorganization.html'),
-            resolve: LazyLoadProvider.load(['parsley'])
+            resolve: {
+                lazyLoad: LazyLoadProvider.load(['parsley']),
+                security: /*@ngInject*/ function (UserProvider, $state) {
+                    redirectNonAdminUser(UserProvider, $state);
+                }
+            }
         })
         .state('app.changepassword', {
             url: '/changepassword',
@@ -502,5 +584,13 @@ App.config(function ($stateProvider, $urlRouterProvider, LazyLoadProvider, AppCo
 
     function getViewPath(path) {
         return AppConfig.viewsBase + path;
+    }
+
+    function redirectNonAdminUser(userProvider, $state) {
+        userProvider.isAdmin().then(function (isAdmin) {
+            if (!isAdmin) {
+                $state.go("app.dashboard");
+            }
+        });
     }
 });
