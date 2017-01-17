@@ -57,10 +57,6 @@
                         'vendor/c3/c3.min.css'],
                 serie: true
             }, {
-                name: 'highlightjs',
-                files: ['vendor/highlightjs/highlight.pack.js',
-                        'vendor/highlightjs/styles/github.css']
-            }, {
                 name: 'ng-file-upload',
                 files: ['vendor/ng-file-upload/ng-file-upload.min.js']
             },
