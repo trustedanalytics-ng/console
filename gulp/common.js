@@ -34,14 +34,7 @@ gulp.task('clean', function (callback) {
     });
 });
 
-gulp.task('test', gulpsync.sync(['test:server', 'test:ui']));
-
-gulp.task('test:server', function() {
-    return gulp.src('test/javascript/server/**/*.js')
-        .pipe(plugins.mocha());
-});
-
-gulp.task('test:ui', function(done) {
+gulp.task('test', function(done) {
     new Karma({
         configFile: path.join(__dirname, '..', config.testsDir, 'ui/karma.conf.js'),
         singleRun: true

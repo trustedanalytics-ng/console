@@ -58,7 +58,7 @@ gulp.task('vendor:app', function () {
         .pipe(plugins.uglify())
         .pipe(jsFilter.restore)
         .pipe(cssFilter)
-        .pipe(plugins.minifyCss({ rebase: false }))
+        .pipe(plugins.cleanCss({ rebase: false }))
         .pipe(cssFilter.restore)
         .pipe(gulp.dest(utils.getDest(taskConfig)));
 

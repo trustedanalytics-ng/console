@@ -52,7 +52,7 @@ module.exports = {
     compileStyles: function(taskConfig) {
         return gulp.src(this.getSrc(taskConfig), { base: this.getBase(taskConfig) })
             .pipe(plugins.compass(this.getCompassOpts(taskConfig)))
-            .pipe(config.isProduction ? plugins.minifyCss() : plugins.util.noop())
+            .pipe(config.isProduction ? plugins.cleanCss() : plugins.util.noop())
             .pipe(gulp.dest(this.getDest(taskConfig)));
     },
 
@@ -60,7 +60,7 @@ module.exports = {
         return gulp.src(this.getSrc(taskConfig), { base: this.getBase(taskConfig) })
             .pipe(plugins.filter('**/*.css'))
             .pipe(plugins.concat(taskConfig.dest))
-            .pipe(config.isProduction ? plugins.minifyCss() : plugins.util.noop())
+            .pipe(config.isProduction ? plugins.cleanCss() : plugins.util.noop())
             .pipe(gulp.dest(config.destDir));
     },
 
@@ -94,7 +94,7 @@ module.exports = {
                 base: './app/ui/'
             }))
             .pipe(plugins.if('*.js', plugins.uglify()))
-            .pipe(plugins.if('*.css', plugins.minifyCss()))
+            .pipe(plugins.if('*.css', plugins.cleanCss()))
             .pipe(gulp.dest(this.getDest(taskConfig)));
     }
 };
