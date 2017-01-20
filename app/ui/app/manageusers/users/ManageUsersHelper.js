@@ -36,9 +36,6 @@
                     } else {
                         UserActionsNotificationsService.userInvited(user);
                     }
-                })
-                .catch(function onError() {
-                    UserActionsNotificationsService.userNotAdded(user);
                 });
         }
 

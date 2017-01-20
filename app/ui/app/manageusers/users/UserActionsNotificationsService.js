@@ -45,10 +45,6 @@
                 NotificationService.success('User ' + user.username + ' has been added');
             },
 
-            userNotAdded: function (user) {
-                NotificationService.error('User ' + user.username + ' has not been added');
-            },
-
             userInvited: function (user) {
                 NotificationService.success('User ' + user.username + ' does not exist. The user has been invited');
             },

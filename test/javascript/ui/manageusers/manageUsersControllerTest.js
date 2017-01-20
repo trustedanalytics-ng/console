@@ -29,7 +29,6 @@ describe("Unit: ManageUsersController", function () {
     beforeEach(module('app', function($provide) {
         UserActionsNotificationsService =  {
             userAdded: sinon.stub(),
-            userNotAdded: sinon.stub(),
             userInvited: sinon.stub()
         };
 
