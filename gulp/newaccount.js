@@ -17,7 +17,6 @@
 var gulp        = require('gulp'),
     config      = require('./config'),
     utils      = require('./utils'),
-    path        = require('path'),
 
     plugins     = require('gulp-load-plugins')();
 // @formatter:on

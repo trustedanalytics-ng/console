@@ -94,7 +94,7 @@ module.exports = {
     inject: {
         newAccount: {
             base: 'new-account/new-account.jade',
-            dest: 'new-account'
+            dest: '.'
         }
     },
 

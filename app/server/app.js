@@ -42,12 +42,14 @@ auth.init(app);
 
 app.get('/new-account',
     function(req, res) {
-        res.sendFile(path.join(staticFilesDir, 'new-account/new-account.html'));
+        res.sendFile(path.join(staticFilesDir, 'new-account.html'));
     }
 );
 
 app.get('/new-account/*',
-    express.static(staticFilesDir)
+    express.static(staticFilesDir, {
+        fallthrough: false
+    })
 );
 
 app.get('/rest/registrations/*',
