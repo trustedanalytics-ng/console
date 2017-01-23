@@ -98,6 +98,13 @@
                     $scope.reload();
                 });
         };
+
+        $scope.canCreateNewInstance = function() {
+            if(!$scope.serviceInstance) {
+                return false;
+            }
+            return !_.findWhere($scope.serviceInstance.metadata || [], {key: 'MODEL_ID'});
+        };
     });
 
     function fillTimestamps(instance) {

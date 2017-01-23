@@ -25,6 +25,7 @@
             instance-actions(instance="serviceInstance" on-delete="deleteWithConfirmation()" on-start="start()"
                 on-stop="stop()" on-restart="restart()")
             button.btn.btn-primary(
+                ng-if='canCreateNewInstance()'
                 ui-sref='app.service({offeringId: serviceInstance.offeringId})')
                 | Create new instance
 

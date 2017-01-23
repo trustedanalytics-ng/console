@@ -147,4 +147,52 @@ describe("Unit: ServiceInstanceDetailsControllerTest", function () {
         expect(notificationService.success).not.to.be.called;
     });
 
+    it('canCreateNewInstance, empty instance, return false', function () {
+        scope.serviceInstance = null;
+
+        var result = scope.canCreateNewInstance();
+
+        expect(result).to.be.not.ok;
+    });
+
+    it('canCreateNewInstance, instance w/o metadata, return true', function () {
+        scope.serviceInstance = {};
+
+        var result = scope.canCreateNewInstance();
+
+        expect(result).to.be.ok;
+    });
+
+    it('canCreateNewInstance, instance w/ empty metadata, return true', function () {
+        scope.serviceInstance = {metadata: []};
+
+        var result = scope.canCreateNewInstance();
+
+        expect(result).to.be.ok;
+    });
+
+    it('canCreateNewInstance, instance w/o MODEL_ID metadata, return true', function () {
+        scope.serviceInstance = {metadata: [{
+            key: "SOME_KEY",
+            value: "SOME_VAL"
+        }]};
+
+        var result = scope.canCreateNewInstance();
+
+        expect(result).to.be.ok;
+    });
+
+    it('canCreateNewInstance, instance w/ MODEL_ID metadata, return false', function () {
+        scope.serviceInstance = {metadata: [{
+            key: "SOME_KEY",
+            value: "SOME_VAL"
+        }, {
+            key: "MODEL_ID",
+            value: "some_id"
+        }]};
+
+        var result = scope.canCreateNewInstance();
+
+        expect(result).to.be.not.ok;
+    });
 });
