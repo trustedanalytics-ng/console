@@ -162,7 +162,6 @@ describe("Unit: ManageUsersController", function () {
        scope.addUser();
        scope.$root.$digest();
        expect(userServiceMock.addUser).to.be.calledWith({username: user.username, role: user.role.toUpperCase()});
-       expect(UserActionsNotificationsService.userAdded.called).to.be.true;
        expect(userServiceMock.getAll.called).to.be.true;
        expect(scope.tableParams.reload.called).to.be.true;
     });
@@ -183,7 +182,6 @@ describe("Unit: ManageUsersController", function () {
        scope.addUser();
        scope.$root.$digest();
        expect(userServiceMock.addUser.called).to.be.true;
-       expect(UserActionsNotificationsService.userAdded.called).to.be.false;
        expect(UserActionsNotificationsService.userInvited.called).to.be.true;
        expect(userServiceMock.getAll.called).to.be.true;
        expect(scope.tableParams.reload.called).to.be.true;

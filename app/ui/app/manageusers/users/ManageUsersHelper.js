@@ -30,12 +30,8 @@
             return userService
                 .withErrorMessage('Failed to add user')
                 .addUser(user)
-                .then(function onSuccess(data) {
-                    if (data != null) {
-                        UserActionsNotificationsService.userAdded(user);
-                    } else {
-                        UserActionsNotificationsService.userInvited(user);
-                    }
+                .then(function onSuccess() {
+                    UserActionsNotificationsService.userInvited(user);
                 });
         }
 
