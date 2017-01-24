@@ -82,7 +82,7 @@ describe("Unit: ModelsController", function() {
     it('init, getInstances, set defaultFilter on success', function () {
         var defaultFilters = {
             selectedType: 'Choose Model Type',
-            created: {}
+            created: { from : '', to: ''}
         };
         createController();
         deferred.resolve();

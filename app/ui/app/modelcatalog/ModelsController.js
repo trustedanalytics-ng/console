@@ -32,7 +32,7 @@
 
         var defaultFilters = {
             selectedType: $scope.modelTypes[0],
-            created: {}
+            created: {from : '', to: ''}
         };
 
         var dateFilter = function (model) {
@@ -58,6 +58,8 @@
 
         $scope.clearFilters = function () {
             $scope.filters = angular.copy(defaultFilters);
+            $scope.filters.created.from = '';
+            $scope.filters.created.to = '';
             $scope.matchSelectedType($scope.filters.selectedType);
             $scope.$broadcast('resetSearch');
         };
