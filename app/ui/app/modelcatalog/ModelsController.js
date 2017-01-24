@@ -28,8 +28,7 @@
         };
 
         $scope.modelTypes = [ "Choose Model Type" ];
-        $scope.validationPattern = ValidationPatterns.DATE.pattern;
-        $scope.validationMessage= ValidationPatterns.DATE.validationMessage;
+        $scope.dateValidationMessage= ValidationPatterns.DATE.validationMessage;
 
         var defaultFilters = {
             selectedType: $scope.modelTypes[0],

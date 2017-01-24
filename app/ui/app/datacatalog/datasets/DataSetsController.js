@@ -30,8 +30,7 @@
             pages: []
         };
 
-        $scope.validationPattern = ValidationPatterns.DATE.pattern;
-        $scope.validationMessage= ValidationPatterns.DATE.validationMessage;
+        $scope.dateValidationMessage= ValidationPatterns.DATE.validationMessage;
 
         var category = null;
         $scope.onCategoryChange = function (c) {

@@ -51,22 +51,22 @@ h3
                                     em.fa.fa-calendar
                                  input.form-control.date-range(name="start" type="text", uib-datepicker-popup="dd-MM-yyyy"
                                     placeholder="dd-MM-yyyy" ng-model="filters.created.from" is-open="dp.createdOpened"
-                                    ng-click="openCreated()" datepicker-options="dp.options" date-validator="{{ validationPattern }}")
+                                    ng-click="openCreated()" datepicker-options="dp.options" date-validator)
                                  span
                                  div(ng-hide="creation.start.$valid")
                                     span.validationMessage(ng-message="regexValidator")
-                                       | {{ validationMessage }}
+                                       | {{ dateValidationMessage }}
                               .form-group
                                  label.date End Date
                                  span
                                     em.fa.fa-calendar
                                  input.form-control.date-range(name="end" type="text", uib-datepicker-popup="dd-MM-yyyy"
                                     placeholder="dd-MM-yyyy" ng-model="filters.created.to" is-open="dp.toOpened"
-                                    ng-click="openTo()" date-validator="{{ validationPattern }}")
+                                    ng-click="openTo()" date-validator)
                                  span
                                  div(ng-hide="creation.end.$valid")
                                     span.validationMessage(ng-message="regexValidator")
-                                       | {{ validationMessage }}
+                                       | {{ dateValidationMessage }}
                      .button-filter
                         button.btn-primary.fa-close(ng-click="clearFilters()") Clear Filters
                   .divider

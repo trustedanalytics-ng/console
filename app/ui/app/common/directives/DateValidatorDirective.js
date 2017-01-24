@@ -23,18 +23,14 @@
             require: 'ngModel',
             link: function (scope, element, attr, ctrl) {
                 function validator(ngModelValue) {
-                    var regexPattern = new RegExp(attr.patternValidator);
-
-                    if (regexPattern.test(ngModelValue.toLocaleDateString())) {
-                        ctrl.$setValidity('regexValidator', true);
+                    if(moment(moment(ngModelValue).format('DD-MM-YYYY'), 'DD-MM-YYYY', true).isValid()) {
+                        ctrl.$setValidity('dateValidator', true);
                     }
                     else {
-                        ctrl.$setValidity('regexValidator', false);
+                        ctrl.$setValidity('dateValidator', false);
                     }
-
                     return ngModelValue;
                 }
-
                 ctrl.$parsers.push(validator);
             }
         };
