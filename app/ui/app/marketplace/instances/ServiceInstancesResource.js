@@ -62,6 +62,10 @@
             return service.one(instanceId).get();
         };
 
+        service.getCredentials = function (serviceId) {
+            return service.one(serviceId).one('credentials').get();
+        };
+
         return service;
     });
 

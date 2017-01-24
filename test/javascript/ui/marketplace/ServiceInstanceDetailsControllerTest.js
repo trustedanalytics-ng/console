@@ -28,24 +28,47 @@ describe("Unit: ServiceInstanceDetailsControllerTest", function () {
         notificationService,
         createController,
         serviceInstanceDeferred,
+        serviceInstanceCredentialsDeferred,
         toolsInstanceDeferred,
         deleteInstanceDeferred,
         redirect = 'app.marketplace.instances';
 
-    var SAMPLE_INSTANCE;
+    var SAMPLE_INSTANCE_WITH_LOGIN_AND_PASSWORD,
+        SAMPLE_INSTANCE_WITHOUT_LOGIN_AND_PASSWORD,
+        SAMPLE_CREDENTIALS;
 
     beforeEach(module('app'));
 
     beforeEach(function() {
-        SAMPLE_INSTANCE = {
+        SAMPLE_INSTANCE_WITH_LOGIN_AND_PASSWORD = {
             id: 'sample-guid',
             auditTrail: {
                 createdOn: 123
-            }
+            },
+            metadata: [{
+                key: "login",
+                value: "some-login"
+            },{
+                key: "password",
+                value: "some-password"
+            }]
         };
+        SAMPLE_INSTANCE_WITHOUT_LOGIN_AND_PASSWORD = {
+            id: 'sample-guid',
+            auditTrail: {
+                createdOn: 123
+            },
+            metadata: []
+        };
+        SAMPLE_CREDENTIALS = [{
+            name: "some-name",
+            envs: {
+                SOME_ENV: "some-value"
+            }
+        }];
     });
 
-    beforeEach(inject(function ($controller, $rootScope, _$q_, State) {
+    beforeEach(inject(function ($controller, $rootScope, _$q_, State, $httpBackend) {
         rootScope = $rootScope;
         scope = rootScope.$new();
         $q = _$q_;
@@ -53,6 +76,7 @@ describe("Unit: ServiceInstanceDetailsControllerTest", function () {
         deleteState = new State();
         toolsState = new State();
         serviceInstanceDeferred = $q.defer();
+        serviceInstanceCredentialsDeferred = $q.defer();
         toolsInstanceDeferred = $q.defer();
         deleteInstanceDeferred = $q.defer();
 
@@ -63,7 +87,8 @@ describe("Unit: ServiceInstanceDetailsControllerTest", function () {
         serviceInstanceResource = {
             supressGenericError: sinon.stub().returnsThis(),
             getById: sinon.stub().returns(serviceInstanceDeferred.promise),
-            deleteInstance: sinon.stub().returns(deleteInstanceDeferred.promise)
+            deleteInstance: sinon.stub().returns(deleteInstanceDeferred.promise),
+            getCredentials: sinon.stub().returns(serviceInstanceCredentialsDeferred.promise)
         };
 
         notificationService = {
@@ -104,12 +129,22 @@ describe("Unit: ServiceInstanceDetailsControllerTest", function () {
         expect(serviceInstanceResource.getById).to.be.called;
     });
 
-    it('init, getById success, instance loaded', function () {
-        serviceInstanceDeferred.resolve(SAMPLE_INSTANCE);
+    it('init, getById w/ login and password success, instance loaded', function () {
+        serviceInstanceDeferred.resolve(SAMPLE_INSTANCE_WITH_LOGIN_AND_PASSWORD);
         scope.$digest();
 
         expect(scope.state.value).to.be.equal(state.values.LOADED);
-        expect(scope.serviceInstance.id).to.be.equal(SAMPLE_INSTANCE.id);
+        expect(scope.serviceInstance.id).to.be.equal(SAMPLE_INSTANCE_WITH_LOGIN_AND_PASSWORD.id);
+        expect(scope.serviceInstance.auditTrail.createdOnMilisec).to.be.equal(123000);
+    });
+
+    it('init, getById w/o login and password success, instance loaded', function () {
+        serviceInstanceDeferred.resolve(SAMPLE_INSTANCE_WITHOUT_LOGIN_AND_PASSWORD);
+        serviceInstanceCredentialsDeferred.resolve(SAMPLE_CREDENTIALS);
+        scope.$digest();
+
+        expect(scope.state.value).to.be.equal(state.values.LOADED);
+        expect(scope.serviceInstance.id).to.be.equal(SAMPLE_INSTANCE_WITHOUT_LOGIN_AND_PASSWORD.id);
         expect(scope.serviceInstance.auditTrail.createdOnMilisec).to.be.equal(123000);
     });
 

@@ -22,6 +22,8 @@
         return {
             getLogin: getLogin,
             getPassword: getPassword,
+            getLoginFromCredentials: getLoginFromCredentials,
+            getPasswordFromCredentials: getPasswordFromCredentials,
             getUrl: getUrl
         };
 
@@ -31,6 +33,14 @@
 
         function getPassword(instance) {
             return getMetadataValue(instance, ["password"]);
+        }
+
+        function getLoginFromCredentials(data) {
+            return getValueFromEnv(data, ["username", "login"]);
+        }
+
+        function getPasswordFromCredentials(data) {
+            return getValueFromEnv(data, ["password"]);
         }
 
         function getUrl(instance) {
@@ -44,6 +54,19 @@
                         return _.isString(meta.key) && _.contains(listOfPossibleKeys, meta.key.toLowerCase());
                     }) || {};
                 return metaObject.value;
+            }
+            return;
+        }
+
+        function getValueFromEnv(data, listOfPossibleKeys) {
+            if (data) {
+                return _.chain(data)
+                    .pluck("envs")
+                    .reduce(_.extend)
+                    .pick(listOfPossibleKeys)
+                    .values()
+                    .first()
+                    .value();
             }
             return;
         }

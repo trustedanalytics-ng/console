@@ -46,20 +46,20 @@
             tr
                 td Created on
                 td {{serviceInstance.auditTrail.createdOn * 1000 | date:'medium'}} by {{serviceInstance.auditTrail.createdBy}}
-            tr(ng-if='getLogin(serviceInstance)')
+            tr(ng-show='instanceLogin')
                 td Login
-                td {{ getLogin(serviceInstance) }}
-            tr(ng-if='getPassword(serviceInstance)')
+                td {{ instanceLogin }}
+            tr(ng-show='instancePassword')
                 td Password
                 td
-                    input.password-view.input-pass(type="text", ng-disabled="!showPass", readonly="readonly", ng-value="showPass ? getPassword(serviceInstance) : '****************'", disabled="disabled")
+                    input.password-view.input-pass(type="text", ng-disabled="!showPass", readonly="readonly", ng-value="showPass ? instancePassword : '****************'", disabled="disabled")
                     button.password-view.btn-pass(type="button", class="btn btn-sm", ng-class="!showPass ? 'btn-success' : 'btn-warning'"
                     ng-click="showPass = !showPass") {{ !showPass ? 'Show' : 'Hide' }}
-            tr(ng-if='getUrl(serviceInstance)')
+            tr(ng-show='instanceUrl')
                 td Url
                 td
-                    a(href='{{ getUrl(serviceInstance) | ensureProtocol }}', target="_blank")
-                        | {{ getUrl(serviceInstance) }}
+                    a(href='{{ instanceUrl | ensureProtocol }}', target="_blank")
+                        | {{ instanceUrl }}
 
     .panel.panel-warning(ng-show='state.isError()')
         .panel-heading Error loading content

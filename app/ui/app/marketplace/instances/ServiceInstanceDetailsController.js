@@ -27,10 +27,6 @@
         $scope.toolsState = toolsState;
         $scope.deleteState = new State().setDefault();
 
-        $scope.getLogin = ServiceMetadataFetcher.getLogin;
-        $scope.getPassword = ServiceMetadataFetcher.getPassword;
-        $scope.getUrl = ServiceMetadataFetcher.getUrl;
-        
         $scope.reload = function () {
             $scope.state.setPending();
             ServiceInstancesResource.getById(instanceId)
@@ -38,6 +34,18 @@
                     fillTimestamps(serviceInstance);
                     $scope.serviceInstance = serviceInstance;
                     $scope.state.setLoaded();
+
+                    $scope.instanceLogin = ServiceMetadataFetcher.getLogin(serviceInstance);
+                    $scope.instancePassword = ServiceMetadataFetcher.getPassword(serviceInstance);
+                    $scope.instanceUrl = ServiceMetadataFetcher.getUrl(serviceInstance);
+
+                    if (!$scope.instanceLogin && !$scope.instancePassword){
+                        ServiceInstancesResource.getCredentials(serviceInstance.id)
+                            .then(function (response) {
+                                $scope.instanceLogin = ServiceMetadataFetcher.getLoginFromCredentials(response);
+                                $scope.instancePassword = ServiceMetadataFetcher.getPasswordFromCredentials(response);
+                            });
+                    }
                 })
                 .catch(function onError (error) {
                     if (error.status === INSTANCE_NOT_FOUND_ERROR) {
