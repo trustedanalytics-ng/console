@@ -18,7 +18,7 @@ describe("Unit: TargetUrlBuilder", function() {
     var targetProvider = {},
         sut;
 
-    beforeEach(module('app'));
+    beforeEach(module('app:core'));
 
     beforeEach(module(function($provide){
         $provide.value('targetProvider', targetProvider);

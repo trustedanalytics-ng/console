@@ -44,7 +44,7 @@ describe("Unit: ManageOrganizationsController", function () {
         }
     ];
 
-    beforeEach(module('app', function($provide) {
+    beforeEach(module('app:core', function($provide) {
         notificationService = {
             error: sinon.stub(),
             success: sinon.stub()
@@ -109,7 +109,8 @@ describe("Unit: ManageOrganizationsController", function () {
             targetProvider: targetProvider,
             NotificationService: notificationService,
             SpaceResource: SpaceResource,
-            UserProvider: UserProvider
+            UserProvider: UserProvider,
+            $stateParams: {}
         });
     }
 

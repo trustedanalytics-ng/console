@@ -24,7 +24,7 @@ describe("Unit: ModelCatalogArtifactsClient", function () {
         NotificationService,
         FileUploaderService;
 
-    beforeEach(module('app'));
+    beforeEach(module('app:core'));
 
     beforeEach(module(function($provide) {
         ModelResource = {

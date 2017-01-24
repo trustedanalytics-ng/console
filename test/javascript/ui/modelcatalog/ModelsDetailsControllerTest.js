@@ -58,7 +58,7 @@ describe("Unit: ModelsDetailsController", function() {
         },
         TAP_SCORING_ENGINE_PATH = "tap-scoring-engine";
 
-    beforeEach(module('app'));
+    beforeEach(module('app:core'));
 
     beforeEach(inject(function ($controller, $rootScope, _$q_, State, ModelsMock) {
         modelsMock = ModelsMock;

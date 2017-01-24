@@ -34,7 +34,7 @@ describe("Unit: ServiceMetadataFetcher", function () {
                 {key: 'urls', value: 'sample-urls'}]
         }];
 
-    beforeEach(module('app'));
+    beforeEach(module('app:core'));
 
     beforeEach(inject(function (ServiceMetadataFetcher) {
         sut = ServiceMetadataFetcher;

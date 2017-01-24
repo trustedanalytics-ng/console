@@ -53,7 +53,7 @@ describe("Unit: TargetProvider", function() {
             "manager" : false
         }];
 
-    beforeEach(module('app', function(_$provide_){
+    beforeEach(module('app:core', function(_$provide_){
         $provide = _$provide_;
     }));
 

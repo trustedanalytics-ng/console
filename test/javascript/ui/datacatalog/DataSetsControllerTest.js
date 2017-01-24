@@ -26,7 +26,7 @@ describe("Unit: DataSetsController", function() {
 
         DEFAULT_TOOL_NAME = 'arcadia';
 
-    beforeEach(module('app', function($provide) {
+    beforeEach(module('app:core', function($provide) {
         platformInfoProvider = {
             getPlatformInfo: function() {
                 return q.defer().promise;

@@ -40,10 +40,13 @@ describe("Unit: ModelUploadService", function() {
             artifactActions: ["PUBLISH_JAR_SCORING_ENGINE"]
         };
 
-    beforeEach(module('app'));
+    beforeEach(module('app:core'));
 
     beforeEach(module(function($provide){
         $provide.value('FileUploaderService', fileUploaderService);
+        $provide.value('$state', {
+            go: sinon.stub()
+        });
     }));
 
 

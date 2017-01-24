@@ -22,7 +22,7 @@ describe("Unit: AddOrganizationsController", function () {
         $q,
         targetProvider;
 
-    beforeEach(module('app'));
+    beforeEach(module('app:core'));
 
     beforeEach(inject(function(_$controller_, $rootScope, _$q_) {
         $controller = _$controller_;
@@ -49,7 +49,8 @@ describe("Unit: AddOrganizationsController", function () {
             OrganizationResource: OrganizationResource,
             NotificationService: NotificationService,
             $state: state,
-            targetProvider: targetProvider
+            targetProvider: targetProvider,
+            $stateParams: {}
         });
     }
 

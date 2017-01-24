@@ -26,7 +26,8 @@ describe("Unit: ManageUsersController", function () {
     var currentUser;
     var UserActionsNotificationsService;
     var $q;
-    beforeEach(module('app', function($provide) {
+
+    beforeEach(module('app:core', function($provide) {
         UserActionsNotificationsService =  {
             userAdded: sinon.stub(),
             userInvited: sinon.stub()
@@ -80,7 +81,8 @@ describe("Unit: ManageUsersController", function () {
             UserService: userServiceMock,
             UserProvider: userProviderMock,
             UserActionsNotificationsService: UserActionsNotificationsService,
-            targetProvider: targetProvider
+            targetProvider: targetProvider,
+            $stateParams: {}
         });
     }
 

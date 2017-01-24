@@ -16,12 +16,12 @@
 
 describe("Unit: WorkflowJobController", function() {
 
-    beforeEach(module("app"));
-
     var controller, scope, targetProvider, workflowJobResource, notificationService, $q, platformInfoResource;
     var JOB_ID = "job-id", workflowJobResourceDefer, platformInfoResourceDefer;
 
-    beforeEach(inject(function($controller, $rootScope, $stateParams, _$q_){
+    beforeEach(module("app:core"));
+
+    beforeEach(inject(function($controller, $rootScope, _$q_){
         scope = $rootScope.$new();
         $q = _$q_;
 

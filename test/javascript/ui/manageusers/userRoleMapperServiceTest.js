@@ -15,7 +15,7 @@
  */
 describe("Unit: UsersRoleMapperService", function () {
     var UserRoleMapperService;
-    beforeEach(module('app'));
+    beforeEach(module('app:core'));
 
     beforeEach(inject(function (_UserRoleMapperService_) {
         UserRoleMapperService = _UserRoleMapperService_;

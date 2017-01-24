@@ -36,7 +36,7 @@ describe("Unit: ScoringEngineRetriever", function () {
     }];
 
 
-    beforeEach(module('app'));
+    beforeEach(module('app:core'));
 
     beforeEach(module(function($provide) {
         ServiceInstancesResource = {

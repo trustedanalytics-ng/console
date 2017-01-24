@@ -16,8 +16,6 @@
 
 describe("Unit: ImportDataController", function () {
 
-    beforeEach(module('app'));
-
     var controller,
         scope,
         $state,
@@ -25,6 +23,8 @@ describe("Unit: ImportDataController", function () {
         notificationService,
         $q,
         jobFormConfig;
+
+    beforeEach(module('app:core'));
 
     beforeEach(inject(function ($controller, $rootScope, _$q_, State, JobFormConfig) {
         scope = $rootScope.$new();

@@ -19,7 +19,8 @@ describe("Unit: UserService", function () {
     var userServiceSUT;
     var targetProviderStub;
     var $rootScope;
-    beforeEach(module('app'));
+
+    beforeEach(module('app:core'));
 
     beforeEach(module(function($provide){
         targetProviderStub = {};

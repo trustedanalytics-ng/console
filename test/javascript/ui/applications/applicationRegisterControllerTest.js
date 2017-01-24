@@ -24,7 +24,7 @@ describe("Unit: ApplicationRegisterController", function () {
 
     var APP_ID = 'app-guid-1234';
 
-    beforeEach(module('app'));
+    beforeEach(module('app:core'));
 
     beforeEach(inject(function($controller, $rootScope, State, _$q_) {
         scope = $rootScope.$new();
@@ -40,7 +40,8 @@ describe("Unit: ApplicationRegisterController", function () {
         createController = function () {
             sut = $controller('ApplicationRegisterController', {
                 $scope: scope,
-                ApplicationMarketplaceRegistrator: applicationMarketplaceRegistrator
+                ApplicationMarketplaceRegistrator: applicationMarketplaceRegistrator,
+                $stateParams: {}
             });
         };
     }));

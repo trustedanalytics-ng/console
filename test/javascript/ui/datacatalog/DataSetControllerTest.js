@@ -15,8 +15,6 @@
  */
 describe("Unit: DataSetController", function() {
 
-    beforeEach(module('app'));
-
     var controller,
         scope,
         rootScope,
@@ -34,6 +32,8 @@ describe("Unit: DataSetController", function() {
             id: "i1",
             orgUUID: ["o1", "o2"]
         });
+
+    beforeEach(module('app:core'));
 
     beforeEach(inject(function($injector, State, $q, TestHelpers){
         rootScope = $injector.get('$rootScope');

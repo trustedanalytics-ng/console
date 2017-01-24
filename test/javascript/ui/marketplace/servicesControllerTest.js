@@ -41,7 +41,7 @@ describe("Unit: ServicesController", function () {
         metadata: [{key: 'MODEL_ID'}]
     };
 
-    beforeEach(module('app'));
+    beforeEach(module('app:core'));
 
     beforeEach(module(function($provide){
         $provide.value('targetProvider', targetProvider);

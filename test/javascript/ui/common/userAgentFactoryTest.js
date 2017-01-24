@@ -15,7 +15,7 @@
  */
 describe("Unit: UserAgent factory", function() {
 
-    beforeEach(module('app'));
+    beforeEach(module('app:core'));
 
     it('should have a ensureProtocol advancedsearch', inject(function(userAgent){
         expect(userAgent).not.to.be.null;

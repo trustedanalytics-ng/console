@@ -16,7 +16,7 @@
 
 describe("Unit: PlatformSnapshotsController", function() {
 
-    beforeEach(module('app'));
+    beforeEach(module('app:core'));
 
     var controller,
         scope,

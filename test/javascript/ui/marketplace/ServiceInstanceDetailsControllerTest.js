@@ -37,7 +37,7 @@ describe("Unit: ServiceInstanceDetailsControllerTest", function () {
         SAMPLE_INSTANCE_WITHOUT_LOGIN_AND_PASSWORD,
         SAMPLE_CREDENTIALS;
 
-    beforeEach(module('app'));
+    beforeEach(module('app:core'));
 
     beforeEach(function() {
         SAMPLE_INSTANCE_WITH_LOGIN_AND_PASSWORD = {
@@ -108,7 +108,8 @@ describe("Unit: ServiceInstanceDetailsControllerTest", function () {
                 NotificationService: notificationService,
                 ServiceInstancesResource: serviceInstanceResource,
                 ToolsInstanceResource: toolsInstanceResource,
-                $state: $state
+                $state: $state,
+                $stateParams: {}
             });
         };
 

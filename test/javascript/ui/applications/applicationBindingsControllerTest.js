@@ -33,9 +33,9 @@ describe("Unit: ApplicationBindingsController", function () {
         ],
         SAMPLE_INSTANCES = [{id:'i1'},{id:'i2'},{id:'i3'}];
 
-    beforeEach(module('app'));
+    beforeEach(module('app:core'));
 
-    beforeEach(inject(function ($controller, _$rootScope_, State, $stateParams, _$q_) {
+    beforeEach(inject(function ($controller, _$rootScope_, State, _$q_) {
         $rootScope = _$rootScope_;
         $scope = $rootScope.$new();
         $q =_$q_;
@@ -54,14 +54,17 @@ describe("Unit: ApplicationBindingsController", function () {
             success: sinon.stub(),
             error: sinon.stub()
         };
-        $stateParams.appId = SAMPLE_APPLICATION.guid;
+        var $stateParams = {
+            appId: SAMPLE_APPLICATION.guid
+        };
 
         createController = function () {
             controller = $controller('ApplicationBindingsController', {
                 $scope: $scope,
                 NotificationService: notificationService,
                 ApplicationResource: applicationResource,
-                ServiceInstancesResource: serviceInstancesResource
+                ServiceInstancesResource: serviceInstancesResource,
+                $stateParams: $stateParams
             });
         };
 

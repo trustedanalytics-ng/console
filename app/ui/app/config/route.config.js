@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-App.config(function ($stateProvider, $urlRouterProvider, LazyLoadProvider, AppConfig, $sceProvider) {
+angular.module('app').config(function ($stateProvider, $urlRouterProvider, LazyLoadProvider, AppConfig, $sceProvider) {
     'use strict';
 
     // This is workaround for marketplace icons not loading
@@ -209,8 +209,7 @@ App.config(function ($stateProvider, $urlRouterProvider, LazyLoadProvider, AppCo
             title: 'Dashboard',
             targetHeader: {org: true, space: false},
             controller: 'DashboardController',
-            templateUrl: getViewPath('dashboard/dashboard.html'),
-            resolve: LazyLoadProvider.load(['c3charts-serial'])
+            templateUrl: getViewPath('dashboard/dashboard.html')
         })
         .state('app.latestevents', {
             url: '/events',

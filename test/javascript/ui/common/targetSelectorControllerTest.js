@@ -34,7 +34,7 @@ describe("Unit: TargetSelectorController", function() {
     var $q;
     var userDeferred;
 
-    beforeEach(module('app'));
+    beforeEach(module('app:core'));
 
     beforeEach(inject(function(_$controller_, $rootScope, _$q_) {
         $q = _$q_;

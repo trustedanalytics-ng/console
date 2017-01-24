@@ -21,7 +21,7 @@ describe("Unit: EmailValidatorDirective", function() {
         element,
         form;
 
-    beforeEach(module('app'));
+    beforeEach(module('app:core'));
 
     beforeEach(inject(function($compile, $rootScope) {
         scope = $rootScope.$new();

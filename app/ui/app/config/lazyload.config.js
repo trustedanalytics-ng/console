@@ -51,12 +51,6 @@
                 name: 'parsley',
                 files: ['vendor/parsleyjs/dist/parsley.min.js']
             }, {
-                name: 'c3charts-serial',
-                files: ['vendor/d3/d3.min.js',
-                        'vendor/c3/c3.min.js',
-                        'vendor/c3/c3.min.css'],
-                serie: true
-            }, {
                 name: 'ng-file-upload',
                 files: ['vendor/ng-file-upload/ng-file-upload.min.js']
             },

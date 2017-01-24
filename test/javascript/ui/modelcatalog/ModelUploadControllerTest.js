@@ -26,6 +26,7 @@ describe("Unit: ModelUploadController", function() {
         $q,
         $state,
         fileUploaderService,
+        modelUploadService,
         redirect = 'app.modelcatalog.models',
         SAMPLE_MODEL = {id: '1234'},
         SAMPLE_UPLOAD_MODEL = {
@@ -40,18 +41,21 @@ describe("Unit: ModelUploadController", function() {
             action: ["PUBLISH_TAP_SCORING_ENGINE"]
         };
 
-    beforeEach(module('app'));
+    beforeEach(module('app:core'));
 
     beforeEach(module(function($provide){
         $provide.value('targetProvider', targetProvider);
     }));
 
-    beforeEach(inject(function ($controller, $rootScope, _$q_, _$state_, State) {
+    beforeEach(inject(function ($controller, $rootScope, _$q_, State) {
         scope = $rootScope.$new();
         $q = _$q_;
         state = new State();
-        $state = _$state_;
         addModelDeferred = $q.defer();
+
+        $state = {
+            go: sinon.stub()
+        };
 
         targetProvider = {
             getOrganization: sinon.stub().returns({ guid: 'o1' })
@@ -105,7 +109,6 @@ describe("Unit: ModelUploadController", function() {
 
 
     it('addModel, success, set state loaded, redirect to models', function () {
-        var redirectSpied = sinon.spy($state, 'go');
         var successSpied = sinon.spy(notificationService, 'success');
 
         modelUploadService.addModelMetadata = sinon.stub().returns(successfulPromise(SAMPLE_MODEL));
@@ -117,12 +120,11 @@ describe("Unit: ModelUploadController", function() {
         scope.$digest();
 
         expect(successSpied.calledTwice).to.be.true;
-        expect(redirectSpied.calledWith(redirect)).to.be.true;
+        expect($state.go).to.be.calledWith(redirect);
         expect(scope.state.value).to.be.equals(state.values.LOADED);
     });
 
     it('addModel, adding metadata - success, adding artifact - reject', function () {
-        var redirectSpied = sinon.spy($state, 'go');
         var errorSpied = sinon.spy(notificationService, 'error');
         var successSpied = sinon.spy(notificationService, 'success');
 
@@ -136,12 +138,11 @@ describe("Unit: ModelUploadController", function() {
 
         expect(successSpied.called).to.be.true;
         expect(errorSpied.called).to.be.true;
-        expect(redirectSpied.calledWith(redirect)).not.to.be.true;
+        expect($state.go).not.to.be.called;
         expect(scope.state.value).to.be.equals(state.values.PENDING);
     });
 
     it('addModel, adding metadata - reject, ', function () {
-        var redirectSpied = sinon.spy($state, 'go');
         var successSpied = sinon.spy(notificationService, 'success');
 
         modelUploadService.addModelMetadata = sinon.stub().returns(rejectedPromise());
@@ -152,7 +153,7 @@ describe("Unit: ModelUploadController", function() {
         scope.$digest();
 
         expect(successSpied.called).not.to.be.true;
-        expect(redirectSpied.calledWith(redirect)).not.to.be.true;
+        expect($state.go).not.to.be.called;
         expect(scope.state.value).to.be.equals(state.values.PENDING);
     });
 

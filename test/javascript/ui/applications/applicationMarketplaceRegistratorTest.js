@@ -48,7 +48,7 @@ describe("Unit: ApplicationMarketplaceRegistrator", function () {
             applicationId: APP_ID
         };
 
-    beforeEach(module('app'));
+    beforeEach(module('app:core'));
 
     beforeEach(module(function($provide){
         offeringsResource  = {};

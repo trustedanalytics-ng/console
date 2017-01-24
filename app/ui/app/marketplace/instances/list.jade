@@ -26,19 +26,7 @@ h3
         .service-item(ng-repeat="(offeringName, instances) in services")
             .service-content
                 .name {{ offeringName }}
-                .instances
-                    uib-accordion(close-others="false")
-                        uib-accordion-group(ng-repeat="instance in instances"
-                            ng-init="formVisible = false" is-open='status.open')
-                            uib-accordion-heading {{ instance.name }}
-                                a.see-details(ui-sref='app.marketplace.instance({instanceId: instance.id})') See details &raquo;
-                                //i.pull-right.glyphicon(ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}")
-                            //.visibleUris.col-md-6(ng-if="instance.kubernetes")
-                                label Visible uri:
-                                .actions
-                                    a(ng-show="instance.kubernetes.public == false", ng-click="exposeInstance(instance, true)")
-                                        | + Expose
-                                    a(ng-show="instance.kubernetes.public", ng-click="exposeInstance(instance, false)")
-                                        | - Unexpose
-                                .link(ng-repeat="uri in instance.kubernetes.uri" ng-if="instance.kubernetes.public")
-                                    | {{uri}}
+                ul.instances
+                    li(ng-repeat="instance in instances")
+                        | {{ instance.name }}
+                        a.see-details(ui-sref='app.marketplace.instance({instanceId: instance.id})') See details &raquo;

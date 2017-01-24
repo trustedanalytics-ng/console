@@ -32,7 +32,7 @@ describe("Unit: ServiceController", function () {
         space = { guid: 222, name: "space" },
         state;
 
-    beforeEach(module('app'));
+    beforeEach(module('app:core'));
 
     var notificationService;
 
@@ -78,7 +78,8 @@ describe("Unit: ServiceController", function () {
                 $scope: scope,
                 targetProvider: _targetProvider,
                 ngDialog: {},
-                $location: location
+                $location: location,
+                $stateParams: {}
             });
         };
     }));

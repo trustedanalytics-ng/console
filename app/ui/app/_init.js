@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 /* jshint unused: false */
-var App = angular.module('app', ['ngRoute', 'ngAnimate', 'ngStorage', 'ngCookies', 'ngSanitize',
-    'ngResource', 'ngTable', 'ngDialog', 'ui.bootstrap', 'ui.router', 'oc.lazyLoad', 'toaster',
+var App = angular.module('app:core', ['ngRoute', 'ngAnimate', 'ngStorage', 'ngCookies', 'ngSanitize',
+    'ngResource', 'ngTable', 'ngDialog', 'ui.bootstrap',  'oc.lazyLoad', 'toaster',
     'restangular', 'ngIdle']);
+angular.module('app', ['app:core', 'ui.router']);

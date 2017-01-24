@@ -21,14 +21,12 @@ describe("Unit: PlatformDashboardController", function () {
         state,
         ConfigResource;
 
-    beforeEach(module('app', function ($provide) {
+    beforeEach(module('app:core', function ($provide) {
         $provide.value('ConfigResource', ConfigResource);
     }));
 
-    beforeEach(inject(function ($injector, $rootScope, State, _$q_, _$httpBackend_) {
+    beforeEach(inject(function ($injector, $rootScope, $q) {
         rootScope = $rootScope;
-        $q = _$q_;
-        $httpBackend = _$httpBackend_;
         scope = $rootScope.$new();
 
         ConfigResource = {
@@ -42,7 +40,8 @@ describe("Unit: PlatformDashboardController", function () {
     function getSUT($injector) {
         controller = $injector.get('$controller')('PlatformDashboardController', {
             $scope: scope,
-            ConfigResource: ConfigResource
+            ConfigResource: ConfigResource,
+            $state: {}
         });
         return controller;
     }

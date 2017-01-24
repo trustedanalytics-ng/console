@@ -27,11 +27,7 @@ describe("Unit: ModelsController", function() {
         modelsMock,
         deferred;
 
-    beforeEach(module('app'));
-
-    beforeEach(module(function($provide){
-        $provide.value('targetProvider', targetProvider);
-    }));
+    beforeEach(module('app:core'));
 
     beforeEach(inject(function ($controller, $rootScope, _$q_, State, ModelsMock) {
         modelsMock = ModelsMock;
@@ -50,7 +46,8 @@ describe("Unit: ModelsController", function() {
                 targetProvider: targetProvider,
                 ModelResource: ModelResource,
                 H2OPublisherResource: h2oPublisherResource,
-                NotificationService: notificationService
+                NotificationService: notificationService,
+                $state: {}
             });
         };
 

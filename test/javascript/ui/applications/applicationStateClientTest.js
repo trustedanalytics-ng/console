@@ -26,7 +26,7 @@ describe("Unit: ApplicationStateClient", function () {
         NotificationService,
         SAMPLE_GUID = "sample-guid-123";
 
-    beforeEach(module('app'));
+    beforeEach(module('app:core'));
 
     beforeEach(module(function($provide) {
         ApplicationResource = {

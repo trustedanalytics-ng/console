@@ -15,32 +15,36 @@
  */
 (function () {
     "use strict";
-
-    function TestHelpers() {
-    }
-
-    TestHelpers.prototype.stubTargetProvider = function (stub) {
-        stub = stub || {};
-        stub.organization = {};
-        stub.space = {};
-        stub.organizations = [];
-        stub.getOrganizations = function () {
-            return this.organizations;
-        };
-        stub.getOrganization = function () {
-            return this.organization;
-        };
-        stub.getSpace = function () {
-            return this.space;
-        };
-        stub.setOrganization = function (organization) {
-            this.organization = organization;
-        };
-        stub.setSpace = function (space) {
-            this.space = space;
-        };
-        return stub;
-    };
-
     App.value('TestHelpers', TestHelpers);
 }());
+
+function TestHelpers() {
+}
+
+TestHelpers.prototype.stubTargetProvider = function (stub) {
+    stub = stub || {};
+    stub.organization = {};
+    stub.space = {};
+    stub.organizations = [];
+    stub.getOrganizations = function () {
+        return this.organizations;
+    };
+    stub.getOrganization = function () {
+        return this.organization;
+    };
+    stub.getSpace = function () {
+        return this.space;
+    };
+    stub.setOrganization = function (organization) {
+        this.organization = organization;
+    };
+    stub.setSpace = function (space) {
+        this.space = space;
+    };
+    stub.refresh = function () {
+        return {
+            catch: function() {}
+        };
+    };
+    return stub;
+};

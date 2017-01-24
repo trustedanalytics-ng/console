@@ -19,14 +19,13 @@ describe("Unit: AppsController", function () {
     var controller,
         createController,
         applicationResource,
-        atkInstanceResource,
         $rootScope,
         $scope,
         $q,
         _targetProvider,
         org = { guid: 'o1', name: 'org1' };
 
-    beforeEach(module('app'));
+    beforeEach(module('app:core'));
 
     beforeEach(inject(function ($controller, TestHelpers, _$rootScope_, _$q_) {
         $rootScope = _$rootScope_;
@@ -43,7 +42,6 @@ describe("Unit: AppsController", function () {
             controller = $controller('ApplicationsController', {
                 targetProvider: _targetProvider,
                 $scope: $scope,
-                AtkInstanceResource: atkInstanceResource,
                 ApplicationResource: applicationResource
             });
         };

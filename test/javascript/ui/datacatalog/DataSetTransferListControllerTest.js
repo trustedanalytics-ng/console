@@ -15,7 +15,7 @@
  */
 describe("Unit: DataSetTransferListControllerTest", function() {
 
-    beforeEach(module('app'));
+    beforeEach(module('app:core'));
 
     var $rootScope,
         $controller,

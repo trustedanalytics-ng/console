@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 describe("Unit: UserActionsModalsService", function () {
-    beforeEach(module('app'));
+    beforeEach(module('app:core'));
 
     var sut;
 

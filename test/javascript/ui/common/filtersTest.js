@@ -15,7 +15,7 @@
  */
 describe("Unit: Testing filters", function() {
 
-    beforeEach(module('app'));
+    beforeEach(module('app:core'));
 
     it('should have a ensureProtocol advancedsearch', inject(function($filter){
         expect($filter('ensureProtocol')).not.to.be.equal(null);

@@ -71,7 +71,7 @@ describe("Unit: GearPumpAppDeployController", function () {
         },
         EXAMPLE_INSTANCE_GENERATED_STRUCTURE = '{"kafka":{"someInstance":{"USERNAME":"username","PASSWORD":"password","urls":"gp-ui-00000000-0000-0000-0000-000000000000.domain.com"}}}';
 
-    beforeEach(module('app', function($provide) {
+    beforeEach(module('app:core', function($provide) {
         _targetProvider = {
             getOrganization:function () {
                 return organization;

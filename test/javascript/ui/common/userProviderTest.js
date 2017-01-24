@@ -24,7 +24,7 @@ describe("Unit: UserProvider", function() {
             return injector.get('UserProvider');
         };
 
-    beforeEach(module('app'));
+    beforeEach(module('app:core'));
 
     beforeEach(inject(function($injector){
         injector = $injector;

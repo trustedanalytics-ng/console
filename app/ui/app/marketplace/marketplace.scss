@@ -521,19 +521,21 @@
     }
 
     .service-content {
-      > .name {
+
+      ul {
+        list-style-type: none;
+        padding-left: 20px;
+        margin: 0;
+
+        li {
+          margin: 5px 0;
+        }
+      }
+
+      .name {
         font-size: 20px;
         font-weight: 400;
         margin-bottom: 6px;
-      }
-
-      uib-accordion * {
-        outline: 0;
-        text-decoration: none;
-
-        &:hover {
-          color: #333333;
-        }
       }
 
       .see-details {
@@ -544,54 +546,6 @@
         }
       }
 
-      .keys {
-
-        .key, .add-key {
-          margin-left: 20px;
-        }
-
-        .new-key {
-          .btn {
-            padding: 2px 10px;
-            vertical-align: middle;
-          }
-
-          input {
-            padding: 1px 5px;
-            vertical-align: middle;
-          }
-
-          a {
-            margin-left: 10px;
-            font-size: 13px;
-          }
-        }
-
-        a.export-add, a.export-remove, a.delete-key, a.add-key {
-          font-size: 13px;
-          margin-left: 10px;
-          text-decoration: none;
-        }
-
-        a.delete-key {
-          color: $color-red;
-        }
-
-        a.export-remove {
-          color: $color-red;
-        }
-      }
-
-      .visibleUris {
-
-        .link, .actions {
-          margin-left: 20px;
-        }
-      }
-
-      .panel-group .panel {
-        margin-bottom: 10px;
-      }
     }
   }
   .vcap {

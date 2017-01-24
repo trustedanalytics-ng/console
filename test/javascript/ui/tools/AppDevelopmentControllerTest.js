@@ -23,7 +23,7 @@ describe("Unit: AppDevelopmentController", function () {
         userProviderMock,
         state;
 
-    beforeEach(module('app'));
+    beforeEach(module('app:core'));
 
     beforeEach(inject(function ($controller, _$rootScope_, _$q_, State) {
         $q = _$q_;

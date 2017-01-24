@@ -34,7 +34,7 @@ describe("Unit: PendingInvitationsController", function() {
     }
 
 
-    beforeEach(module('app'));
+    beforeEach(module('app:core'));
 
     beforeEach(inject(function(_$controller_, _$rootScope_, _$q_, _NotificationService_) {
         $controller = _$controller_;

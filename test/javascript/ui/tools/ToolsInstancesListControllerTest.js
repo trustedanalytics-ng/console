@@ -34,7 +34,7 @@ describe("Unit: ToolsInstanceListController", function () {
             }]
         };
 
-    beforeEach(module('app'));
+    beforeEach(module('app:core'));
 
     beforeEach(inject(function ($controller, $location, TestHelpers, _$rootScope_, _$q_) {
         $q = _$q_;

@@ -25,7 +25,7 @@ describe("Unit: PlatformTestSuitesController", function () {
         listTestSuiteState,
         availableTestSuitesState;
 
-    beforeEach(module('app'));
+    beforeEach(module('app:core'));
 
     beforeEach(inject(function ($controller, _$rootScope_, _$q_, State) {
         $rootScope = _$rootScope_;

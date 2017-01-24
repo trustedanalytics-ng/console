@@ -16,7 +16,8 @@
 describe("Unit: LatestEventsController", function() {
 
     var controller, scope, eventsResource, deferred, rootScope, params, provider;
-    beforeEach(module('app'));
+
+    beforeEach(module('app:core'));
 
     beforeEach(inject(function($controller, $rootScope, $q, EventsResource, targetProvider) {
 

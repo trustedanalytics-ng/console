@@ -16,12 +16,12 @@
 /*jshint -W030 */
 describe("Unit: CoordinatorJobController", function() {
 
-    beforeEach(module("app"));
-
     var controller, scope, targetProvider, coordinatorJobResource, notificationService, $q, defer;
     var JOB_ID = "job-id";
 
-    beforeEach(inject(function($controller, $rootScope, $stateParams, _$q_){
+    beforeEach(module("app:core"));
+
+    beforeEach(inject(function($controller, $rootScope, _$q_){
         scope = $rootScope.$new();
         $q = _$q_;
 
@@ -40,6 +40,7 @@ describe("Unit: CoordinatorJobController", function() {
             controller = $controller('CoordinatorJobController', {
                 $scope: scope,
                 $stateParams: {coordinatorjobId: JOB_ID},
+                $state: {},
                 targetProvider: targetProvider,
                 NotificationService: notificationService,
                 CoordinatorJobResource: coordinatorJobResource

@@ -24,7 +24,7 @@ describe("Unit: PlatformInfoProvider", function() {
         plain: function() { return this; }
     });
 
-    beforeEach(module('app'));
+    beforeEach(module('app:core'));
 
     beforeEach(module(function($provide){
         platformInfoResource = {

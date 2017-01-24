@@ -31,7 +31,7 @@ describe("Unit: ServiceInstancesListController", function () {
 
         createController;
 
-    beforeEach(module('app'));
+    beforeEach(module('app:core'));
 
     beforeEach(inject(function($controller, $rootScope, State, _$q_) {
         $q = _$q_;

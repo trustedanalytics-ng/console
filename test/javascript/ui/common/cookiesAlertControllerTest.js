@@ -23,7 +23,7 @@ describe("Unit: CookiesAlertController", function() {
         scope,
         cookies;
 
-    beforeEach(module('app'));
+    beforeEach(module('app:core'));
 
     beforeEach(inject(function($controller, $rootScope, $cookies){
 

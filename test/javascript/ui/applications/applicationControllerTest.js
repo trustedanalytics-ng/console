@@ -29,7 +29,7 @@ describe("Unit: ApplicationController", function () {
         APP_ID = "app-guid",
         SAMPLE_APP = { guid: APP_ID };
 
-    beforeEach(module('app'));
+    beforeEach(module('app:core'));
 
     beforeEach(inject(function(_$q_, $rootScope, $controller, State) {
         $q = _$q_;

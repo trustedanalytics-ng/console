@@ -25,7 +25,7 @@ describe("Unit: DocumentationController", function () {
         createController,
         deferred;
 
-    beforeEach(module('app'));
+    beforeEach(module('app:core'));
 
     beforeEach(inject(function ($controller, $rootScope, _$q_, State) {
         rootScope = $rootScope;

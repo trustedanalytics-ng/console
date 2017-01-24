@@ -27,7 +27,7 @@ describe("Unit: ServiceInstancesController", function () {
         organization = { guid: 111, name: "org" },
         space = { guid: 222, name: "space" };
 
-    beforeEach(module('app'));
+    beforeEach(module('app:core'));
 
     beforeEach(inject(function ($controller, TestHelpers, _$rootScope_, _$q_,
                                 ServiceInstancesResource) {

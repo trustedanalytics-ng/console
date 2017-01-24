@@ -16,8 +16,8 @@
 
 describe("Unit: CoordinatorJobsController", function() {
 
-    var controller, scope, coordinatorJobResource, targetProvider, defer, $q;
-    beforeEach(module('app'));
+    var controller, createController, scope, coordinatorJobResource, targetProvider, defer, $q;
+    beforeEach(module('app:core'));
 
     beforeEach(module(function($provide){
         targetProvider = {
@@ -29,7 +29,7 @@ describe("Unit: CoordinatorJobsController", function() {
 
 
 
-    beforeEach(inject(function($controller, $rootScope, _$state_, _$q_){
+    beforeEach(inject(function($controller, $rootScope, _$q_){
         scope = $rootScope.$new();
         $q = _$q_;
 

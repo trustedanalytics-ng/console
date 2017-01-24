@@ -16,8 +16,8 @@
 
 describe("Unit: WorkflowJobsController", function() {
 
-    var controller, scope, workflowJobResource, targetProvider, defer, $q;
-    beforeEach(module('app'));
+    var controller, createController, scope, workflowJobResource, targetProvider, defer, $q;
+    beforeEach(module('app:core'));
 
     beforeEach(module(function($provide){
         targetProvider = {
@@ -29,7 +29,7 @@ describe("Unit: WorkflowJobsController", function() {
 
 
 
-    beforeEach(inject(function($controller, $rootScope, _$state_, _$q_){
+    beforeEach(inject(function($controller, $rootScope, _$q_){
         scope = $rootScope.$new();
         $q = _$q_;
 
@@ -37,7 +37,8 @@ describe("Unit: WorkflowJobsController", function() {
             controller = $controller('WorkflowJobsController', {
                 $scope: scope,
                 targetProvider: targetProvider,
-                WorkflowJobResource: workflowJobResource
+                WorkflowJobResource: workflowJobResource,
+                $state: {}
             });
         };
 
