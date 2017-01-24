@@ -24,7 +24,7 @@ var configRouter = function() {
             res.send(config.get("UPLOADER_CONFIG"));
         }
     );
-    
+
     router.get('', function(req, res) {
             res.send(config.getFew(["METRICS_GRAFANA_HOST", "SESSION_CONFIG"]));
         }

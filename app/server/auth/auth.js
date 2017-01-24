@@ -35,7 +35,7 @@ function init(app) {
         resave: false,
         rolling: true,
         cookie: {
-            maxAge: sessionTimeout // 30 minutes
+            maxAge: sessionTimeout
         },
         saveUninitialized: false
     }));

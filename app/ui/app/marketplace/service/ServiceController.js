@@ -21,7 +21,7 @@
         targetProvider, $scope, ServiceInstancesResource, State, $location, ValidationPatterns) {
 
         var GATEWAY_TIMEOUT_ERROR = 504;
-        
+
         $scope.validationPattern = ValidationPatterns.INSTANCE_NAME.pattern;
         $scope.validationMessage = ValidationPatterns.INSTANCE_NAME.validationMessage;
 

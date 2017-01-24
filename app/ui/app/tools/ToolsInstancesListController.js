@@ -124,5 +124,5 @@
     function passwordAvailable(instances, password) {
         return _.some(instances, password);
     }
-    
+
 }());

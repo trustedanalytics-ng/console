@@ -17,11 +17,14 @@
 (function () {
     'use strict';
 
-    App.factory('ScoringEngineRetriever', function (ServiceInstancesResource) {
+    App.factory('ScoringEngineRetriever', function (ServiceInstancesResource, ScoringEngineResource, NotificationService) {
         var API_DOCS_SUFFIX = '/api-docs';
+        var MAIN_ARTIFACT_PREFIX = 'publish_';
 
         return {
-            getScoringEngineInstancesCreatedFromThatModel: getScoringEngineInstancesCreatedFromThatModel
+            getScoringEngineInstancesCreatedFromThatModel: getScoringEngineInstancesCreatedFromThatModel,
+            createScoringEngine: createScoringEngine,
+            getPublishAction: getPublishAction
         };
 
         function getScoringEngineInstancesCreatedFromThatModel (modelId) {
@@ -37,6 +40,33 @@
                         })
                         .value();
                 });
+        }
+
+        function createScoringEngine(modelId, modelName, artifact) {
+            var publishPath = actionToPath(getPublishAction(artifact));
+            return ScoringEngineResource
+                .withErrorMessage('An error occurred while adding new scoring engine')
+                .addScoringEngine(publishPath, {
+                    modelId: modelId,
+                    artifactId: artifact.id,
+                    modelName: modelName
+                })
+                .then(function onSuccess() {
+                    NotificationService.success('Scoring engine has been added');
+                });
+        }
+
+        function getPublishAction(artifact) {
+            if(!artifact) {
+                return null;
+            }
+            return _.find(artifact.actions || [], function (action) {
+                return action.toLowerCase().indexOf(MAIN_ARTIFACT_PREFIX) === 0;
+            });
+        }
+
+        function actionToPath(action) {
+            return action.split('_').slice(1).join('-').toLowerCase();
         }
     });
 }());

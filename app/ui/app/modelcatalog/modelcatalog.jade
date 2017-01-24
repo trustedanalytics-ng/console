@@ -50,8 +50,8 @@ h3
                                  span
                                     em.fa.fa-calendar
                                  input.form-control.date-range(name="start" type="text", uib-datepicker-popup="dd-MM-yyyy"
-                                    placeholder="dd-MM-yyyy" ng-model="filters.created.from" is-open="dp.createdOpened"
-                                    ng-click="openCreated()" datepicker-options="dp.options")
+                                    placeholder="dd-MM-yyyy" ng-model="filters.created.from" is-open="createdStartBoxOpened"
+                                    ng-focus="createdStartBoxOpened = true" datepicker-options="dp.options")
                                  span
                                  div(ng-hide="creation.start.$valid")
                                     span.validationMessage {{ dateValidationMessage }}
@@ -60,9 +60,9 @@ h3
                                  label.date End Date
                                  span
                                     em.fa.fa-calendar
-                                 input.form-control.date-range(name="end" type="text" uib-datepicker-popup="dd-MM-yyyy"
-                                    placeholder="dd-MM-yyyy" ng-model="filters.created.to" is-open="dp.toOpened"
-                                    ng-click="openTo()")
+                                 input.form-control.date-range(name="end" type="text", uib-datepicker-popup="dd-MM-yyyy"
+                                    placeholder="dd-MM-yyyy" ng-model="filters.created.to" is-open="createdEndBoxOpened"
+                                    ng-focus="createdEndBoxOpened = true")
                                  span
                                  div(ng-hide="creation.end.$valid")
                                     span.validationMessage {{ dateValidationMessage }}

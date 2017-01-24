@@ -18,9 +18,8 @@
 
     App.controller('DataSetsController', function ($scope, $routeParams, ngTableParams, State,
                                                    $cookies, DataSetsHelper, ValidationPatterns) {
-
         var TOOL_KEY = 'datacatalog_tool',
-            DEFAULT_TOOL = 'arcadia',
+            DEFAULT_TOOL = 'hue',
             searchText = '';
 
         $scope.pagination = {
@@ -30,7 +29,7 @@
             pages: []
         };
 
-        $scope.dateValidationMessage= ValidationPatterns.DATE.validationMessage;
+        $scope.dateValidationMessage = ValidationPatterns.DATE.validationMessage;
 
         var category = null;
         $scope.onCategoryChange = function (c) {
@@ -42,22 +41,18 @@
         $scope.format = {};
         $scope.created = {};
         $scope.tool = $cookies.get(TOOL_KEY) || DEFAULT_TOOL;
+        $scope.id = $routeParams.id || "";
+        $scope.dataSets = {};
+        $scope.state = new State().setLoaded();
 
         $scope.$watch('tool', function () {
             $cookies.put(TOOL_KEY, $scope.tool);
         });
 
-        var state = new State();
-        state.value = state.values.DEFAULT;
-        $scope.state = state;
-
-        $scope.id = $routeParams.id || "";
-        $scope.dataSets = {};
-
         /*jshint newcap: false*/
         function preparePagination() {
-            var ngTable = new ngTableParams();
-            $scope.pagination.pages = ngTable.generatePagesArray($scope.pagination.currentPage, $scope.pagination.total, $scope.pagination.numPerPage);
+            $scope.pagination.pages = new ngTableParams().generatePagesArray($scope.pagination.currentPage,
+                $scope.pagination.total, $scope.pagination.numPerPage);
         }
 
         $scope.availableVisualizationsTools =[];

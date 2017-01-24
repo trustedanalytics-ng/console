@@ -13,19 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
+/*jshint -W030 */
 describe("Unit: ModelsDetailsController", function() {
 
     var controller,
         createController,
         scope,
         modelResource,
-        scoringEngineResource,
         modelDetailsDeferred,
-        deleteModelDeferred,
-        modelUpdateDeferred,
         getAllScoringEngineInstancesDeferred,
-        addScoringEngineDeferred,
         confirmDeferred,
         progressDeferred,
         notificationService,
@@ -37,8 +33,7 @@ describe("Unit: ModelsDetailsController", function() {
         $state,
         $stateParams,
         $q,
-        fileUploaderService,
-        modelCatalogArtifactsClient,
+        modelMetadataClient,
         scoringEngineRetriever,
         modelsMock,
         redirect = 'app.modelcatalog.models',
@@ -55,8 +50,7 @@ describe("Unit: ModelsDetailsController", function() {
         SAMPLE_ARTIFACT = {
             id: "1234",
             actions: ["PUBLISH_TAP_SCORING_ENGINE"]
-        },
-        TAP_SCORING_ENGINE_PATH = "tap-scoring-engine";
+        };
 
     beforeEach(module('app:core'));
 
@@ -69,22 +63,12 @@ describe("Unit: ModelsDetailsController", function() {
         scoringEngineState = new State();
         addScoringEngineState = new State();
         modelDetailsDeferred = $q.defer();
-        modelUpdateDeferred = $q.defer();
-        deleteModelDeferred = $q.defer();
         getAllScoringEngineInstancesDeferred = $q.defer();
-        addScoringEngineDeferred = $q.defer();
         confirmDeferred = $q.defer();
         progressDeferred = $q.defer();
 
         modelResource = {
             getModelMetadata: sinon.stub().returns(modelDetailsDeferred.promise),
-            updateModelMetadata: sinon.stub().returns(modelUpdateDeferred.promise),
-            deleteModel: sinon.stub().returns(deleteModelDeferred.promise),
-            withErrorMessage: sinon.stub().returnsThis()
-        };
-
-        scoringEngineResource = {
-            addScoringEngine: sinon.stub(),
             withErrorMessage: sinon.stub().returnsThis()
         };
 
@@ -101,13 +85,14 @@ describe("Unit: ModelsDetailsController", function() {
         };
 
         scoringEngineRetriever = {
+            createScoringEngine: sinon.stub().returns($q.defer().promise),
             getScoringEngineInstancesCreatedFromThatModel: sinon.stub().returns(getAllScoringEngineInstancesDeferred.promise),
             deleteScoringEngineInstances: sinon.stub()
         };
 
-        modelCatalogArtifactsClient = {
-            deleteArtifact: sinon.stub(),
-            uploadArtifact: sinon.stub()
+        modelMetadataClient = {
+            deleteModel: sinon.stub().returns($q.defer().promise),
+            updateName: sinon.stub().returns($q.defer().promise)
         };
 
         $state = {
@@ -126,20 +111,11 @@ describe("Unit: ModelsDetailsController", function() {
                 $state: $state,
                 $stateParams: $stateParams,
                 CommonTableParams: commonTableParams,
-                FileUploaderService: fileUploaderService,
                 ScoringEngineRetriever: scoringEngineRetriever,
-                ScoringEngineResource: scoringEngineResource,
-                ModelCatalogArtifactsClient: modelCatalogArtifactsClient
+                ModelMetadataClient: modelMetadataClient
             });
         };
 
-    }));
-
-    beforeEach(inject(function($httpBackend) {
-        // workaround for 'Unexpected request GER /rest/orgs' issued by router.
-        $httpBackend.expectGET('/rest/orgs').respond(function () {
-            return null;
-        });
     }));
 
     it('should not be null', function () {
@@ -170,19 +146,20 @@ describe("Unit: ModelsDetailsController", function() {
         expect(scope.state.value).to.be.equals(state.values.LOADED);
     });
 
-    it('init, getModelMetadata success, split artifacts into two groups', function () {
+    it('init, getModelMetadata success, set publishable as main artifact', function () {
         createController();
+        scoringEngineRetriever.getPublishAction = sinon.stub();
+        scoringEngineRetriever.getPublishAction.withArgs(modelsMock[0].artifacts[1]).returns('publish_whatever');
         modelDetailsDeferred.resolve(modelsMock[0]);
         scope.$digest();
-        expect(scope.mainArtifact).to.be.deep.equal({id: '4321-1234', actions: ['publish_whatever']});
-        expect(scope.extraArtifacts).to.be.deep.equal([{id: '1234-1234', actions: []}]);
+        expect(scope.mainArtifact).to.be.deep.equal(modelsMock[0].artifacts[1]);
     });
 
-    it('getModelMetadata success, artifact action doesn\'t start with "publish", mainArtifact not set', function () {
+    it('getModelMetadata success, artifact action doesn\'t start with "publish", set first on the list as main artifact', function () {
         createController();
         modelDetailsDeferred.resolve(modelsMock[2]);
         scope.$digest();
-        expect(scope.mainArtifact).to.be.undefined;
+        expect(scope.mainArtifact).to.be.deep.equal({id: '1234-1234', actions: []});
     });
 
     it('getModelMetadata reject, getTableParams not called', function () {
@@ -234,28 +211,39 @@ describe("Unit: ModelsDetailsController", function() {
         expect(scope.scoringEngineState.value).to.be.equals(scoringEngineState.values.ERROR);
     });
 
-    it('deleteModel, invoke, set deleteState on pending', function () {
+    it('tryDeleteModel, invoke, set deleteState on pending', function () {
+        scope.model = SAMPLE_MODEL;
+        notificationService.confirm = sinon.stub().returns(successfulPromise());
         createController();
-        scope.deleteModel();
+
+        scope.tryDeleteModel();
         scope.$digest();
+
         expect(scope.deleteState.value).to.be.equals(deleteState.values.PENDING);
     });
 
-    it('deleteModel, success, redirect to models, set deleteState to default', function () {
+    it('tryDeleteModel, success, redirect to models, set deleteState to default', function () {
+        scope.model = SAMPLE_MODEL;
+        notificationService.confirm = sinon.stub().returns(successfulPromise());
+        modelMetadataClient.deleteModel = sinon.stub().returns(successfulPromise());
         createController();
-        deleteModelDeferred.resolve();
-        scope.deleteModel();
+
+        scope.tryDeleteModel();
         scope.$digest();
-        expect(notificationService.success).to.be.called;
+
         expect($state.go.calledWith(redirect)).to.be.true;
         expect(scope.deleteState.value).to.be.equals(deleteState.values.DEFAULT);
     });
 
-    it('deleteModel, delete failed, do not notify about success, set deleteState to default', function () {
+    it('tryDeleteModel, delete failed, do not notify about success, set deleteState to default', function () {
+        scope.model = SAMPLE_MODEL;
+        notificationService.confirm = sinon.stub().returns(successfulPromise());
+        modelMetadataClient.deleteModel = sinon.stub().returns(failedPromise({status: 404}));
         createController();
-        deleteModelDeferred.reject({status: 404});
-        scope.deleteModel();
+
+        scope.tryDeleteModel();
         scope.$digest();
+
         expect(notificationService.success).not.to.be.called;
         expect($state.go).not.to.be.called;
         expect(scope.deleteState.value).to.be.equals(deleteState.values.DEFAULT);
@@ -265,49 +253,18 @@ describe("Unit: ModelsDetailsController", function() {
         createController();
         scope.model = modelsMock[0];
         scope.updateModelName('name');
-        expect(modelResource.updateModelMetadata.called).to.be.false;
+        expect(modelMetadataClient.updateName).not.to.be.called;
     });
 
     it('updateModelName, model name changed, call updateModelMetadata method', function () {
         createController();
         scope.model = modelsMock[0];
         scope.updateModelName('not-name');
-        expect(modelResource.updateModelMetadata.called).to.be.true;
-    });
-
-    it('tryDeleteArtifact, invoke, user should be prompt about deleting artifact', function () {
-        createController();
-        scope.tryDeleteArtifact({filename: 'filename', id: '1234-5678'});
-        scope.$digest();
-        expect(notificationService.confirm.called).to.be.true;
-    });
-
-    it('tryDeleteArtifact, success, deleteArtifact should be called', function () {
-        confirmDeferred.resolve();
-        createController();
-        scope.tryDeleteArtifact({filename: 'filename', id: '1234-5678'});
-        scope.$digest();
-        expect(modelCatalogArtifactsClient.deleteArtifact).to.be.calledWith($stateParams.modelId, '1234-5678');
-    });
-
-    it('tryUploadArtifact, invoke, popup window should appear', function () {
-        createController();
-        scope.tryUploadArtifact();
-        scope.$digest();
-        expect(notificationService.confirm.called).to.be.true;
-    });
-
-    it('tryUploadArtifact, success, uploadArtifact should be called', function () {
-        confirmDeferred.resolve();
-        createController();
-        scope.tryUploadArtifact();
-        scope.$digest();
-        expect(modelCatalogArtifactsClient.uploadArtifact).to.be.calledWith($stateParams.modelId);
+        expect(modelMetadataClient.updateName).to.be.called;
     });
 
     it('addScoringEngine, invoke, setPending state', function () {
-        scoringEngineResource.addScoringEngine=sinon.stub().returns(addScoringEngineDeferred.promise);
-
+        scoringEngineRetriever.getPublishAction = sinon.stub().returns('publish_action');
         createController();
 
         scope.model = SAMPLE_MODEL;
@@ -318,23 +275,22 @@ describe("Unit: ModelsDetailsController", function() {
         expect(scope.state.value).to.be.equals(addScoringEngineState.values.PENDING);
     });
 
-    it('addScoringEngine, no main artifact, show error message', function () {
-        scoringEngineResource.addScoringEngine = sinon.stub().returns(addScoringEngineDeferred.promise);
-
+    it('addScoringEngine, no publishable artifact, show error message', function () {
         createController();
         scope.model = SAMPLE_MODEL;
         scope.mainArtifact = null;
+        scoringEngineRetriever.getPublishAction = sinon.stub().returns(null);
 
         scope.addScoringEngine();
         scope.$digest();
 
         expect(notificationService.error).to.be.called;
-        expect(scoringEngineResource.addScoringEngine).not.to.be.called;
+        expect(scoringEngineRetriever.createScoringEngine).not.to.be.called;
     });
 
     it('addScoringEngine, success, create correct path', function () {
-        scoringEngineResource.addScoringEngine = sinon.stub().returns(successfulPromise());
-        addScoringEngineDeferred.resolve();
+        scoringEngineRetriever.getPublishAction = sinon.stub().returns('publish_action');
+        scoringEngineRetriever.createScoringEngine = sinon.stub().returns(successfulPromise());
 
         createController();
         scope.model = SAMPLE_MODEL;
@@ -343,17 +299,14 @@ describe("Unit: ModelsDetailsController", function() {
         scope.addScoringEngine();
         scope.$digest();
 
-        expect(scoringEngineResource.addScoringEngine).to.be.calledWith(TAP_SCORING_ENGINE_PATH, {
-            modelId: SAMPLE_MODEL.id,
-                artifactId: SAMPLE_ARTIFACT.id,
-                modelName: SAMPLE_MODEL.name
-        });
-        expect(notificationService.success).to.be.called;
+        expect(scoringEngineRetriever.createScoringEngine).to.be.calledWith(SAMPLE_MODEL.id, SAMPLE_MODEL.name,
+            SAMPLE_ARTIFACT);
         expect(scope.state.isLoaded(), 'loaded').to.be.true;
     });
 
     it('addScoringEngine, error, create correct path ', function () {
-        scoringEngineResource.addScoringEngine = sinon.stub().returns(failedPromise({data: {message: 'error message'}}));
+        scoringEngineRetriever.getPublishAction = sinon.stub().returns('publish_action');
+        scoringEngineRetriever.createScoringEngine = sinon.stub().returns(failedPromise({data: {message: 'error message'}}));
 
         createController();
         scope.model = SAMPLE_MODEL;
@@ -362,11 +315,8 @@ describe("Unit: ModelsDetailsController", function() {
         scope.addScoringEngine();
         scope.$digest();
 
-        expect(scoringEngineResource.addScoringEngine).to.be.calledWith(TAP_SCORING_ENGINE_PATH, {
-            modelId: SAMPLE_MODEL.id,
-            artifactId: SAMPLE_ARTIFACT.id,
-            modelName: SAMPLE_MODEL.name
-        });
+        expect(scoringEngineRetriever.createScoringEngine).to.be.calledWith(SAMPLE_MODEL.id, SAMPLE_MODEL.name,
+            SAMPLE_ARTIFACT);
         expect(notificationService.success).not.to.be.called;
         expect(scope.state.value).to.be.equals(addScoringEngineState.values.LOADED);
     });

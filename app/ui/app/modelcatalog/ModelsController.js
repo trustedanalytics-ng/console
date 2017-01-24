@@ -16,38 +16,33 @@
 (function () {
     "use strict";
 
-    App.controller('ModelsController', function ($scope, State, $state, ModelResource, CommonTableParams, targetProvider, ValidationPatterns) {
+    App.controller('ModelsController', function ($scope, State, $state, ModelResource, CommonTableParams,
+            targetProvider, ValidationPatterns, FilterUtils) {
         var state = new State().setPending();
-        var searchFields = [ "name", "algorithm", "creationTool" ];
+        var SEARCH_FIELDS = [ "name", "algorithm", "creationTool" ];
+        var UNDEFINED_MODEL_TYPE = "Choose Model Type";
         var searchText = '';
         $scope.state = state;
-        $scope.created = {};
-        $scope.dp = {
-            createdOpened: false,
-            toOpened: false
-        };
 
-        $scope.modelTypes = [ "Choose Model Type" ];
+        $scope.modelTypes = [UNDEFINED_MODEL_TYPE];
         $scope.dateValidationMessage= ValidationPatterns.DATE.validationMessage;
 
-        var defaultFilters = {
-            selectedType: $scope.modelTypes[0],
+        var DEFAULT_FILTERS = Object.freeze({
+            selectedType: UNDEFINED_MODEL_TYPE,
             created: {from : '', to: ''}
-        };
+        });
 
         var dateFilter = function (model) {
             return isBetweenDate(model.addedOn, $scope.filters.created.from, $scope.filters.created.to);
         };
 
         var searchFilter = function (model) {
-            return isModelMatching(model, searchText);
+            return FilterUtils.somePropertiesMatch(model, SEARCH_FIELDS, searchText);
         };
 
         var typeFilter = function (model) {
-            if ($scope.filters.selectedType === $scope.modelTypes[0]) {
-                return true;
-            }
-            return model.creationTool === $scope.filters.selectedType;
+            return $scope.filters.selectedType === UNDEFINED_MODEL_TYPE ||
+                $scope.filters.selectedType === model.creationTool;
         };
 
         var filters = {
@@ -57,7 +52,7 @@
         };
 
         $scope.clearFilters = function () {
-            $scope.filters = angular.copy(defaultFilters);
+            $scope.filters = angular.copy(DEFAULT_FILTERS);
             $scope.filters.created.from = '';
             $scope.filters.created.to = '';
             $scope.matchSelectedType($scope.filters.selectedType);
@@ -69,14 +64,10 @@
             reload();
         });
 
-        $scope.$on('targetChanged', function () {
-            $scope.state.setPending();
-            getInstances();
-        });
+        $scope.$on('targetChanged', getInstances);
 
-        $scope.matchSelectedType = function () {
-            reload();
-        };
+        $scope.getModelCreationTimestamp = getModelCreationTimestamp;
+        $scope.matchSelectedType = reload;
 
         $scope.$watch('filters.created.from', function (newValue, oldValue) {
             if(_.difference(newValue, oldValue)) {
@@ -93,18 +84,6 @@
             }
         });
 
-        $scope.openCreated = function () {
-            $scope.dp.createdOpened = true;
-        };
-
-        $scope.openTo = function () {
-            $scope.dp.toOpened = true;
-        };
-
-        $scope.getModelCreationTimestamp = function (model) {
-            return moment(model.addedOn).unix() * 1000;
-        };
-
         getInstances();
 
         $scope.tableParams = CommonTableParams.getTableParams($scope, function () {
@@ -112,19 +91,13 @@
         });
 
         function reload () {
-            $scope.filteredModels = filterModels();
+            $scope.filteredModels = FilterUtils.filterByMany($scope.models, filters);
             $scope.tableParams.reload();
             $scope.tableParams.page(1);
         }
 
-        function isBetweenDate(givenDate, startDate, endDate) {
-            var startMoment = startDate ? moment(startDate) : moment(0);
-            var endMoment = endDate ? moment(endDate) : moment().add(1000, 'years');
-
-            return moment(givenDate).isBetween(startMoment, endMoment);
-        }
-
         function getInstances() {
+            $scope.state.setPending();
             ModelResource.getModels(targetProvider.getOrganization().guid)
                 .then(function (models) {
                     $scope.models = models;
@@ -136,24 +109,16 @@
                     state.setError();
                 });
         }
-
-        function isModelMatching(model, searchText) {
-            return !searchText || _.some(searchFields, function (field) {
-                    return contains(model[field], searchText);
-                });
-        }
-
-        function contains(str, searchText) {
-            if(!str){
-                return false;
-            }
-            return str.toLowerCase().indexOf(searchText.toLowerCase()) > -1;
-        }
-        
-        function filterModels () {
-            return _.reduce(filters, function (memo, filterMethod) {
-                return _.filter(memo, filterMethod);
-            }, $scope.models);
-        }
     });
+
+    function getModelCreationTimestamp(model) {
+        return moment(model.addedOn).unix() * 1000;
+    }
+
+    function isBetweenDate(givenDate, startDate, endDate) {
+        var startMoment = startDate ? moment(startDate) : moment(0);
+        var endMoment = endDate ? moment(endDate) : moment().add(1000, 'years');
+
+        return moment(givenDate).isBetween(startMoment, endMoment);
+    }
 }());

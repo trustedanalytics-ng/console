@@ -48,7 +48,7 @@
                     self.offerings = _.sortBy(offerings, function (offering) {
                         return offering.name.toLowerCase();
                     });
-                    self.filtered = filterOfferings(filters, self.offerings); 
+                    self.filtered = filterOfferings(filters, self.offerings);
                     calculatePagination($scope.currentPage, $scope.itemsPerPage);
                     self.state.setLoaded();
 

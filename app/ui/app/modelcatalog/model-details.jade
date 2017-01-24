@@ -27,11 +27,8 @@
         .actions
             //button.btn.btn-primary.fa-pencil-square-o(ng-click="goToEditMode()") Edit Metadata
             a.btn.btn-primary.fa-times(ng-click='tryDeleteModel()') Delete
-            a.btn.btn-primary.fa-download(ng-href='/rest/models/{{model.id}}/artifacts/{{mainArtifact.id}}/file'
-               ng-if="mainArtifact") Download
-            // should be deleted when UI will support additional artifact section
-            a.btn.btn-primary.fa-download(ng-href='/rest/models/{{model.id}}/artifacts/{{extraArtifacts[0].id}}/file'
-               ng-if="extraArtifacts && !mainArtifact") Download
+            a.btn.btn-primary.fa-download(ng-href='/rest/models/{{model.id}}/artifacts/{{mainArtifact.id}}/file')
+              | Download
             a.btn.btn-primary.fa-plus(ng-if="supportsScoringEngines()" ng-click='addScoringEngine()') Add Scoring Engine
             a.btn.btn-primary.fa-plus(ng-click='tryUploadArtifact()' ng-hide='true') Add Artifact
 
@@ -79,26 +76,6 @@
                     td {{ instance.state }}
                     td
                        a(ui-sref='app.marketplace.instance({instanceId: instance.id})') See details &raquo;
-           .divider
-
-        .artifacts(ng-hide='true')
-           h4(ng-if='extraArtifacts.length') Additional Artifacts
-           div(ng-if='!extraArtifacts.length') No Additional Artifacts
-
-           spinner(ng-show='deleteArtifactState.isPending() || addArtifactState.isPending()')
-           table.table.table-striped(ng-table="tableParams"
-               ng-show='extraArtifacts.length && deleteArtifactState.isDefault() && addArtifactState.isDefault()')
-              tr(ng-repeat="artifact in $data")
-                 td(data-title="'Artifact Name'" sortable="'filename'")
-                    | {{ artifact.filename }}
-                 td(data-title="'File Path'" sortable="'location'")
-                    | {{ artifact.location }}
-                 td(data-title="'Actions'").pull-right 
-                    .action-icon
-                       span.fa.fa-trash-o(ng-click='tryDeleteArtifact(artifact)')
-                    .action-icon
-                       a(ng-href='/rest/models/{{model.id}}/artifacts/{{artifact.id}}/file')
-                        span.fa.fa-download
 
     .panel.panel-warning(ng-show='state.isError()')
         .panel-heading Error loading content
@@ -114,26 +91,8 @@ script(type="text/ng-template", id="confirm-delete")
         p
             | Are you sure you want to delete
             = ' '
-            b {{ data.model || data.artifact || data.instance }}
+            b {{ data.model || data.instance }}
             | ?
         .pull-right
             button.btn.btn-primary(type='button', ng-click='confirm()') Delete
             button.btn.btn-default(type='button', ng-click="cancel()") Cancel
-
-script(type="text/ng-template", id="confirm-add-artifact")
-    .ngdialog-message.upload-dialog.clearfix
-       h4 Add New Model Artifact
-       .browse-upload
-          label Browse for Local File
-          .input-group
-            input.file-box(value='{{file.name}}')
-            .file-input
-               input(type="file", nv-file-select, ng-model='file'
-                  ngf-select='data.scope.setChosenFile(file)' autofocus='true')
-               span Choose...
-       .actions
-          button.btn.btn-primary.fa-plus(ng-click='confirm()') Add Artifact
-          button.btn.btn-primary.fa-times(type='button', ng-click="cancel()") Cancel Add
-
-
-
