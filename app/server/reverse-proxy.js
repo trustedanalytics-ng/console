@@ -16,6 +16,7 @@
 var request = require('request'),
     urlJoin = require('url-join'),
     util = require('util'),
+    config = require('./config/config'),
     defaults = require('./config/defaults.json'),
     servicesConfig = require('./config/services-config'),
     httpException = require('./utils/http-exception'),
@@ -42,15 +43,23 @@ function forwardRequest(req, res) {
     } else {
         var cleanPath = path.replace(defaults.reverse_proxy.request_prefix, '');
         var prefix = service.prefix || servicesConfig.getServicePrefix(service);
-        targetUrl = urlJoin(host, prefix, cleanPath);
+        if(service.dontUsePath){
+            targetUrl = urlJoin(host, cleanPath.replace(service.path, ''));
+        }else{
+            targetUrl = urlJoin(host, prefix, cleanPath);
+        }
     }
     if(!targetUrl.match(/(http(s)?:)?\/\//)) {
         targetUrl = DEFAULT_PROTO + targetUrl;
     }
 
-    setHeaders(req);
-    req.clearTimeout();
+    if(service.authHeaderRewrite) {
+        setGrafanaHeader(req);
+    }else{
+        setHeaders(req);
+    }
 
+    req.clearTimeout();
     req.pipe(
         request({
             url: targetUrl,
@@ -66,6 +75,13 @@ function setHeaders(req) {
         req.headers['Authorization'] = 'bearer ' + req.user.accessToken;
     }
     req.headers['x-forwarded-host'] = req.headers['host'];
+}
+
+function setGrafanaHeader(req) {
+    var header = new Buffer(config.get('GRAFANA_BASIC_USER') +":"+
+                            config.get('GRAFANA_BASIC_PASSWORD')
+                            ).toString("base64");
+    req.headers['Authorization'] = 'Basic ' + header;
 }
 
 function handleProxyError(res, serviceName, path) {

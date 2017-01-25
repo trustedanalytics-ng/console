@@ -91,4 +91,9 @@
 },{
   "path": "/scoring-engine/tap-scoring-engine",
   "name": "tap-scoring-engine-publisher"
+},{
+  "path": "/grafana",
+  "name": "metrics-grafana",
+  "authHeaderRewrite": true,
+  "dontUsePath": true
 }]

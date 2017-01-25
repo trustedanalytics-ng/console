@@ -22,22 +22,21 @@
     .row.row-wrapper
       div.col-lg-12
         div.col-lg-4
-          iframe(ng-src="{{ getIframeSrc(1, 'organization-dashboard', 'now-5m') }}", src="", width="100%", height="200px" frameborder="0").iframe-wrapper
+          div(style="background-image:url('{{ getIframeSrc(1, 'organization-dashboard', 'now') }}')").iframe-wrapper.background-tiles 
         div.col-lg-4
-          iframe(ng-src="{{ getIframeSrc(2, 'organization-dashboard', 'now-5m') }}", src="", width="100%", height="200px" frameborder="0").iframe-wrapper
+          div(style="background-image:url('{{ getIframeSrc(2, 'organization-dashboard', 'now') }}')").iframe-wrapper.background-tiles
         div.col-lg-4
-          iframe(ng-src="{{ getIframeSrc(3, 'organization-dashboard', 'now') }}", src="", width="100%", height="200px" frameborder="0" allowtransparency="true").iframe-wrapper
+          div(style="background-image:url('{{ getIframeSrc(3, 'organization-dashboard', 'now') }}')").iframe-wrapper.background-tiles
       div.col-lg-12
         div.col-lg-4
-          iframe(ng-src="{{ getIframeSrc(4, 'organization-dashboard', 'now') }}", src="", width="100%", height="200px" frameborder="0").iframe-wrapper
+          div(style="background-image:url('{{ getIframeSrc(4, 'organization-dashboard', 'now') }}')").iframe-wrapper.background-tiles
         div.col-lg-4
-          iframe(ng-src="{{ getIframeSrc(5, 'organization-dashboard', 'now-15m') }}", src="", width="100%", height="200px" frameborder="0").iframe-wrapper
+          div(style="background-image:url('{{ getIframeSrc(5, 'organization-dashboard', 'now-15m') }}')").iframe-wrapper.background-tiles
         div.col-lg-4
-          iframe(ng-src="{{ getIframeSrc(6, 'organization-dashboard', 'now-15m') }}", src="", width="100%", height="200px" frameborder="0").iframe-wrapper
-
+          div(style="background-image:url('{{ getIframeSrc(6, 'organization-dashboard', 'now-15m') }}')").iframe-wrapper.background-tiles
     .category-title.clearfix
         | Data
     .row.row-wrapper
       div.col-lg-12
         div.col-lg-4
-          iframe(ng-src="{{ getIframeSrc(7, 'organization-dashboard', 'now') }}", src="", width="100%", height="200px" frameborder="0").iframe-wrapper
+          div(style="background-image:url('{{ getIframeSrc(7, 'organization-dashboard', 'now') }}')").iframe-wrapper.background-tiles

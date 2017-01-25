@@ -22,27 +22,30 @@
         var state = new State().setPending();
         $scope.state = state;
 
-        var DEFAULT_GRAFANA_PREFIX = '/dashboard-solo/db';
         var DEFAULT_DETAILS_PREFIX = '/dashboard/db';
+        var DEFAULT_GRAFANA_PREFIX = '/rest/grafana/render/dashboard-solo/db';
         var DEFAULT_DASHBOARD_PARAMS = {
             to: 'now',
-            theme: 'light'
+            theme: 'light',
+            height: 190,
+            width: 450
+        };
+
+        $scope.getIframeSrc = function(number, dashboardName, timeBack) {
+            var params = _.chain({panelId: number, from: timeBack})
+                .extend(DEFAULT_DASHBOARD_PARAMS)
+                .mapObject(function(v, k){return k + '=' + v;})
+                .values()
+                .value()
+                .join('&');
+
+            return DEFAULT_GRAFANA_PREFIX + '/' + dashboardName + '?' + params;
         };
 
         ConfigResource.getSessionConfig('metrics_grafana_host')
             .then(function onSuccess(response) {
                 $scope.getGrafanaDashboardLink = function(dashboardName) {
                    return "//" + response + DEFAULT_DETAILS_PREFIX + '/' + dashboardName;
-                };
-                $scope.getIframeSrc = function(number, dashboardName, timeBack) {
-                    var params = _.chain({panelId: number, from: timeBack})
-                        .extend(DEFAULT_DASHBOARD_PARAMS)
-                        .mapObject(function(v, k){return k + '=' + v;})
-                        .values()
-                        .value()
-                        .join('&');
-
-                    return "//" + response + DEFAULT_GRAFANA_PREFIX + '/' + dashboardName + '?' + params;
                 };
             }).catch(function onError() {
             state.setError();

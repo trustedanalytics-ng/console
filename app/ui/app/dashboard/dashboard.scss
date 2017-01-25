@@ -34,6 +34,14 @@ $dashboard-tile-margin: 20px;
   margin-top: 10px;
 }
 
+.background-tiles {
+  min-height: 200px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+
+
 .dashboard {
 
   &.visibility-hidden {
