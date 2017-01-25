@@ -34,8 +34,7 @@
                                 pattern-validator="{{ validationPattern }}", required)
                             span
                                 div(ng-hide="uploadForm.name.$valid")
-                                    span.validationMessage(ng-messages="regexValidator")
-                                        | {{ validationMessage }}
+                                    span.validationMessage {{ validationMessage }}
                 .col-md-6
                     label.label-title(for='method') Method
                     label.additional-info-opt (optional)

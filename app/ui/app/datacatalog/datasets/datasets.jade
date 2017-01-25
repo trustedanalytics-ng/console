@@ -42,25 +42,25 @@ h3
                     div
                         span from:
                         .input-group
-                            input.form-control(name="from" type='text', uib-datepicker-popup="dd-MM-yyyy", placeholder="dd-MM-yyyy"  ng-model='created.from', is-open='fromOpened' date-validator)
+                            input.form-control(name="from" type='text', uib-datepicker-popup="dd-MM-yyyy",
+                                placeholder="dd-MM-yyyy"  ng-model='created.from', is-open='fromOpened')
                             span.input-group-btn
                                 button.btn.btn-default(type='button', ng-click='openFrom($event)')
                                     em.fa.fa-calendar
                             span
                             div(ng-hide="creation.from.$valid")
-                                span.validationMessage(ng-message="regexValidator")
-                                    | {{ dateValidationMessage }}
+                                span.validationMessage {{ dateValidationMessage }}
                     div
                         span to:
                         .input-group
-                            input.form-control(name="to" type='text', uib-datepicker-popup="dd-MM-yyyy", placeholder="dd-MM-yyyy" ng-model='created.to', is-open='toOpened' date-validator="{{ validationPattern }}")
+                            input.form-control(name="to" type='text', uib-datepicker-popup="dd-MM-yyyy",
+                                placeholder="dd-MM-yyyy" ng-model='created.to', is-open='toOpened')
                             span.input-group-btn
                                 button.btn.btn-default(type='button', ng-click='openTo($event)')
                                     em.fa.fa-calendar
                             span
                             div(ng-hide="creation.to.$valid")
-                                span.validationMessage(ng-message="regexValidator")
-                                    | {{ dateValidationMessage }}
+                                span.validationMessage {{ dateValidationMessage }}
 
         div(ng-show='availableVisualizationsTools.length > 1')
             .heading Tool for visualization
