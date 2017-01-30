@@ -31,8 +31,7 @@
             canBeStopped: _.partial(stateEquals, InstanceState.RUNNING),
             canBeDeleted: _.partial(stateIn, [
                 InstanceState.STOPPED,
-                InstanceState.FAILURE,
-                InstanceState.UNAVAILABLE
+                InstanceState.FAILURE
             ])
         };
 
