@@ -14,7 +14,7 @@
    limitations under the License.
 //-
 .instance-details
-    h3 Instances: {{serviceInstance.name}}
+    h3.truncate(data-ng-bind="'Instance: ' + serviceInstance.name" data-ellipsis title="{{serviceInstance.name}}" data-ellipsis-separator="")
     spinner(ng-show='state.isPending() || deleteState.isPending()')
     .panel(ng-show='state.isLoaded() && deleteState.isDefault()')
         button.btn.btn-primary.fa-refresh.app-refresher(ng-click='reload()') Refresh page
@@ -33,10 +33,10 @@
         table.table
             tr
                 td Offering name
-                td {{serviceInstance.serviceName}}
+                td.break-word {{serviceInstance.serviceName}}
             tr
                 td Instance name
-                td {{serviceInstance.name}}
+                td.break-word {{serviceInstance.name}}
             tr
                 td State
                 td {{serviceInstance.state}}

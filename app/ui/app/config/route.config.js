@@ -245,6 +245,7 @@ angular.module('app').config(function ($stateProvider, $urlRouterProvider, LazyL
             title: 'Service instance details',
             targetHeader: {org: false, space: false},
             controller: 'ServiceInstanceDetailsController',
+            resolve: LazyLoadProvider.load(['dibari.angular-ellipsis']),
             templateUrl: getViewPath('marketplace/instances/instance-details.html')
         })
         .state('app.service', {
@@ -254,7 +255,7 @@ angular.module('app').config(function ($stateProvider, $urlRouterProvider, LazyL
             controller: 'ServiceController',
             controllerAs: 'ctrl',
             templateUrl: getViewPath('marketplace/service/service.html'),
-            resolve: LazyLoadProvider.load(['ngMessages'])
+            resolve: LazyLoadProvider.load(['ngMessages','dibari.angular-ellipsis'])
         })
         .state('app.applications', {
             url: '/applications',
@@ -270,6 +271,7 @@ angular.module('app').config(function ($stateProvider, $urlRouterProvider, LazyL
             targetHeader: {org: false, space: false},
             controller: 'ApplicationController',
             controllerAs: 'appCtrl',
+            resolve: LazyLoadProvider.load(['dibari.angular-ellipsis']),
             templateUrl: getViewPath('applications/application/application.html')
         })
         .state('app.application.overview', {

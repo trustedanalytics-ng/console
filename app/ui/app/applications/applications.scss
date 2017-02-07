@@ -13,6 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+.break-word {
+  word-wrap: break-word;
+  word-break: break-all;
+}
+
 .applications {
 
   .app-offline {
@@ -52,6 +58,12 @@
 }
 
 .application {
+
+  h3{
+    font-size: 30px;
+    max-height: 2em;
+    padding: 20px 0px;
+  }
 
   .table {
     table-layout: fixed;

@@ -38,12 +38,15 @@ div
     h4 Details
     table.table
         tr
+            td Application name
+            td.break-word {{$ctrl.application.name}}
+        tr
             td Running instances:
             td
                 | {{ $ctrl.application.running_instances }} / {{ $ctrl.application.replication }}
         tr
             td Domains:
-            td
+            td.break-word
                 div(ng-repeat='url in $ctrl.application.urls')
                     a(ng-href='{{ url | ensureProtocol }}') {{ url }}
         tr

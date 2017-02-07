@@ -15,7 +15,7 @@
 //-
 .application
 
-    h3(ng-bind='application.name')
+    h3(data-ng-bind="'Application: ' + application.name" data-ellipsis title="{{application.name}}" data-ellipsis-separator="")
 
     div
         ul.nav.nav-tabs

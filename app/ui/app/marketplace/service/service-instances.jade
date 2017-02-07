@@ -38,9 +38,9 @@
                 th
         tbody
             tr(ng-repeat="instance in $ctrl.instances | orderBy: 'name'")
-                td {{ instance.name }}
+                td.break-word {{ instance.name }}
                 td {{ instance.planName }}
-                td
+                td.break-word
                     a.app-bound(ng-repeat='app in instance.bound_apps', ui-sref='app.application({ appId: app.guid })') {{ app.name }}
                 td(class="state state-{{ $ctrl.getNormalizedState(instance) }}")  {{instance.state}}
                 td

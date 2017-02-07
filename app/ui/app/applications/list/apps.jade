@@ -23,7 +23,7 @@ h3
     .table(ng-if='state.isLoaded()')
         table.table(ng-show='applications.length > 0', ng-table='tableParams', show-filter='true')
             tr(ng-repeat='app in $data', ng-class="{ 'details-visible':  detailsVisible(app)}")
-                td(data-title="'Name'", sortable="'name'", filter="{ 'name': 'text' }", ng-class="{'status-problem': checkStatusProblem(app)}")
+                td.break-word(data-title="'Name'", sortable="'name'", filter="{ 'name': 'text' }", ng-class="{'status-problem': checkStatusProblem(app)}")
                     | {{ app.name }}
 
                 td.status(data-title="'Status'", sortable="'state'", filter="{ 'state': 'select' }", filter-data='appStates()')
@@ -32,7 +32,7 @@ h3
                 td(data-title="'Instances'", sortable="'running_instances'")
                     | {{ app.running_instances }}
 
-                td(data-title="'URLs'")
+                td.break-word(data-title="'URLs'")
                     div(data-ng-repeat='url in app.urls')
                         a(href='{{ url | ensureProtocol }}' target="_blank")
                             | {{ url }}

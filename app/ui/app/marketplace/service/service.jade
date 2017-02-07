@@ -18,12 +18,12 @@
     spinner(ng-show='ctrl.state.isPending()')
 
     div(ng-show='ctrl.state.isLoaded()')
-        h3
+        h3.break-word
             | {{ ctrl.offering.displayName || ctrl.offering.name }}
             small {{ ctrl.offering.provider }}
 
         .description.panel.clearfix
-            span {{ ctrl.offering.description }}
+            span.break-word {{ ctrl.offering.description }}
 
             .pull-right(ng-if='ctrl.deletable')
                 button.btn.btn-danger(ng-click='ctrl.tryDeleteOffering()')

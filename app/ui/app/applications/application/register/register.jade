@@ -57,6 +57,6 @@
             spinner(ng-show='offeringsState.isPending()')
             .list-group(ng-if='offeringsState.isLoaded()')
                .list-group-item(ng-repeat="offering in offerings")
-                  a(ui-sref="app.service({ offeringId: offering.id })") {{ offering.displayName || offering.name }}
+                  a.break-word(ui-sref="app.service({ offeringId: offering.id })") {{ offering.displayName || offering.name }}
                .list-group-item(ng-if="!offerings.length")
                   | No service offerings found

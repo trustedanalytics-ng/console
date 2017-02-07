@@ -14,6 +14,16 @@
  * limitations under the License.
  */
 
+.break-word {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  -ms-word-wrap: break-word;
+  word-break: break-all;
+  -ms-word-break: break-all;
+  white-space: pre-wrap;
+  white-space: -o-pre-wrap;
+}
+
 .marketplace {
 
   .searchbar {
@@ -36,12 +46,12 @@
   }
 
   .service-list {
+    margin: 0px -10px;
     display: flex;
     display: -webkit-flex;
-    -webkit-flex-wrap: wrap;
-    flex-wrap: wrap;
     flex-flow: row wrap;
-    margin: 0 -10px;
+    align-content: flex-start;
+    justify-content: flex-start;
 
     .available-services {
       position: relative;
@@ -66,26 +76,25 @@
   }
 
   .service-card {
-    padding: 10px;
-    float: left;
-    display: flex;
-    flex-direction: column;
+    padding: 20px;
 
     .card {
-      width: 100%;
-      height: 100%;
+      min-width: 20vw;
+      max-width: 50vw;
+      flex: 1 1 30%;
 
       .card-top {
         width: 100%;
         padding: 0 12px 35px;
         position: relative;
         min-height: 175px;
+        text-align: left;
 
         h1 {
           font-size: 24px;
           margin-top: 0;
-          padding: 20px 5px 0 8px;
-          max-height: 3em;
+          padding: 20px 10px 0 10px;
+          max-height: 2em;
           overflow: hidden;
           text-overflow: ellipsis;
           white-space: nowrap;
@@ -93,10 +102,11 @@
 
         .description {
           font-size: 14px;
-          padding-left: 10px;
-          height: 60px;
+          padding: 20px 5px 0 8px;
+          max-height: 60px;
           overflow: hidden;
           text-overflow: ellipsis;
+          white-space: nowrap;
         }
 
         a.details {
@@ -194,6 +204,12 @@
 
 .service {
 
+  h3{
+    font-size: 30px;
+    max-height: 70px;
+    padding: 20px 10px;
+  }
+
   .icon {
     width: 64px;
     float: left;
@@ -215,9 +231,15 @@
   }
 
   .description {
-    padding: 20px; 
+    padding: 20px;
     font-size: 20px;
     font-weight: lighter;
+    width: 100%;
+
+    .break-word {
+      display: inline-block;
+      display: -moz-inline-stack;
+    }
 
     .tags {
       padding-top: 20px;
@@ -395,6 +417,14 @@
 
 .instance-details {
 
+
+  h3.truncate{
+    font-size: 30px;
+    max-height: 2em;
+    padding: 20px 0px;
+  }
+
+
   .panel {
     padding: 25px 30px;
   }
@@ -434,6 +464,7 @@
         font-weight: bold;
         width: 160px;
       }
+
     }
   }
 }
@@ -529,6 +560,7 @@
 
         li {
           margin: 5px 0;
+          display: block;
         }
       }
 

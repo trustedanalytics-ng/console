@@ -25,8 +25,8 @@ h3
     div(ng-show='state.isLoaded() && services')
         .service-item(ng-repeat="(offeringName, instances) in services")
             .service-content
-                .name {{ offeringName }}
+                .name.break-word {{ offeringName }}
                 ul.instances
-                    li(ng-repeat="instance in instances")
+                    li.break-word(ng-repeat="instance in instances")
                         | {{ instance.name }}
                         a.see-details(ui-sref='app.marketplace.instance({instanceId: instance.id})') See details &raquo;
