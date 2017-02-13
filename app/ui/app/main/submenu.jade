@@ -13,7 +13,6 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 //-
-li.sidebar-subnav-header {{ item.text }}
 li(ng-repeat='subitem in item.items' ng-if="isVisible(subitem)")
     a(ng-href="{{ getHref(subitem) }}" ng-click="clickOnSubmenu(item, $event)" ng-class="{ active: isActive(subitem) }")
         span {{ subitem.text }}

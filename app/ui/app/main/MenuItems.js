@@ -127,17 +127,9 @@
                     "text": "Manage Organization Users",
                     "sref": "app.manage.orgusers",
                     "access": ["admin", "currentOrgManager"]
-                } /*, {
-                    "text": "Manage Organizations",
-                    "sref": "app.manage.organizations.manage",
-                    "access": ["admin", "anyOrgManager"]
-                } */
+                }
             ],
             "access": ["admin", "anyOrgManager"]
-        /*}, {
-            "text": "Event Log",
-            "sref": "app.latestevents",
-            "icon": "icon-book-open"*/
         }
     ]);
 })();

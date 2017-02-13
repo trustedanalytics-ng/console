@@ -35,6 +35,9 @@
             },
             function toolAvailability(item) {
                 return isToolAvailable(item.tool, $scope.tools);
+            },
+            function notEmptyExpandable(item) {
+                return !_.isArray(item.items) || anySubitemVisible(item);
             }
         ];
 
@@ -114,7 +117,13 @@
             $scope.toggleCollapse();
             event.stopPropagation();
         };
+
+        function anySubitemVisible(item) {
+            return _.some(item.items, $scope.isVisible);
+        }
+
     });
+
 
     function hasAccess(accessRestrictions, accessGranted) {
         return !accessRestrictions || _.some(accessRestrictions, function (accessName) {

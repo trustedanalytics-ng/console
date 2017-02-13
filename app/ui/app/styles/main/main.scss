@@ -67,10 +67,6 @@ a {
         width: $menu-width;
         padding: 0;
         margin: 0;
-
-        > .nav-floating {
-          margin-left: $menu-collapsed-width;
-        }
       }
 
       > footer {

@@ -50,30 +50,8 @@ nav {
 
 .sidebar-subnav {
 
-  > .sidebar-subnav-header {
-    display: none;
-    padding: 10px 20px;
-    font-weight: bold;
-  }
-
   &.nav > li > a {
     padding-left: 65px;
-  }
-
-  &.nav-floating {
-    position: absolute;
-    top: 0;
-    left: $menu-collapsed-width;
-    display: none;
-    white-space: nowrap;
-
-    > .sidebar-subnav-header {
-      display: block;
-    }
-
-    li > a {
-      padding-left: 20px;
-    }
   }
 }
 
@@ -93,11 +71,6 @@ nav {
       .sidebar-subnav,
       > li > a > span {
         display: none;
-      }
-
-      .nav-floating.in,
-      .nav-floating.collapsing {
-        display: block;
       }
     }
   }
