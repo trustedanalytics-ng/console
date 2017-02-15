@@ -1,7 +1,3 @@
-[![Build Status](https://travis-ci.org/trustedanalytics/console.svg)](https://travis-ci.org/trustedanalytics/console)
-[![Dependency Status](https://www.versioneye.com/user/projects/572364f9ba37ce00350af4fc/badge.svg?style=flat)](https://www.versioneye.com/user/projects/572364f9ba37ce00350af4fc)
-[![Code Climate](https://codeclimate.com/github/trustedanalytics/console/badges/gpa.svg)](https://codeclimate.com/github/trustedanalytics/console)
-
 Console
 =======
 
@@ -34,7 +30,7 @@ npm start
 ### Setting up dependencies
 Console is only a reverse-proxy - it doesn't have application logic. To run and develop console locally, it's needed to configure the console to know where the dependencies are. There is no need to set up all dependent microservices at once. Most of the time developer works on 1-2 features and uses a few microservices only. 
 
-Although, there is one project always required - [user-management](https://github.com/trustedanalytics/user-management) which is responsible for downloading user details, organizations list, etc. A whole list of dependencies is stored in [service-mapping.json](app/server/config/service-mapping.json).
+Although, there is one project always required - [user-management](https://github.com/trustedanalytics-ng/user-management) which is responsible for downloading user details, organizations list, etc. A whole list of dependencies is stored in [service-mapping.json](app/server/config/service-mapping.json).
 
 To run the service locally or in TAP, a few environment variables with proper values inside needs to be defined:
 ```
