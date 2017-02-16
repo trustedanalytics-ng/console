@@ -19,7 +19,7 @@
 
     App.controller('DocumentationController', function ($scope, State, PlatformInfoProvider) {
 
-        var TAP_WIKI = "https://github.com/trustedanalytics/platform-wiki";
+        var TAP_WIKI = "https://github.com/trustedanalytics-ng/platform-wiki";
         var platformVersion;
         var state = new State().setPending();
 
