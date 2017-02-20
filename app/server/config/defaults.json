@@ -8,6 +8,7 @@
     ]
   },
   "metrics_grafana_host": "localhost:3000",
+  "metrics_grafana_tap_domain_host": "localhost:3000",
   "session_config": {
     "idle_time": 1800,
     "keepalive_time": 5

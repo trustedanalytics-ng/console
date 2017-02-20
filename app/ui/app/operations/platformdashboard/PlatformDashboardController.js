@@ -42,10 +42,10 @@
             return DEFAULT_GRAFANA_PREFIX + '/' + dashboardName + '?' + params;
         };
 
-        ConfigResource.getSessionConfig('metrics_grafana_host')
+        ConfigResource.getSessionConfig('metrics_grafana_tap_domain_host')
             .then(function onSuccess(response) {
                 $scope.getGrafanaDashboardLink = function(dashboardName) {
-                   return "//" + response + DEFAULT_DETAILS_PREFIX + '/' + dashboardName;
+                   return response + DEFAULT_DETAILS_PREFIX + '/' + dashboardName;
                 };
             }).catch(function onError() {
             state.setError();

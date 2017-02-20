@@ -26,7 +26,7 @@ var configRouter = function() {
     );
 
     router.get('', function(req, res) {
-            res.send(config.getFew(["METRICS_GRAFANA_HOST", "SESSION_CONFIG"]));
+            res.send(config.getFew(["METRICS_GRAFANA_TAP_DOMAIN_HOST", "SESSION_CONFIG"]));
         }
     );
 
