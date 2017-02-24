@@ -22,7 +22,7 @@
     App.controller('ToolsInstancesListController', function ($scope, $location, targetProvider, State,
         NotificationService, OfferingsResource, ServiceInstancesResource, $state, ValidationPatterns, ServiceMetadataFetcher) {
 
-        var GEARPUMP_LINK_SUFFIX = '/login/oauth2/cloudfoundryuaa/authorize';
+        var GEARPUMP_LINK_SUFFIX = '/';
 
         $scope.validationPattern = ValidationPatterns.INSTANCE_NAME.pattern;
         $scope.validationMessage = ValidationPatterns.INSTANCE_NAME.validationMessage;
